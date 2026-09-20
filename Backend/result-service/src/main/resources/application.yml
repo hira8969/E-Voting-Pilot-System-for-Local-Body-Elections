@@ -1,0 +1,14 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: result-service
+
+services:
+  voting-service:
+    url: ${VOTING_SERVICE_URL:http://localhost:8084}
+  candidate-service:
+    url: ${CANDIDATE_SERVICE_URL:http://localhost:8083}
+  election-service:
+    url: ${ELECTION_SERVICE_URL:http://localhost:8082}

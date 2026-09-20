@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: evoting-backend
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:evotingdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driverClassName: ${DB_DRIVER:org.h2.Driver}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.H2Dialect}
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+services:
+  voter-service:
+    url: http://localhost:8080
+  election-service:
+    url: http://localhost:8080
+  candidate-service:
+    url: http://localhost:8080
+  voting-service:
+    url: http://localhost:8080

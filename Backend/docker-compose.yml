@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: evoting-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - VOTER_SERVICE_URL=http://voter-service:8081
+      - ELECTION_SERVICE_URL=http://election-service:8082
+      - CANDIDATE_SERVICE_URL=http://candidate-service:8083
+      - VOTING_SERVICE_URL=http://voting-service:8084
+      - RESULT_SERVICE_URL=http://result-service:8085
+    depends_on:
+      - voter-service
+      - election-service
+      - candidate-service
+      - voting-service
+      - result-service
+    networks:
+      - evoting-net
+
+  voter-service:
+    build:
+      context: ./voter-service
+      dockerfile: Dockerfile
+    container_name: evoting-voter-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+    networks:
+      - evoting-net
+
+  election-service:
+    build:
+      context: ./election-service
+      dockerfile: Dockerfile
+    container_name: evoting-election-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+    networks:
+      - evoting-net
+
+  candidate-service:
+    build:
+      context: ./candidate-service
+      dockerfile: Dockerfile
+    container_name: evoting-candidate-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVER_PORT=8083
+    networks:
+      - evoting-net
+
+  voting-service:
+    build:
+      context: ./voting-service
+      dockerfile: Dockerfile
+    container_name: evoting-voting-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SERVER_PORT=8084
+      - VOTER_SERVICE_URL=http://voter-service:8081
+    depends_on:
+      - voter-service
+    networks:
+      - evoting-net
+
+  result-service:
+    build:
+      context: ./result-service
+      dockerfile: Dockerfile
+    container_name: evoting-result-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SERVER_PORT=8085
+      - VOTING_SERVICE_URL=http://voting-service:8084
+      - CANDIDATE_SERVICE_URL=http://candidate-service:8083
+      - ELECTION_SERVICE_URL=http://election-service:8082
+    depends_on:
+      - voting-service
+      - candidate-service
+      - election-service
+    networks:
+      - evoting-net
+
+networks:
+  evoting-net:
+    driver: bridge

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Backend/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/candidate-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/election-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/result-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/voter-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Backend/voting-service/src/main/java" charset="UTF-8" />
+  </component>
+</project>

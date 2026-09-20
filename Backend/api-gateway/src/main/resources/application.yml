@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: voter-service
+          uri: ${VOTER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/voters/**
+        - id: election-service
+          uri: ${ELECTION_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/elections/**
+        - id: candidate-service
+          uri: ${CANDIDATE_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/candidates/**
+        - id: voting-service
+          uri: ${VOTING_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/votes/**
+        - id: result-service
+          uri: ${RESULT_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/api/results/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+              - "http://localhost:3000"
+              - "http://127.0.0.1:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
