@@ -1,0 +1,15 @@
+<div class="empty-state-box">
+  <div class="empty-icon">{{ icon }}</div>
+  <h3 class="empty-title">{{ title }}</h3>
+  <p class="empty-description">{{ description }}</p>
+
+  @if (actionText && actionLink) {
+    <a [routerLink]="actionLink" class="empty-btn">
+      {{ actionText }}
+    </a>
+  } @else if (actionText) {
+    <button type="button" class="empty-btn" (click)="onAction()">
+      {{ actionText }}
+    </button>
+  }
+</div>

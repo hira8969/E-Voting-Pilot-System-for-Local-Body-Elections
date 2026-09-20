@@ -1,0 +1,86 @@
+<div class="auth-page">
+  <app-navbar></app-navbar>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">🗳️</div>
+        <h2>Sign In to E-Voting Portal</h2>
+        <p>Enter your Electoral Photo ID (EPIC) or registered email</p>
+      </div>
+
+      <!-- Quick Demo Credentials helper for Evaluators / Viva -->
+      <div class="demo-quick-bar">
+        <span>Quick Viva Demo:</span>
+        <button type="button" (click)="quickFill('voter')" class="quick-btn">Voter (Citizen)</button>
+        <button type="button" (click)="quickFill('admin')" class="quick-btn admin-btn">Admin</button>
+      </div>
+
+      @if (errorMessage) {
+        <div class="error-banner">
+          <span class="error-icon">⚠️</span>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <!-- Email or EPIC Number -->
+        <div class="form-group">
+          <label for="emailOrEpic">Voter ID (EPIC) / Email</label>
+          <div class="input-with-icon">
+            <span class="field-icon">🆔</span>
+            <input
+              id="emailOrEpic"
+              type="text"
+              formControlName="emailOrEpic"
+              placeholder="e.g. IND1234567 or email"
+              class="form-control"
+              [class.is-invalid]="loginForm.get('emailOrEpic')?.invalid && loginForm.get('emailOrEpic')?.touched" />
+          </div>
+          @if (loginForm.get('emailOrEpic')?.invalid && loginForm.get('emailOrEpic')?.touched) {
+            <span class="field-error">EPIC Voter ID or registered Email is required</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password">Password</label>
+            <a href="javascript:void(0)" class="forgot-link">Forgot Password?</a>
+          </div>
+          <div class="input-with-icon">
+            <span class="field-icon">🔑</span>
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter secure password"
+              class="form-control"
+              [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+            <button type="button" (click)="togglePasswordVisibility()" class="toggle-password" tabindex="-1">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="field-error">Password must be at least 4 characters</span>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="isLoading" class="btn-submit">
+          @if (isLoading) {
+            <span class="spinner"></span>
+            <span>Verifying Credentials...</span>
+          } @else {
+            <span>Proceed to Verification →</span>
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Don't have a registered Voter account?</p>
+        <a routerLink="/register" class="link-register">Register as New Voter</a>
+      </div>
+    </div>
+  </div>
+</div>

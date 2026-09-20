@@ -1,0 +1,63 @@
+@if (isOpen && selectedCandidate) {
+  <div class="confirm-backdrop" (click)="onCancel()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="evm-header-icon">🗳️</div>
+        <div>
+          <h3>Confirm Your Ballot Choice</h3>
+          <p>Please carefully verify your selection before sealing</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="election-banner-mini">
+          <span class="lbl">CONTEST:</span>
+          <span class="val">{{ election?.title }} ({{ election?.constituency }})</span>
+        </div>
+
+        <!-- Chosen Candidate Highlight Card -->
+        <div class="chosen-candidate-card">
+          <div class="symbol-circle">
+            {{ selectedCandidate.symbolUrl || '🗳️' }}
+          </div>
+          <div class="chosen-info">
+            <span class="cand-serial">Candidate #{{ selectedCandidate.candidateNumber || selectedCandidate.id }}</span>
+            <h4 class="cand-name">{{ selectedCandidate.fullName }}</h4>
+            <p class="cand-party">{{ selectedCandidate.partyName }}</p>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <span class="warn-icon">⚠️</span>
+          <div>
+            <strong>Irreversible Digital Action:</strong>
+            <p>Once you click "Confirm & Cast Ballot", your vote will be cryptographically sealed into the election ledger. You cannot change your choice.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          [disabled]="isSubmitting"
+          (click)="onCancel()"
+          class="btn-cancel">
+          ← Change Selection
+        </button>
+
+        <button
+          type="button"
+          [disabled]="isSubmitting"
+          (click)="onConfirm()"
+          class="btn-confirm-vote">
+          @if (isSubmitting) {
+            <span class="spinner"></span>
+            <span>Recording Vote on Ledger...</span>
+          } @else {
+            <span>✓ CONFIRM & CAST BALLOT</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

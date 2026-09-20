@@ -1,0 +1,156 @@
+<app-navbar></app-navbar>
+
+<div class="admin-layout">
+  <!-- Admin Sidebar -->
+  <app-sidebar mode="admin"></app-sidebar>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+    
+    <!-- Header Greeting -->
+    <div class="dashboard-header">
+      <div class="title-meta">
+        <span class="admin-badge">ADMINISTRATION & AUDIT CONSOLE</span>
+        <h1 class="main-title">Election Commission Dashboard</h1>
+        <p class="subtitle">
+          System Overview: Manage live elections, voter enrollment verification, candidate nominations, and official tallies.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <a routerLink="/admin/elections" class="btn-primary">
+          + Create New Election
+        </a>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-box">
+      <app-loading text="Loading administrative metrics..."></app-loading>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <!-- 4 Top Stat Cards -->
+      <div class="stats-grid">
+        <div class="metric-card">
+          <div class="card-icon bg-blue">👥</div>
+          <div class="card-info">
+            <span class="card-label">Total Enrolled Voters</span>
+            <h2 class="card-number">{{ totalVoters }}</h2>
+            <span class="card-sub text-green">✓ Verified EPIC Database</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="card-icon bg-green">🗳️</div>
+          <div class="card-info">
+            <span class="card-label">Active Elections</span>
+            <h2 class="card-number">{{ activeElectionsCount }}</h2>
+            <span class="card-sub text-blue">Live Polling Stations</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="card-icon bg-purple">🧑‍💼</div>
+          <div class="card-info">
+            <span class="card-label">Approved Candidates</span>
+            <h2 class="card-number">{{ totalCandidates }}</h2>
+            <span class="card-sub">Across All Wards</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="card-icon bg-amber">📊</div>
+          <div class="card-info">
+            <span class="card-label">Total Votes Sealed</span>
+            <h2 class="card-number">{{ totalVotesCast | number }}</h2>
+            <span class="card-sub text-green">100% Cryptographic Integrity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards Section -->
+      <div class="section-title-bar">
+        <h3>Administrative Controls</h3>
+        <span>Fast navigation to core system functions</span>
+      </div>
+
+      <div class="quick-nav-grid">
+        <a routerLink="/admin/elections" class="action-card">
+          <span class="action-icon">🗳️</span>
+          <h4>Manage Elections</h4>
+          <p>Create, activate, reschedule, or finalize elections and time windows.</p>
+          <span class="card-link-arrow">Open Elections →</span>
+        </a>
+
+        <a routerLink="/admin/candidates" class="action-card">
+          <span class="action-icon">🧑‍💼</span>
+          <h4>Manage Candidates</h4>
+          <p>Review nominations, approve ballot positions, symbols, and parties.</p>
+          <span class="card-link-arrow">Open Candidates →</span>
+        </a>
+
+        <a routerLink="/admin/voters" class="action-card">
+          <span class="action-icon">👥</span>
+          <h4>Manage Voters</h4>
+          <p>Verify citizen identity, check EPIC status, and review eligibility.</p>
+          <span class="card-link-arrow">Open Voters →</span>
+        </a>
+
+        <a routerLink="/admin/results" class="action-card">
+          <span class="action-icon">🏆</span>
+          <h4>Election Results</h4>
+          <p>View verified tallies, turnout percentages, and official winners.</p>
+          <span class="card-link-arrow">Open Results →</span>
+        </a>
+      </div>
+
+      <!-- Split View: Recent Elections & Security Audit Log -->
+      <div class="split-grid">
+        
+        <!-- Recent Elections Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h4>Recent Elections Status</h4>
+            <a routerLink="/admin/elections" class="panel-more-link">View All</a>
+          </div>
+
+          <div class="elections-compact-list">
+            <div *ngFor="let elec of recentElections" class="election-row">
+              <div class="elec-badge" [class.active-badge]="elec.status === 'ACTIVE'" [class.upcoming-badge]="elec.status === 'UPCOMING'" [class.completed-badge]="elec.status === 'COMPLETED'">
+                {{ elec.status }}
+              </div>
+              <div class="elec-title-col">
+                <strong>{{ elec.title }}</strong>
+                <span>{{ elec.electionType }} • {{ elec.constituency }}</span>
+              </div>
+              <a [routerLink]="['/admin/elections']" class="btn-manage-sm">Manage</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Log Overview Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h4>Security & Audit Trail</h4>
+            <span class="audit-status">🔒 Tamper-Evident</span>
+          </div>
+
+          <div class="audit-list">
+            <div *ngFor="let log of auditLogs" class="audit-item">
+              <div class="audit-icon-dot"></div>
+              <div class="audit-text">
+                <span class="audit-event">{{ log.eventType }}</span>
+                <p class="audit-desc">{{ log.details }}</p>
+                <span class="audit-time">{{ log.timestamp }} • By {{ log.actor }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+</div>

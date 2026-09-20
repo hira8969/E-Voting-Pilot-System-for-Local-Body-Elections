@@ -1,0 +1,52 @@
+<div class="min-h-[70vh] flex items-center justify-center p-4">
+  <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 p-8 shadow-xl text-center space-y-6">
+    
+    <!-- Success Animated Badge -->
+    <div class="w-20 h-20 rounded-full bg-green-50 text-green-600 border-4 border-green-200 flex items-center justify-center text-4xl mx-auto shadow-sm">
+      ✓
+    </div>
+
+    <div>
+      <span class="text-xs font-bold uppercase tracking-widest text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+        Ballot Sealed & Confirmed
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">Vote Recorded Successfully</h2>
+      <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+        Thank you for participating in local body democracy. Your vote has been encrypted and recorded into the decentralized election ledger.
+      </p>
+    </div>
+
+    <!-- Transaction Info Box -->
+    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-2.5">
+      <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-200">
+        <span class="text-slate-500 font-medium">Vote Reference ID:</span>
+        <span class="font-mono font-bold text-blue-900">{{ receipt?.receiptNumber || 'EV-2026-889021' }}</span>
+      </div>
+      <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-200">
+        <span class="text-slate-500 font-medium">Polling Station:</span>
+        <span class="font-semibold text-slate-800">{{ receipt?.boothCode || 'PB-12-01' }} (Ward 12)</span>
+      </div>
+      <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-200">
+        <span class="text-slate-500 font-medium">Timestamp:</span>
+        <span class="font-semibold text-slate-800">{{ receipt?.timestamp || '22 Aug 2026 11:32:00 AM' }}</span>
+      </div>
+      <div class="flex items-center justify-between text-xs">
+        <span class="text-slate-500 font-medium">Ballot Secrecy:</span>
+        <span class="text-green-700 font-bold flex items-center gap-1">
+          <span>🔒</span> Preserved (Zero-Knowledge)
+        </span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+      <a routerLink="/voter/receipt" class="w-full sm:flex-1 py-3 px-4 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-xl shadow-md transition-all text-center">
+        📜 View Official Receipt
+      </a>
+      <a routerLink="/voter/dashboard" class="w-full sm:flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors text-center">
+        Return to Dashboard
+      </a>
+    </div>
+
+  </div>
+</div>

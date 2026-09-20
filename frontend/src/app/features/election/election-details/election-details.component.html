@@ -1,0 +1,142 @@
+<div class="details-page">
+  <app-navbar></app-navbar>
+
+  <div class="portal-body">
+    @if (authService.isAuthenticated()) {
+      <app-sidebar [mode]="authService.isAdmin() ? 'admin' : 'voter'"></app-sidebar>
+    }
+
+    <main class="details-content">
+      @if (isLoading) {
+        <app-loading message="Loading election overview and candidate filings..."></app-loading>
+      } @else if (!election) {
+        <div class="not-found-card">
+          <h3>Election Not Found</h3>
+          <p>The requested election identifier was not found in the system registry.</p>
+          <a routerLink="/voter/elections" class="btn-back">← Back to Elections</a>
+        </div>
+      } @else {
+        <!-- Top Navigation / Breadcrumb -->
+        <div class="breadcrumb">
+          <a routerLink="/voter/elections">← All Elections</a>
+          <span>/</span>
+          <span>{{ election.title }}</span>
+        </div>
+
+        <!-- Election Header Card -->
+        <div class="header-card">
+          <div class="header-left">
+            <div class="status-tags">
+              <span
+                class="status-tag"
+                [class.tag-active]="election.status === 'ACTIVE'"
+                [class.tag-upcoming]="election.status === 'UPCOMING'">
+                {{ election.status === 'ACTIVE' ? '🟢 LIVE POLLING' : '📅 ' + election.status }}
+              </span>
+              <span class="type-tag">{{ election.electionType }}</span>
+            </div>
+            <h2>{{ election.title }}</h2>
+            <p class="location">📍 {{ election.constituency }}</p>
+            <p class="description">{{ election.description }}</p>
+          </div>
+
+          <div class="header-action-box">
+            @if (election.status === 'ACTIVE') {
+              @if (hasVoted) {
+                <div class="already-voted-box">
+                  <span class="check-mark">✓</span>
+                  <p>You have cast your vote in this election.</p>
+                  <a routerLink="/voter/history" class="btn-view-rec">View Receipt</a>
+                </div>
+              } @else {
+                <div class="vote-cta-box">
+                  <span class="pulse-icon">🔴</span>
+                  <p>Polling is currently live in your ward.</p>
+                  <a [routerLink]="['/voter/vote', election.id]" class="btn-start-voting">
+                    🗳️ Start Voting on EVM →
+                  </a>
+                </div>
+              }
+            } @else if (election.status === 'COMPLETED') {
+              <a [routerLink]="['/results', election.id]" class="btn-view-results">
+                🏆 View Election Results
+              </a>
+            } @else {
+              <div class="upcoming-notice">
+                <span>📅 Polling starts on {{ election.startDate | date:'mediumDate' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="details-2col">
+          <!-- Left Column: Candidates List -->
+          <div class="candidates-column">
+            <div class="section-title-row">
+              <h3>Nominated Candidates ({{ candidates.length }})</h3>
+              <span class="badge-approved">ELECTION COMMISSION APPROVED</span>
+            </div>
+
+            <div class="candidates-list">
+              @for (candidate of candidates; track candidate.id) {
+                <div class="candidate-item">
+                  <div class="symbol-badge">
+                    <span class="symbol-art">{{ candidate.symbolUrl }}</span>
+                    <span class="cand-number">#{{ candidate.candidateNumber || candidate.id }}</span>
+                  </div>
+
+                  <div class="cand-info">
+                    <h4>{{ candidate.fullName }}</h4>
+                    <p class="party-name">{{ candidate.partyName }}</p>
+                    <p class="bio">{{ candidate.bio }}</p>
+
+                    @if (candidate.manifesto) {
+                      <div class="manifesto-box">
+                        <strong>Ward Manifesto:</strong> {{ candidate.manifesto }}
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Right Column: Voting Instructions & Rules -->
+          <div class="instructions-column">
+            <div class="rules-card">
+              <h3>📋 E-Voting Guidelines & Rules</h3>
+              <ul class="rules-list">
+                <li>
+                  <span class="rule-icon">1</span>
+                  <span><strong>Eligibility:</strong> Only registered electors enrolled in this constituency may vote.</span>
+                </li>
+                <li>
+                  <span class="rule-icon">2</span>
+                  <span><strong>Single Ballot Rule:</strong> Only one vote can be submitted per citizen. Duplicate attempts are rejected by the backend server.</span>
+                </li>
+                <li>
+                  <span class="rule-icon">3</span>
+                  <span><strong>Ballot Secrecy:</strong> Your selection is cryptographically sealed and separated from your personal identity.</span>
+                </li>
+                <li>
+                  <span class="rule-icon">4</span>
+                  <span><strong>Audit Receipt:</strong> After pressing the EVM button, you will receive a verifiable transaction receipt code.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="booth-card">
+              <h3>🏛️ Polling Administration</h3>
+              <div class="booth-details">
+                <p><strong>Constituency:</strong> {{ election.constituency }}</p>
+                <p><strong>Polling Hours:</strong> 08:00 AM – 06:00 PM IST</p>
+                <p><strong>Verification Protocol:</strong> Digital EPIC + OTP 2FA</p>
+                <p><strong>Returning Officer:</strong> Sub-Divisional Magistrate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </main>
+  </div>
+</div>

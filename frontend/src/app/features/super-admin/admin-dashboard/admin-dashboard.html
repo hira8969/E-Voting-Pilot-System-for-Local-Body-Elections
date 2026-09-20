@@ -1,0 +1,137 @@
+<div class="space-y-6">
+  
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900">Super Administrator Console</h1>
+      <p class="text-xs text-slate-500 mt-0.5">High-privilege system governance, election lifecycle, and identity administration</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <a routerLink="/admin/elections" class="px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-1.5">
+        <span>⚙️</span>
+        <span>Configure Election</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <app-stat-card
+      title="Registered Users"
+      value="12,842"
+      icon="👥"
+      color="blue"
+      subtitle="Citizens & Election Staff">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Active Elections"
+      value="1 Active"
+      icon="🟢"
+      color="green"
+      subtitle="2 Scheduled Upcoming">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Audit Trail Logs"
+      value="24,582"
+      icon="📜"
+      color="purple"
+      subtitle="Immutable event entries">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Key Ring & Root HSM"
+      value="HEALTHY"
+      icon="🔐"
+      color="green"
+      subtitle="ECC-256 Master Root Active">
+    </app-stat-card>
+  </div>
+
+  <!-- Active Election Governance Card -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
+            🟢 Active Production Run
+          </span>
+          <span class="text-xs font-semibold text-slate-400">ID: elec-2026-01</span>
+        </div>
+        <h2 class="text-lg font-bold text-slate-900 mt-2">Sitamarhi Municipal Corporation Election 2026</h2>
+        <p class="text-xs text-slate-500 mt-1">Voting Window: 22 Aug 2026 (07:00 AM – 06:00 PM IST) • Ward 12</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a routerLink="/admin/elections" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+          Edit Configuration
+        </a>
+        <a routerLink="/admin/reports" class="px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg shadow-xs transition-all">
+          Generate Turnout Report
+        </a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 text-xs">
+      <div>
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Total Electorate</span>
+        <span class="font-bold text-slate-900">45,820 Citizens</span>
+      </div>
+      <div>
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Booths Allocated</span>
+        <span class="font-bold text-slate-900">42 Online Terminals</span>
+      </div>
+      <div>
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Nominated Candidates</span>
+        <span class="font-bold text-slate-900">5 + NOTA</span>
+      </div>
+      <div>
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Zero-Knowledge Proofs</span>
+        <span class="font-bold text-green-700">Validated 100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Quick Navigation Panels -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+      <div>
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-3">
+          👥
+        </div>
+        <h3 class="text-sm font-bold text-slate-900">User & Role Management</h3>
+        <p class="text-xs text-slate-500 mt-1">Assign returning officer badges, grant observer credentials, and manage system roles.</p>
+      </div>
+      <a routerLink="/admin/users" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
+        Manage Users →
+      </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+      <div>
+        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-900 flex items-center justify-center text-xl mb-3">
+          📜
+        </div>
+        <h3 class="text-sm font-bold text-slate-900">Security & Audit Trails</h3>
+        <p class="text-xs text-slate-500 mt-1">Export signed compliance certificates, inspect tamper flags, and download audit logs.</p>
+      </div>
+      <a routerLink="/admin/audit" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
+        View Audit Trail →
+      </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+      <div>
+        <div class="w-10 h-10 rounded-xl bg-green-50 text-green-900 flex items-center justify-center text-xl mb-3">
+          📊
+        </div>
+        <h3 class="text-sm font-bold text-slate-900">Statutory Election Reports</h3>
+        <p class="text-xs text-slate-500 mt-1">Generate official Form 20 final result sheets, booth turnout summaries, and observer reports.</p>
+      </div>
+      <a routerLink="/admin/reports" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
+        Generate Reports →
+      </a>
+    </div>
+  </div>
+
+</div>

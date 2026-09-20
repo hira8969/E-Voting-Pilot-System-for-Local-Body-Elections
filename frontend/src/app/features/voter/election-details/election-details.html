@@ -1,0 +1,82 @@
+@if (election) {
+  <div class="space-y-6">
+    <!-- Breadcrumb & Back -->
+    <div class="flex items-center justify-between">
+      <a routerLink="/voter/elections" class="text-xs font-semibold text-blue-900 hover:underline">
+        ← Back to All Elections
+      </a>
+      <span class="px-3 py-1 rounded-full text-xs font-bold"
+            [ngClass]="election.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-blue-50 text-blue-700 border border-blue-200'">
+        {{ election.status === 'ACTIVE' ? '🟢 LIVE VOTING NOW' : '📅 ' + election.status }}
+      </span>
+    </div>
+
+    <!-- Header Banner -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+      <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">{{ election.type }} ELECTION</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">{{ election.title }}</h1>
+      <p class="text-sm text-slate-600 mt-3 leading-relaxed max-w-3xl">{{ election.description }}</p>
+
+      <!-- Key Details Grid -->
+      <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-y border-slate-100 bg-slate-50/50 rounded-xl px-4">
+        <div>
+          <span class="text-slate-400 text-[10px] uppercase font-bold block">Constituency</span>
+          <span class="font-bold text-slate-900 text-sm">{{ election.constituency }}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[10px] uppercase font-bold block">Ward Jurisdiction</span>
+          <span class="font-bold text-slate-900 text-sm">{{ election.ward }}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[10px] uppercase font-bold block">Polling Date</span>
+          <span class="font-bold text-slate-900 text-sm">{{ election.startDate }}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[10px] uppercase font-bold block">Voting Window</span>
+          <span class="font-bold text-slate-900 text-sm">{{ election.startTime }} – {{ election.endTime }}</span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-6 text-xs text-slate-500">
+          <span>👥 Total Voters: <strong class="text-slate-800">{{ election.totalVoters | number }}</strong></span>
+          <span>📍 Polling Booths: <strong class="text-slate-800">{{ election.totalBooths }}</strong></span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a routerLink="/voter/candidates" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+            View Candidate Profiles
+          </a>
+          @if (election.status === 'ACTIVE') {
+            <a [routerLink]="['/voter/vote', election.id]" class="px-6 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-xs font-extrabold rounded-lg shadow-md transition-all">
+              ⚡ Open EVM & Cast Vote →
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate Preview Section in Election Details -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Candidates in {{ election.ward }}</h2>
+          <p class="text-xs text-slate-500">Official nominated candidates on ballot</p>
+        </div>
+        <a routerLink="/voter/candidates" class="text-xs font-bold text-blue-900 hover:underline">
+          View All Manifestos →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @for (cand of candidates; track cand.id) {
+          <app-candidate-card
+            [candidate]="cand"
+            [showVoteButton]="election.status === 'ACTIVE'"
+            (voteClicked)="onCandidateSelect(cand)">
+          </app-candidate-card>
+        }
+      </div>
+    </div>
+  </div>
+}

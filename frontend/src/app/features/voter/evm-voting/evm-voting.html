@@ -1,0 +1,212 @@
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- EVM Top Machine Header / Control Status -->
+  <div class="bg-slate-900 text-white rounded-2xl border-4 border-slate-800 p-5 shadow-2xl">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-xl font-bold shadow-md">
+          🗳️
+        </div>
+        <div>
+          <h1 class="text-lg font-black tracking-wider uppercase text-white flex items-center gap-2">
+            ELECTRONIC VOTING MACHINE
+            <span class="text-xs font-mono font-normal text-blue-400 bg-blue-950 px-2 py-0.5 rounded border border-blue-800">
+              BU-2026-IN
+            </span>
+          </h1>
+          <p class="text-xs text-slate-400">Election Commission of India • Local Body Elections</p>
+        </div>
+      </div>
+
+      <!-- EVM Status LEDs -->
+      <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+        <!-- Ready LED -->
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <span class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse"></span>
+          <span class="text-green-400 font-bold">READY</span>
+        </div>
+        <!-- Busy / Voted LED -->
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <span class="w-3 h-3 rounded-full" [ngClass]="selectedCandidate ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,1)]' : 'bg-slate-700'"></span>
+          <span [ngClass]="selectedCandidate ? 'text-red-400 font-bold' : 'text-slate-500'">VOTE CAST</span>
+        </div>
+        <!-- Battery Level -->
+        <div class="hidden sm:flex items-center gap-1 text-xs text-slate-400 font-mono">
+          <span>🔋 98%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Machine Ballot Metadata Bar -->
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-300">
+      <div class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Election</span>
+        <span class="font-bold text-white truncate block">Sitamarhi Municipal 2026</span>
+      </div>
+      <div class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Ward</span>
+        <span class="font-bold text-white block">Ward 12</span>
+      </div>
+      <div class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Booth Unit</span>
+        <span class="font-bold text-white block">PB-12-01 (Room 2)</span>
+      </div>
+      <div class="bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="text-slate-400 text-[10px] uppercase font-bold block">Voter Verification</span>
+        <span class="font-bold text-green-400 block">AUTHENTICATED</span>
+      </div>
+    </div>
+  </div>
+
+  @if (alreadyVoted) {
+    <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-8 text-center shadow-sm">
+      <div class="text-4xl mb-3">⚠️</div>
+      <h2 class="text-xl font-extrabold text-amber-900">Vote Already Recorded For This Session</h2>
+      <p class="text-sm text-amber-800 max-w-md mx-auto mt-2">
+        Your cryptographic ballot token has already been sealed. Under Election Rules, multiple votes are strictly prevented.
+      </p>
+      <div class="mt-6">
+        <a routerLink="/voter/receipt" class="px-6 py-3 bg-blue-900 text-white font-bold text-sm rounded-xl shadow-md inline-block">
+          View Your Vote Receipt →
+        </a>
+      </div>
+    </div>
+  } @else {
+
+    <!-- PHYSICAL BALLOT UNIT FRAME -->
+    <div class="bg-slate-200 border-4 border-slate-300 rounded-2xl shadow-2xl overflow-hidden p-3 sm:p-5">
+      
+      <!-- Ballot Unit Header Plate -->
+      <div class="bg-slate-100 border-2 border-slate-300 rounded-xl p-3 mb-4 text-center">
+        <h2 class="text-base sm:text-lg font-black uppercase tracking-wider text-slate-800">
+          BALLOT UNIT — CANDIDATES LIST (WARD 12)
+        </h2>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Press the <strong class="text-blue-900">BLUE BUTTON</strong> corresponding to your chosen candidate.
+        </p>
+      </div>
+
+      <!-- Candidate Ballot Rows (Table / Card Grid) -->
+      <div class="space-y-3">
+        @for (candidate of candidates; track candidate.id) {
+          <div
+            class="bg-white border-2 rounded-xl p-3 sm:p-4 transition-all duration-200 flex items-center justify-between gap-3 select-none"
+            [ngClass]="selectedCandidate?.id === candidate.id ? 'border-blue-900 ring-2 ring-blue-800 bg-blue-50/40 shadow-md scale-[1.01]' : 'border-slate-300 hover:border-slate-400 shadow-xs'">
+            
+            <!-- Left: Ballot Serial Number -->
+            <div class="w-10 sm:w-12 h-12 rounded-lg bg-slate-100 border border-slate-300 flex items-center justify-center font-black text-lg text-slate-800 shrink-0">
+              {{ candidate.ballotPosition }}
+            </div>
+
+            <!-- Candidate Photo & Name & Party -->
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              @if (candidate.isNota) {
+                <div class="w-12 h-12 rounded-lg bg-slate-200 border border-slate-300 flex items-center justify-center text-xl shrink-0 font-bold text-red-600">
+                  ❌
+                </div>
+              } @else if (candidate.photoUrl) {
+                <img [src]="candidate.photoUrl" [alt]="candidate.name" class="w-12 h-12 rounded-lg object-cover border border-slate-300 shrink-0">
+              } @else {
+                <div class="w-12 h-12 rounded-lg bg-slate-200 border border-slate-300 flex items-center justify-center text-lg font-bold text-slate-600 shrink-0">
+                  {{ candidate.name.charAt(0) }}
+                </div>
+              }
+
+              <div class="min-w-0">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 truncate leading-tight">
+                  {{ candidate.name }}
+                </h3>
+                <p class="text-xs font-semibold text-blue-950 truncate mt-0.5">
+                  {{ candidate.partyName }}
+                </p>
+                <p class="text-[11px] text-slate-500 truncate hidden sm:block">
+                  {{ candidate.symbolName }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Center-Right: Party Symbol (Large & Distinct) -->
+            <div class="w-14 h-14 rounded-xl bg-slate-50 border-2 border-slate-200 flex items-center justify-center text-3xl shrink-0 shadow-2xs" [title]="candidate.symbolName">
+              <span>{{ candidate.symbol }}</span>
+            </div>
+
+            <!-- Red LED Indicator light for this candidate row -->
+            <div class="flex items-center justify-center w-8 shrink-0">
+              <div
+                class="w-4 h-4 rounded-full border transition-all duration-300"
+                [ngClass]="selectedCandidate?.id === candidate.id ? 'bg-red-600 border-red-800 shadow-[0_0_12px_rgba(220,38,38,1)] animate-ping-once' : 'bg-slate-300 border-slate-400'">
+              </div>
+            </div>
+
+            <!-- Right: Big Physical Blue Voting Button -->
+            <div class="shrink-0">
+              <button
+                type="button"
+                [disabled]="processing"
+                class="w-14 sm:w-20 h-12 rounded-xl text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-md transition-all active:scale-95 focus:outline-none flex items-center justify-center cursor-pointer select-none"
+                [ngClass]="selectedCandidate?.id === candidate.id ? 'bg-blue-950 border-2 border-blue-600 ring-2 ring-blue-500 shadow-blue-900/50' : 'bg-blue-700 hover:bg-blue-800 active:bg-blue-900 border border-blue-500'"
+                (click)="onPressVoteButton(candidate)">
+                <span class="inline-block w-4 h-4 rounded-full border-2 border-white sm:mr-1"></span>
+                <span class="hidden sm:inline">VOTE</span>
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <!-- Bottom Machine Bar: Selected Candidate & Action Trigger -->
+      <div class="mt-6 bg-slate-900 text-white rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-2 border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-2xl border border-slate-700">
+            @if (selectedCandidate) {
+              <span>{{ selectedCandidate.symbol }}</span>
+            } @else {
+              <span class="text-slate-500">?</span>
+            }
+          </div>
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Current Selection</span>
+            <p class="text-base font-extrabold text-white">
+              @if (selectedCandidate) {
+                <span class="text-blue-300">{{ selectedCandidate.name }}</span>
+                <span class="text-xs text-slate-400 ml-1.5 font-normal">({{ selectedCandidate.partyName }})</span>
+              } @else {
+                <span class="text-slate-400 italic">None selected yet. Press a blue button above.</span>
+              }
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          @if (selectedCandidate) {
+            <button
+              type="button"
+              class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-colors"
+              (click)="clearSelection()">
+              Cancel Selection
+            </button>
+          }
+          <button
+            type="button"
+            [disabled]="!selectedCandidate || processing"
+            class="flex-1 sm:flex-none px-8 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-black tracking-wide uppercase rounded-xl shadow-lg hover:shadow-green-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+            (click)="proceedToConfirmation()">
+            CONFIRM VOTE →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- VOTE CONFIRMATION MODAL -->
+  @if (showConfirmModal && selectedCandidate) {
+    <app-vote-confirmation
+      [candidate]="selectedCandidate"
+      (confirmed)="onVoteConfirmed()"
+      (cancelled)="onVoteCancelled()">
+    </app-vote-confirmation>
+  }
+
+</div>

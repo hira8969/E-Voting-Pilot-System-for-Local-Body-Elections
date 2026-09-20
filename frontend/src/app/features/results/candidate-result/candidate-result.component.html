@@ -1,0 +1,31 @@
+<div class="candidate-result-row" [class.winner]="isWinner">
+  <div class="rank-indicator" [class.gold]="rank === 1" [class.silver]="rank === 2" [class.bronze]="rank === 3">
+    #{{ rank }}
+  </div>
+
+  <div class="symbol-box">
+    <span class="symbol-icon">{{ result.symbolUrl || '🗳️' }}</span>
+  </div>
+
+  <div class="details-section">
+    <div class="name-header">
+      <h4 class="candidate-name">{{ result.candidateName }}</h4>
+      <span *ngIf="isWinner" class="winner-badge">🏆 WINNER / LEADING</span>
+    </div>
+    <p class="party-name">{{ result.partyName }}</p>
+
+    <!-- Visual Vote Percentage Progress Bar -->
+    <div class="progress-track">
+      <div 
+        class="progress-fill" 
+        [class.winner-fill]="isWinner"
+        [style.width.%]="result.percentage">
+      </div>
+    </div>
+  </div>
+
+  <div class="votes-meta">
+    <span class="percentage-label">{{ result.percentage | number:'1.1-1' }}%</span>
+    <span class="vote-count-label">{{ result.votes | number }} votes</span>
+  </div>
+</div>

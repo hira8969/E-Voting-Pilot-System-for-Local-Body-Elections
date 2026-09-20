@@ -1,0 +1,7 @@
+:host {
+  display: inline-block;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}

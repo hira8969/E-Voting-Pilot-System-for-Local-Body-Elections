@@ -1,0 +1,123 @@
+<div class="space-y-6">
+  
+  <!-- Observer Top Alert -->
+  <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">👁️</span>
+        <h1 class="text-2xl font-bold">Independent Observer Dashboard</h1>
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+          READ-ONLY ACCESS
+        </span>
+      </div>
+      <p class="text-xs text-slate-400 mt-1">
+        Assigned: <strong class="text-slate-200">Dr. Ananya Sen (IAS Retd.)</strong> • Jurisdiction: <strong class="text-slate-200">Sitamarhi Central</strong>
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a routerLink="/observer/turnout" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-colors">
+        Turnout Breakdown →
+      </a>
+      <a routerLink="/observer/audit" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-colors">
+        Audit Trails →
+      </a>
+    </div>
+  </div>
+
+  <!-- Turnout Progress Bar Banner -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-2">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Sitamarhi Ward 12 Overall Participation</span>
+        <h3 class="text-3xl font-extrabold text-slate-900 mt-1">70.75% <span class="text-sm font-normal text-slate-500">(32,421 / 45,820 Votes)</span></h3>
+      </div>
+      <span class="px-3 py-1 bg-green-50 text-green-700 font-extrabold text-xs rounded-full border border-green-200">
+        🟢 Robust Turnout
+      </span>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden mt-4 p-0.5 border border-slate-200">
+      <div class="bg-gradient-to-r from-blue-900 to-green-600 h-full rounded-full transition-all duration-1000" style="width: 70.75%"></div>
+    </div>
+  </div>
+
+  <!-- Key Observer Metrics -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <app-stat-card
+      title="Total Registered"
+      value="45,820"
+      icon="👥"
+      color="blue"
+      subtitle="Electorate base">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Votes Authenticated"
+      value="32,421"
+      icon="✓"
+      color="green"
+      subtitle="Sealed in EVMs">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Active Polling Stations"
+      value="42 / 42"
+      icon="📍"
+      color="purple"
+      subtitle="Zero disruptions">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Integrity Anomalies"
+      value="0"
+      icon="🛡️"
+      color="green"
+      subtitle="All checksums verified">
+    </app-stat-card>
+  </div>
+
+  <!-- Integrity & Compliance Checks -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🔒</span>
+        <h4 class="text-sm font-bold text-slate-900">Ballot Secrecy Protocol</h4>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Complies with Representation of the People Act. Zero voter-candidate correlation found in data transmission pipes.
+      </p>
+      <span class="mt-4 inline-block text-[11px] font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-md border border-green-200">
+        ✓ 100% COMPLIANT
+      </span>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">📡</span>
+        <h4 class="text-sm font-bold text-slate-900">EVM Heartbeat Telemetry</h4>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        All 42 Ballot Units transmit encrypted status hashes every 10 seconds with 0 network packet drops observed.
+      </p>
+      <span class="mt-4 inline-block text-[11px] font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-md border border-green-200">
+        ✓ SYNCHRONIZED
+      </span>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">⚖️</span>
+        <h4 class="text-sm font-bold text-slate-900">Tally Scrutiny & Seal</h4>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Audit trail hashes are cross-anchored with timestamp proofs ensuring post-poll counting immutability.
+      </p>
+      <span class="mt-4 inline-block text-[11px] font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-md border border-green-200">
+        ✓ SEAL INTACT
+      </span>
+    </div>
+  </div>
+
+</div>

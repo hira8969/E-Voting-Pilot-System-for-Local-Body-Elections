@@ -1,0 +1,103 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Polling Station & Booth Management</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Real-time geospatial telemetry and terminal monitoring</p>
+    </div>
+    <button
+      type="button"
+      class="px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+      (click)="openAddBoothModal()">
+      <span>➕</span>
+      <span>Add Polling Booth</span>
+    </button>
+  </div>
+
+  <!-- Interactive Map / Station Overview Card -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Ward 12 Geospatial Booth Grid</h3>
+      <span class="text-xs text-green-700 bg-green-50 px-2.5 py-1 rounded-full font-bold border border-green-200">
+        4 / 4 Stations Operational
+      </span>
+    </div>
+
+    <!-- Simulated Map Vector Box -->
+    <div class="relative bg-slate-900 rounded-xl p-8 text-white min-h-[220px] overflow-hidden border border-slate-800 flex flex-col justify-between">
+      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px]"></div>
+      
+      <div class="relative z-10 flex items-center justify-between text-xs text-slate-400">
+        <span>📍 Sitamarhi Municipal Sector: <strong class="text-white">Ward 12 (Central Zone)</strong></span>
+        <span>GPS Datum: WGS-84 / Active Mesh Link</span>
+      </div>
+
+      <!-- Map Pin Nodes -->
+      <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4 my-4">
+        @for (booth of booths; track booth.id) {
+          <div class="bg-slate-800/80 backdrop-blur-xs p-3 rounded-xl border border-slate-700 hover:border-blue-400 transition-all cursor-pointer">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-ping"></span>
+              <span class="font-mono text-xs font-bold text-white">{{ booth.code }}</span>
+            </div>
+            <p class="text-xs font-semibold text-slate-200 mt-1 truncate">{{ booth.name }}</p>
+            <p class="text-[10px] text-blue-300 font-mono mt-0.5">Lat: {{ booth.latitude }}° N</p>
+          </div>
+        }
+      </div>
+
+      <div class="relative z-10 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800 pt-3">
+        <span>📡 Direct Encrypted Satellite / Fiber Mesh Active</span>
+        <span class="text-green-400 font-mono">Telemetry Latency: ~18ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Booths Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Booth Master Registry</h3>
+    <app-data-table
+      [columns]="columns"
+      [data]="booths"
+      [hasActions]="true"
+      [actionsTemplate]="boothActions">
+    </app-data-table>
+
+    <ng-template #boothActions let-booth>
+      <span class="text-xs font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+        EVM: {{ booth.evmUnitNumber }}
+      </span>
+    </ng-template>
+  </div>
+
+  <!-- Add Booth Modal -->
+  <app-modal
+    [isOpen]="isModalOpen"
+    title="Register New Polling Station"
+    size="md"
+    (closed)="closeModal()">
+    
+    <form (submit)="onSaveBooth($event)" class="space-y-4 text-xs">
+      <div>
+        <label class="block font-semibold text-slate-700 uppercase mb-1">Station Code</label>
+        <input type="text" [(ngModel)]="newBoothData.code" name="code" class="w-full rounded-lg border border-slate-300 p-2" required>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-700 uppercase mb-1">Station Name</label>
+        <input type="text" [(ngModel)]="newBoothData.name" name="name" class="w-full rounded-lg border border-slate-300 p-2" required>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-700 uppercase mb-1">Location Address</label>
+        <input type="text" [(ngModel)]="newBoothData.locationAddress" name="address" class="w-full rounded-lg border border-slate-300 p-2" required>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-700 uppercase mb-1">Presiding Officer Name</label>
+        <input type="text" [(ngModel)]="newBoothData.officerInCharge" name="officer" class="w-full rounded-lg border border-slate-300 p-2" required>
+      </div>
+
+      <div class="pt-4 flex items-center justify-end gap-2">
+        <button type="button" class="px-4 py-2 bg-slate-100 rounded-lg" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="px-5 py-2 bg-blue-900 text-white rounded-lg font-bold">Register Station</button>
+      </div>
+    </form>
+  </app-modal>
+</div>

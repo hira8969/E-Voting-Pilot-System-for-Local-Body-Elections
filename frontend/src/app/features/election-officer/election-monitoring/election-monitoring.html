@@ -1,0 +1,85 @@
+<div class="space-y-6">
+  
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-bold text-slate-900">Live Election Telemetry & Monitoring</h1>
+        <app-status-indicator state="active" label="STREAM SYNCED"></app-status-indicator>
+      </div>
+      <p class="text-xs text-slate-500 mt-0.5">Real-time vote ingestion throughput and ward-wide participation rate</p>
+    </div>
+    <div class="text-right">
+      <span class="text-xs font-bold text-slate-500">Live Refresh: Every 2s</span>
+    </div>
+  </div>
+
+  <!-- Real-time Throughput Banner -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-blue-900 text-white rounded-2xl p-6 shadow-sm flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-blue-200 block">Current Ingestion Rate</span>
+        <h3 class="text-3xl font-extrabold mt-1">48 Votes/min</h3>
+        <p class="text-[11px] text-blue-200 mt-1">Kafka topic: evm.vote.cast.events</p>
+      </div>
+      <div class="text-3xl">⚡</div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-slate-400 block">Cumulative Votes Cast</span>
+        <h3 class="text-3xl font-extrabold text-slate-900 mt-1">32,421</h3>
+        <p class="text-[11px] text-green-600 font-semibold mt-1">70.75% of Total Electorate</p>
+      </div>
+      <div class="text-3xl">🗳️</div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-slate-400 block">Peak Ingestion Hour</span>
+        <h3 class="text-3xl font-extrabold text-slate-900 mt-1">10:00 AM</h3>
+        <p class="text-[11px] text-slate-500 mt-1">4,820 votes recorded in 1 hour</p>
+      </div>
+      <div class="text-3xl">📊</div>
+    </div>
+  </div>
+
+  <!-- Hourly Turnout Pace Bar Chart (Visualized with semantic CSS Bars) -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6">Hourly Voting Velocity (07:00 AM — Present)</h3>
+    <div class="grid grid-cols-6 sm:grid-cols-11 gap-2 items-end h-48 pt-6 border-b border-slate-100">
+      @for (slot of hourlyData; track slot.time) {
+        <div class="flex flex-col items-center gap-2 h-full justify-end">
+          <span class="text-[10px] font-bold text-slate-600">{{ slot.votes }}</span>
+          <div class="w-full bg-blue-100 hover:bg-blue-900 rounded-t-lg transition-all duration-300 relative group" [style.height.%]="(slot.votes / 5000) * 100">
+            <div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap z-20">
+              {{ slot.time }}: {{ slot.votes }} votes
+            </div>
+          </div>
+          <span class="text-[10px] text-slate-400 font-semibold truncate w-full text-center">{{ slot.time }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Real-time Incident & Event Stream -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Live Security & Telemetry Stream</h3>
+      <span class="text-xs font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200">Zero Anomalies</span>
+    </div>
+
+    <div class="space-y-2.5 font-mono text-xs">
+      @for (event of liveEvents; track event.id) {
+        <div class="flex items-start justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/70">
+          <div class="flex items-center gap-3">
+            <span class="text-slate-400 text-[11px]">{{ event.time }}</span>
+            <span class="font-bold text-blue-950">[{{ event.type }}]</span>
+            <span class="text-slate-700 font-sans text-xs">{{ event.message }}</span>
+          </div>
+          <span class="text-green-600 font-bold text-[11px]">OK</span>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>

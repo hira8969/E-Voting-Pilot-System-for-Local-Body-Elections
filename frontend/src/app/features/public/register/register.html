@@ -1,0 +1,170 @@
+<div class="min-h-screen flex flex-col justify-between bg-slate-50">
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-2 font-bold text-base text-blue-950">
+        <span class="text-xl">🗳️</span>
+        <span>E-VOTE INDIA</span>
+      </a>
+      <a routerLink="/login" class="text-xs font-semibold text-blue-900 hover:underline">
+        Already registered? Login →
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 my-6">
+    <div class="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+      <div class="text-center mb-8">
+        <div class="w-12 h-12 rounded-xl bg-blue-900 text-white flex items-center justify-center text-xl mx-auto shadow-md mb-2">
+          📝
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">Voter Enrollment Portal</h2>
+        <p class="text-xs text-slate-500 mt-1">Register for Local Body & Municipal Council Elections</p>
+      </div>
+
+      <form (submit)="onSubmit($event)" class="space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Full Legal Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="formData.name"
+              placeholder="e.g. Ramesh Chandra"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Voter ID / EPIC No. <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="voterId"
+              [(ngModel)]="formData.voterId"
+              placeholder="e.g. VTR-2026-99012"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Mobile Number <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              name="mobileNumber"
+              [(ngModel)]="formData.mobileNumber"
+              placeholder="10-digit mobile number"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="formData.email"
+              placeholder="voter@example.com"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Date of Birth <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              [(ngModel)]="formData.dateOfBirth"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Gender <span class="text-red-500">*</span>
+            </label>
+            <select
+              name="gender"
+              [(ngModel)]="formData.gender"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Ward Number <span class="text-red-500">*</span>
+            </label>
+            <select
+              name="wardNumber"
+              [(ngModel)]="formData.wardNumber"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none">
+              <option value="Ward 12">Ward 12 (Sitamarhi Central)</option>
+              <option value="Ward 08">Ward 08 (Sitamarhi East)</option>
+              <option value="Block 4">Block 4 (Dumra Rural)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Pincode <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="pincode"
+              [(ngModel)]="formData.pincode"
+              placeholder="e.g. 843302"
+              class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+            Residential Address <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            name="address"
+            [(ngModel)]="formData.address"
+            rows="2"
+            placeholder="House/Flat number, Street name, Colony, Area"
+            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
+            required></textarea>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900 flex items-start gap-2">
+          <span>ℹ️</span>
+          <span>By submitting, you declare that you are an Indian citizen of at least 18 years of age and the information provided matches your official electoral records.</span>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full py-3 bg-blue-900 hover:bg-blue-950 disabled:opacity-50 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+          @if (loading) {
+            <svg class="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Submitting Registration...</span>
+          } @else {
+            <span>Submit Voter Enrollment →</span>
+          }
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="py-4 text-center text-xs text-slate-400">
+    E-Voting Pilot System • Election Commission of India
+  </footer>
+</div>

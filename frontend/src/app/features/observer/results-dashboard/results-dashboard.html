@@ -1,0 +1,93 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-bold text-slate-900">Election Counting & Results Tally</h1>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+          PROVISIONAL TALLY
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 mt-0.5">Sitamarhi Municipal Corporation (Ward 12) • 32,421 Total Ballots Counted</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+        Round 4 of 4 Completed (100%)
+      </span>
+    </div>
+  </div>
+
+  <!-- Leading Candidate Showcase Card -->
+  <div class="bg-gradient-to-r from-blue-900 via-blue-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4 text-center sm:text-left">
+        <div class="w-20 h-20 rounded-2xl bg-white/10 border-2 border-white/20 flex items-center justify-center text-4xl shadow-inner shrink-0">
+          ⭐
+        </div>
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded-md border border-amber-600/50 inline-block mb-1">
+            🏆 LEADING CANDIDATE (PROJECTED WINNER)
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black mt-1">Priya Sharma</h2>
+          <p class="text-xs text-blue-200">Pragati Seva Sangh (PSS) • Symbol: Bright Star</p>
+        </div>
+      </div>
+
+      <div class="text-center sm:text-right bg-white/10 p-4 rounded-xl border border-white/10 shrink-0">
+        <span class="text-xs text-blue-200 uppercase font-bold block">Votes Secured</span>
+        <h3 class="text-3xl font-black text-white">12,150</h3>
+        <p class="text-xs text-green-400 font-semibold mt-0.5">37.47% Share • (+1,730 Margin)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Candidate Vote Share Visual Comparison -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6">Vote Share Breakdown by Candidate</h3>
+    
+    <div class="space-y-5">
+      @for (cand of sortedCandidates; track cand.id) {
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold">
+            <div class="flex items-center gap-2">
+              <span class="text-base">{{ cand.symbol }}</span>
+              <span class="text-slate-900">{{ cand.name }}</span>
+              <span class="text-slate-400 font-normal">({{ cand.partyCode }})</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-900">{{ cand.votesReceived | number }} votes</span>
+              <span class="text-blue-900 ml-2 font-black">({{ getPercentage(cand.votesReceived || 0) }}%)</span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+            <div
+              class="h-3 rounded-full transition-all duration-700"
+              [ngClass]="cand.partyCode === 'PSS' ? 'bg-blue-900' : (cand.partyCode === 'AVP' ? 'bg-green-600' : 'bg-slate-500')"
+              [style.width.%]="getPercentage(cand.votesReceived || 0)">
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Scrutiny Audit Summary -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+    <div class="bg-white p-5 rounded-2xl border border-slate-200">
+      <h4 class="font-bold text-slate-900 uppercase mb-2">EVM Memory Hash Scrutiny</h4>
+      <p class="text-slate-600 leading-relaxed">
+        All 42 physical Ballot Units were audited against digital hashes before counting initiation. Zero discrepancies detected.
+      </p>
+      <span class="text-green-700 font-bold block mt-3">✓ SHA-256 Ledger Consensus 100% Match</span>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-slate-200">
+      <h4 class="font-bold text-slate-900 uppercase mb-2">Observer Certificate</h4>
+      <p class="text-slate-600 leading-relaxed">
+        Certified by Dr. Ananya Sen (Observer #012) under Statutory Conduct of Elections Rules, 1961.
+      </p>
+      <span class="text-blue-900 font-bold block mt-3">✓ ECI-OBS-CERT-2026-902 Validated</span>
+    </div>
+  </div>
+
+</div>

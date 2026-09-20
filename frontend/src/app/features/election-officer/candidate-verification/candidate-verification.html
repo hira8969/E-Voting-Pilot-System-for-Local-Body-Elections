@@ -1,0 +1,37 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Candidate Nomination Scrutiny</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Returning Officer portal for vetting Form 26 affidavits and ballot allocation</p>
+    </div>
+    <div class="w-full sm:w-72">
+      <app-search-box placeholder="Search candidate..." (searchChanged)="onSearch($event)"></app-search-box>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <app-data-table
+      [columns]="columns"
+      [data]="filteredCandidates"
+      [hasActions]="true"
+      [actionsTemplate]="candActionTpl">
+    </app-data-table>
+
+    <ng-template #candActionTpl let-cand>
+      <div class="flex items-center justify-end gap-1.5">
+        <button
+          type="button"
+          class="px-2.5 py-1 text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 rounded-md border border-green-200 cursor-pointer"
+          (click)="verifyCandidate(cand, 'VERIFIED')">
+          ✓ Scrutiny Passed
+        </button>
+        <button
+          type="button"
+          class="px-2.5 py-1 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-md border border-red-200 cursor-pointer"
+          (click)="verifyCandidate(cand, 'REJECTED')">
+          ✕ Reject
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

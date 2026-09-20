@@ -1,0 +1,157 @@
+<div class="dashboard-page">
+  <app-navbar></app-navbar>
+
+  <div class="portal-body">
+    <app-sidebar mode="voter"></app-sidebar>
+
+    <main class="dashboard-content">
+      <!-- Welcome Hero Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <div class="badge-role">CITIZEN VOTER PORTAL</div>
+          <h2>Welcome back, {{ currentUser?.fullName || 'Voter' }}!</h2>
+          <p>
+            Constituency: <strong>{{ currentUser?.constituency || 'Ward 12 - Indiranagar' }}</strong> •
+            Voter ID (EPIC): <strong>{{ currentUser?.epicNumber || 'IND1234567' }}</strong>
+          </p>
+        </div>
+        <div class="status-box-banner">
+          <span class="badge-verified">
+            {{ currentUser?.isVerified ? '✅ KYC Verified Voter' : '⚠️ Pending Verification' }}
+          </span>
+          <span class="voted-status" [class.already-voted]="hasVotedInCurrent">
+            {{ hasVotedInCurrent ? '🗳️ Ballot Cast Recorded' : '🟢 Eligible to Vote' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Status Cards Grid -->
+      <div class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">🗳️</div>
+          <div>
+            <p class="stat-num">{{ activeElections.length }}</p>
+            <p class="stat-lbl">Active Elections</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">📅</div>
+          <div>
+            <p class="stat-num">{{ upcomingElections.length }}</p>
+            <p class="stat-lbl">Upcoming Schedules</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-green">📜</div>
+          <div>
+            <p class="stat-num">{{ recentHistory.length }}</p>
+            <p class="stat-lbl">Votes Recorded</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-purple">🔒</div>
+          <div>
+            <p class="stat-num">100%</p>
+            <p class="stat-lbl">Ballot Secrecy Seal</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Section: Active Election EVM Call to Action -->
+      @if (activeElections.length > 0) {
+        @let mainElection = activeElections[0];
+        <div class="active-election-banner">
+          <div class="election-info">
+            <div class="pill-live">
+              <span class="pulse-dot"></span>
+              <span>LIVE POLLING BOOTH OPEN</span>
+            </div>
+            <h3>{{ mainElection.title }}</h3>
+            <p class="election-desc">{{ mainElection.description }}</p>
+
+            <div class="election-details-row">
+              <span>📍 {{ mainElection.constituency }}</span>
+              <span>⏳ Closes: {{ mainElection.endDate | date:'medium' }}</span>
+              <span>👥 {{ mainElection.totalCandidates || 4 }} Registered Candidates</span>
+            </div>
+          </div>
+
+          <div class="election-action-box">
+            @if (hasVotedInCurrent) {
+              <div class="voted-badge-box">
+                <span class="check-icon">✓</span>
+                <p class="voted-title">You Have Already Voted</p>
+                <p class="voted-sub">Your digital ballot is sealed. Thank you for participating in local democracy!</p>
+                <a routerLink="/voter/history" class="btn-receipt">View Cryptographic Receipt →</a>
+              </div>
+            } @else {
+              <div class="vote-ready-box">
+                <p class="vote-prompt">Your digital ballot is ready to be cast:</p>
+                <a [routerLink]="['/voter/vote', mainElection.id]" class="btn-cast-vote">
+                  🗳️ Start EVM Voting Now
+                </a>
+                <a [routerLink]="['/voter/elections', mainElection.id]" class="link-candidates">
+                  Inspect Candidates & Affidavits →
+                </a>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="dashboard-grid-2col">
+        <!-- Upcoming Elections Card -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <h3>📅 Upcoming Electoral Schedules</h3>
+            <a routerLink="/voter/elections" class="header-link">View All →</a>
+          </div>
+
+          @if (upcomingElections.length === 0) {
+            <p class="empty-text">No upcoming elections currently scheduled in this ward.</p>
+          } @else {
+            <div class="list-cards">
+              @for (upcoming of upcomingElections; track upcoming.id) {
+                <div class="item-card">
+                  <div>
+                    <h4>{{ upcoming.title }}</h4>
+                    <p class="item-meta">{{ upcoming.electionType }} • Starts {{ upcoming.startDate | date:'mediumDate' }}</p>
+                  </div>
+                  <a [routerLink]="['/voter/elections', upcoming.id]" class="btn-view-sm">Details</a>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Recent Voting Receipts -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <h3>📜 Verified Voting Participation</h3>
+            <a routerLink="/voter/history" class="header-link">Full History →</a>
+          </div>
+
+          @if (recentHistory.length === 0) {
+            <p class="empty-text">No votes cast yet in this electoral cycle.</p>
+          } @else {
+            <div class="list-cards">
+              @for (item of recentHistory; track item.receiptId) {
+                <div class="history-item-row">
+                  <div class="history-left">
+                    <span class="hash-tag">RECEIPT #{{ item.receiptId }}</span>
+                    <p class="history-title">{{ item.electionTitle }}</p>
+                    <p class="history-time">{{ item.timestamp | date:'medium' }}</p>
+                  </div>
+                  <span class="status-verified-badge">✓ {{ item.status }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

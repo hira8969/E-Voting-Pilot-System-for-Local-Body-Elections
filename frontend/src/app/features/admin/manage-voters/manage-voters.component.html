@@ -1,0 +1,120 @@
+<app-navbar></app-navbar>
+
+<div class="admin-layout">
+  <app-sidebar mode="admin"></app-sidebar>
+
+  <main class="admin-main">
+    <div class="page-header">
+      <div class="title-meta">
+        <span class="admin-badge">CITIZEN ROSTER</span>
+        <h1 class="main-title">Manage Voters & Electoral Roll</h1>
+        <p class="subtitle">
+          Verify citizen eligibility, monitor EPIC enrollment records, check voting completion tokens, and update verification flags.
+        </p>
+      </div>
+    </div>
+
+    <!-- Search & Filter Header Bar -->
+    <div class="search-filter-card">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="onSearchChange()" 
+          placeholder="Search by Voter Name, EPIC Number, Email, or Ward..." 
+          class="search-input" />
+      </div>
+
+      <div class="filter-group">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" [(ngModel)]="filterStatus" (change)="onStatusChange()" class="filter-select">
+          <option value="ALL">All Voters ({{ voters.length }})</option>
+          <option value="VERIFIED">Verified / Eligible</option>
+          <option value="PENDING">Pending Verification</option>
+          <option value="VOTED">Already Voted</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Feedback messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span>✓ {{ successMessage }}</span>
+      <button (click)="successMessage = ''" class="close-alert">×</button>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span>⚠️ {{ errorMessage }}</span>
+      <button (click)="errorMessage = ''" class="close-alert">×</button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading text="Loading electoral roll records..."></app-loading>
+    </div>
+
+    <!-- Voters Table -->
+    <div *ngIf="!isLoading" class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>EPIC Number</th>
+            <th>Voter Full Name</th>
+            <th>Contact</th>
+            <th>Constituency / Ward</th>
+            <th>Verification</th>
+            <th>Ballot Status</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let voter of filteredVoters">
+            <td>
+              <span class="epic-badge">{{ voter.epicNumber || 'N/A' }}</span>
+            </td>
+            <td>
+              <div class="voter-name-col">
+                <strong>{{ voter.fullName }}</strong>
+                <span class="voter-id-sub">ID: {{ voter.id }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="contact-col">
+                <span>{{ voter.email }}</span>
+                <span class="phone-sub">{{ voter.phone || 'Phone verified' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="ward-tag">{{ voter.constituency || 'Ward 12' }}</span>
+            </td>
+            <td>
+              <span class="verification-badge" [class.verified]="voter.isVerified" [class.pending]="!voter.isVerified">
+                {{ voter.isVerified ? '✓ VERIFIED' : '⏳ PENDING' }}
+              </span>
+            </td>
+            <td>
+              <span class="ballot-status-badge" [class.voted]="voter.hasVoted">
+                {{ voter.hasVoted ? '🗳️ VOTED' : '○ NOT VOTED' }}
+              </span>
+            </td>
+            <td class="text-right">
+              <button 
+                (click)="toggleVerification(voter)" 
+                class="btn-toggle-verify" 
+                [class.btn-unverify]="voter.isVerified">
+                {{ voter.isVerified ? 'Revoke Approval' : 'Approve Voter' }}
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredVoters.length === 0">
+            <td colspan="7" class="empty-cell">
+              No voter records match your search criteria.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>

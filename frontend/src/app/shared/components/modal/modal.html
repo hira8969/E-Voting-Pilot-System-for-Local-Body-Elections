@@ -1,0 +1,37 @@
+@if (isOpen) {
+  <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" (click)="closeOnBackdrop ? close() : null"></div>
+
+    <!-- Dialog container -->
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div
+        class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full"
+        [ngClass]="getSizeClasses()">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+          <h3 class="text-lg font-semibold text-slate-900" id="modal-title">{{ title }}</h3>
+          <button
+            type="button"
+            class="text-slate-400 hover:text-slate-600 rounded-lg p-1 hover:bg-slate-100 transition-colors"
+            (click)="close()">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="px-6 py-4 max-h-[75vh] overflow-y-auto">
+          <ng-content></ng-content>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t border-slate-100 bg-slate-50 px-6 py-3 flex items-center justify-end gap-3">
+          <ng-content select="[modal-footer]"></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,79 @@
+<div class="max-w-3xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Election Manifesto Publication</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Upload verified party manifesto and key citizen commitments</p>
+    </div>
+    <a routerLink="/party/dashboard" class="text-xs font-bold text-blue-900 hover:underline">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-xs space-y-6">
+    <!-- Active Manifesto status -->
+    <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">📜</span>
+        <div>
+          <h4 class="text-sm font-bold text-green-950">Active Published Manifesto</h4>
+          <p class="text-xs text-green-700 font-medium">AVP_Local_Manifesto_2026.pdf (2.4 MB) • Verified</p>
+        </div>
+      </div>
+      <span class="px-3 py-1 bg-green-600 text-white text-xs font-bold rounded-lg shadow-2xs">
+        ONLINE
+      </span>
+    </div>
+
+    <!-- PDF Upload Drag/Drop Zone -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+        Upload Updated Manifesto PDF
+      </label>
+      <div
+        class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-blue-900 transition-colors bg-slate-50 cursor-pointer"
+        (click)="simulateUpload()">
+        <span class="text-4xl block mb-2">📄</span>
+        <h4 class="text-sm font-bold text-slate-900">Click to Select or Drop PDF Manifesto</h4>
+        <p class="text-xs text-slate-500 mt-1">Maximum file size: 15MB • Must be digitally signed by Party President</p>
+        
+        @if (uploadProgress > 0 && uploadProgress < 100) {
+          <div class="mt-4 max-w-xs mx-auto">
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="bg-blue-900 h-2 rounded-full transition-all duration-200" [style.width.%]="uploadProgress"></div>
+            </div>
+            <span class="text-[10px] text-slate-500 mt-1 block">Uploading {{ uploadProgress }}%...</span>
+          </div>
+        } @else if (uploadProgress === 100) {
+          <div class="mt-3 inline-block px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">
+            ✓ PDF Uploaded & Hash Verified
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Key Policy Commitments -->
+    <div>
+      <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Key Development Pillars (Sitamarhi 2026):</h3>
+      <div class="space-y-2.5">
+        @for (point of keyPoints; track $index) {
+          <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800">
+            <span class="w-6 h-6 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0 text-[10px]">
+              {{ $index + 1 }}
+            </span>
+            <span class="flex-1 font-medium">{{ point }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+      <p class="text-xs text-slate-400">Published under Election Model Code of Conduct</p>
+      <button
+        type="button"
+        class="px-6 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg shadow-sm transition-all"
+        (click)="saveManifesto()">
+        Save & Publish to Voter Portal
+      </button>
+    </div>
+  </div>
+</div>

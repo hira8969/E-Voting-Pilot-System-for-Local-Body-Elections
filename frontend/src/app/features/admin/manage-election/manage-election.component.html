@@ -1,0 +1,173 @@
+<app-navbar></app-navbar>
+
+<div class="admin-layout">
+  <app-sidebar mode="admin"></app-sidebar>
+
+  <main class="admin-main">
+    <div class="page-header">
+      <div class="title-meta">
+        <span class="admin-badge">ELECTION LIFECYCLE</span>
+        <h1 class="main-title">Manage Elections</h1>
+        <p class="subtitle">
+          Configure voting schedules, define constituencies, activate polling windows, and monitor election status.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <button (click)="openAddModal()" class="btn-create">
+          + Add New Election
+        </button>
+      </div>
+    </div>
+
+    <!-- Feedback messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span>✓ {{ successMessage }}</span>
+      <button (click)="successMessage = ''" class="close-alert">×</button>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span>⚠️ {{ errorMessage }}</span>
+      <button (click)="errorMessage = ''" class="close-alert">×</button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading text="Loading elections records..."></app-loading>
+    </div>
+
+    <!-- Table of Elections -->
+    <div *ngIf="!isLoading" class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Election Title</th>
+            <th>Type</th>
+            <th>Schedule</th>
+            <th>Status</th>
+            <th>Total Voters</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let elec of elections">
+            <td class="font-mono">#{{ elec.id }}</td>
+            <td>
+              <div class="cell-title">
+                <strong>{{ elec.title }}</strong>
+                <span class="cell-sub">{{ elec.constituency }}</span>
+              </div>
+            </td>
+            <td><span class="type-pill">{{ elec.electionType || 'General' }}</span></td>
+            <td>
+              <div class="date-range">
+                <span>From: {{ elec.startDate | date:'mediumDate' }}</span>
+                <span>To: {{ elec.endDate | date:'mediumDate' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="elec.status === 'ACTIVE'" [class.upcoming]="elec.status === 'UPCOMING'" [class.completed]="elec.status === 'COMPLETED'">
+                {{ elec.status }}
+              </span>
+            </td>
+            <td>{{ elec.totalVoters | number }}</td>
+            <td>
+              <div class="actions-group">
+                <button 
+                  (click)="toggleStatus(elec)" 
+                  class="btn-action" 
+                  [title]="elec.status === 'ACTIVE' ? 'Close Election' : 'Activate Election'">
+                  {{ elec.status === 'ACTIVE' ? 'Close' : 'Activate' }}
+                </button>
+                <button (click)="openEditModal(elec)" class="btn-action edit" title="Edit Details">
+                  Edit
+                </button>
+                <button (click)="deleteElection(elec.id)" class="btn-action delete" title="Delete Election">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="elections.length === 0">
+            <td colspan="7" class="text-center empty-cell">No elections configured yet. Click "Add New Election" to begin.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add / Edit Election Modal -->
+    <div *ngIf="showModal" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>{{ isEditing ? 'Edit Election Event' : 'Create New Election Event' }}</h3>
+          <button (click)="closeModal()" class="btn-close-modal">×</button>
+        </div>
+
+        <form [formGroup]="electionForm" (ngSubmit)="onSubmit()" class="modal-form">
+          <div class="form-group">
+            <label for="title">Election Title *</label>
+            <input id="title" type="text" formControlName="title" placeholder="e.g. Municipal Ward Council 2026" class="form-control" />
+            <span *ngIf="electionForm.get('title')?.touched && electionForm.get('title')?.invalid" class="field-error">
+              Title is required (min 4 characters).
+            </span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="electionType">Election Type *</label>
+              <select id="electionType" formControlName="electionType" class="form-control">
+                <option value="General">General Election</option>
+                <option value="Municipal Ward">Municipal Ward</option>
+                <option value="Assembly">Legislative Assembly</option>
+                <option value="Panchayat">Gram Panchayat</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="constituency">Constituency / Ward *</label>
+              <input id="constituency" type="text" formControlName="constituency" placeholder="e.g. Ward 12 - Indiranagar" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">Start Date & Time *</label>
+              <input id="startDate" type="datetime-local" formControlName="startDate" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">End Date & Time *</label>
+              <input id="endDate" type="datetime-local" formControlName="endDate" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Initial Lifecycle Status *</label>
+            <select id="status" formControlName="status" class="form-control">
+              <option value="UPCOMING">UPCOMING (Scheduled for future)</option>
+              <option value="ACTIVE">ACTIVE (Polling Open)</option>
+              <option value="COMPLETED">COMPLETED (Polls Closed)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Election Description & Citizen Instructions *</label>
+            <textarea id="description" rows="3" formControlName="description" placeholder="Brief summary of eligibility, rules, and voting instructions..." class="form-control"></textarea>
+            <span *ngIf="electionForm.get('description')?.touched && electionForm.get('description')?.invalid" class="field-error">
+              Description is required (min 10 characters).
+            </span>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" (click)="closeModal()" class="btn-cancel">Cancel</button>
+            <button type="submit" [disabled]="electionForm.invalid" class="btn-submit">
+              {{ isEditing ? 'Save Changes' : 'Create Election' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div>

@@ -1,0 +1,36 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">User Identity & Role Directory</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Control administrative roles, officer badge assignments, and observer accounts</p>
+    </div>
+    <div class="w-full sm:w-72">
+      <app-search-box placeholder="Search users by name or role..." (searchChanged)="onSearch($event)"></app-search-box>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+    <app-data-table
+      [columns]="columns"
+      [data]="filteredUsers"
+      [hasActions]="true"
+      [actionsTemplate]="userActionTpl">
+    </app-data-table>
+
+    <ng-template #userActionTpl let-usr>
+      <div class="flex items-center justify-end gap-2">
+        <select
+          [value]="usr.role"
+          (change)="changeRole(usr, $event)"
+          class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg p-1.5 focus:border-blue-900">
+          <option value="VOTER">VOTER</option>
+          <option value="PARTY_REP">PARTY_REP</option>
+          <option value="OFFICER">OFFICER</option>
+          <option value="OBSERVER">OBSERVER</option>
+          <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+          <option value="SYSTEM_ADMIN">SYSTEM_ADMIN</option>
+        </select>
+      </div>
+    </ng-template>
+  </div>
+</div>
