@@ -1,0 +1,118 @@
+{
+  "state": {
+    "id": 1,
+    "name": "Bihar",
+    "code": "BR"
+  },
+  "district": {
+    "id": 1,
+    "name": "Sitamarhi",
+    "hq": "Dumra",
+    "subDivisionsCount": 3,
+    "blocksCount": 17,
+    "gramPanchayatsCount": 273,
+    "revenueVillagesCount": 845,
+    "districtCouncilCount": 1,
+    "municipalBodiesCount": 4
+  },
+  "subDivisions": [
+    { "id": 1, "name": "Sadar", "hq": "Dumra" },
+    { "id": 2, "name": "Pupri", "hq": "Pupri" },
+    { "id": 3, "name": "Belsand", "hq": "Belsand" }
+  ],
+  "blocks": [
+    { "id": 1, "name": "Bairgania", "subDivision": "Sadar" },
+    { "id": 2, "name": "Bajpatti", "subDivision": "Pupri" },
+    { "id": 3, "name": "Bathnaha", "subDivision": "Sadar" },
+    { "id": 4, "name": "Belsand", "subDivision": "Belsand" },
+    { "id": 5, "name": "Bokhra", "subDivision": "Pupri" },
+    { "id": 6, "name": "Choraut", "subDivision": "Pupri" },
+    { "id": 7, "name": "Dumra", "subDivision": "Sadar" },
+    { "id": 8, "name": "Majorganj", "subDivision": "Sadar" },
+    { "id": 9, "name": "Nanpur", "subDivision": "Pupri" },
+    { "id": 10, "name": "Parihar", "subDivision": "Sadar" },
+    { "id": 11, "name": "Parsauni", "subDivision": "Belsand" },
+    { "id": 12, "name": "Pupri", "subDivision": "Pupri" },
+    { "id": 13, "name": "Riga", "subDivision": "Sadar" },
+    { "id": 14, "name": "Runni Saidpur", "subDivision": "Belsand" },
+    { "id": 15, "name": "Sonbarsa", "subDivision": "Sadar" },
+    { "id": 16, "name": "Suppi", "subDivision": "Sadar" },
+    { "id": 17, "name": "Sursand", "subDivision": "Pupri" }
+  ],
+  "parliamentaryConstituencies": [
+    { "number": 4, "name": "Sheohar (Part)", "type": "GEN" },
+    { "number": 5, "name": "Sitamarhi", "type": "GEN" }
+  ],
+  "assemblyConstituencies": [
+    { "number": 23, "name": "Riga", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 24, "name": "Bathnaha", "category": "SC", "parliamentaryNo": 5 },
+    { "number": 25, "name": "Parihar", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 26, "name": "Sursand", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 27, "name": "Bajpatti", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 28, "name": "Sitamarhi", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 29, "name": "Runnisaidpur", "category": "GEN", "parliamentaryNo": 5 },
+    { "number": 30, "name": "Belsand", "category": "GEN", "parliamentaryNo": 4 }
+  ],
+  "electionTypes": [
+    {
+      "id": 1,
+      "code": "LOK_SABHA",
+      "name": "Lok Sabha Election",
+      "authority": "Election Commission of India (ECI)",
+      "tier": "National",
+      "post": "Member of Parliament (MP)",
+      "constituencyType": "Parliamentary"
+    },
+    {
+      "id": 2,
+      "code": "VIDHAN_SABHA",
+      "name": "Vidhan Sabha Election",
+      "authority": "Election Commission of India (ECI)",
+      "tier": "State",
+      "post": "Member of Legislative Assembly (MLA)",
+      "constituencyType": "Assembly"
+    },
+    {
+      "id": 3,
+      "code": "PANCHAYAT",
+      "name": "Bihar Panchayat General Election 2026",
+      "authority": "State Election Commission (SEC) Bihar",
+      "tier": "Rural Local Body (Three-Tier)",
+      "delimitationBasis": "Population ~500 per Ward (2026 SEC Delimitation Rules)",
+      "directElectedPosts": [
+        "Zila Parishad Member",
+        "Panchayat Samiti Member",
+        "Gram Panchayat Mukhiya",
+        "Gram Panchayat Ward Member",
+        "Gram Kachahri Sarpanch",
+        "Gram Kachahri Panch"
+      ],
+      "indirectElectedPosts": [
+        "Zila Parishad Chairman",
+        "Zila Parishad Vice-Chairman",
+        "Panchayat Samiti Pramukh",
+        "Panchayat Samiti Up-Pramukh",
+        "Up-Mukhiya",
+        "Up-Sarpanch"
+      ]
+    },
+    {
+      "id": 4,
+      "code": "MUNICIPAL",
+      "name": "Urban Local Body (Municipal) Election 2026",
+      "authority": "State Election Commission (SEC) Bihar",
+      "tier": "Urban Local Body",
+      "urbanBodies": [
+        { "name": "Sitamarhi Municipal Corporation (Nagar Nigam)", "type": "MUNICIPAL_CORPORATION" },
+        { "name": "Dumra Nagar Parishad", "type": "MUNICIPAL_COUNCIL" },
+        { "name": "Bairgania Nagar Panchayat", "type": "TOWN_COUNCIL" },
+        { "name": "Pupri Nagar Panchayat", "type": "TOWN_COUNCIL" }
+      ],
+      "directElectedPosts": [
+        "Chief Councillor / Mayor",
+        "Deputy Chief Councillor / Deputy Mayor",
+        "Ward Councillor"
+      ]
+    }
+  ]
+}

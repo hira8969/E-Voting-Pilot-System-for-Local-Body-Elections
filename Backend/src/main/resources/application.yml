@@ -5,12 +5,12 @@ spring:
   application:
     name: evoting-backend
   datasource:
-    url: ${DB_URL:jdbc:h2:mem:evotingdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
-    driverClassName: ${DB_DRIVER:org.h2.Driver}
-    username: ${DB_USER:sa}
-    password: ${DB_PASSWORD:}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/evotingdb}
+    driverClassName: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:Hira2006@}
   jpa:
-    database-platform: ${DB_DIALECT:org.hibernate.dialect.H2Dialect}
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.MySQLDialect}
     hibernate:
       ddl-auto: update
     show-sql: false

@@ -6,11 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Annotation profile for E-Voting Pilot System - Microservices Parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="candidate-service" />
+        <module name="auth-service" />
+        <module name="audit-service" />
         <module name="api-gateway" />
         <module name="voter-service" />
-        <module name="candidate-service" />
         <module name="voting-service" />
         <module name="result-service" />
+        <module name="eureka-server" />
         <module name="election-service" />
       </profile>
     </annotationProcessing>
@@ -18,12 +29,12 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Backend" options="" />
-      <module name="api-gateway" options="-parameters" />
-      <module name="candidate-service" options="-parameters" />
-      <module name="election-service" options="-parameters" />
-      <module name="result-service" options="-parameters" />
-      <module name="voter-service" options="-parameters" />
-      <module name="voting-service" options="-parameters" />
+      <module name="api-gateway" options="" />
+      <module name="candidate-service" options="" />
+      <module name="election-service" options="" />
+      <module name="result-service" options="" />
+      <module name="voter-service" options="" />
+      <module name="voting-service" options="" />
     </option>
   </component>
 </project>

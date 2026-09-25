@@ -5,17 +5,30 @@ spring:
   application:
     name: candidate-service
   datasource:
-    url: ${DB_URL:jdbc:h2:mem:candidatedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
-    driverClassName: ${DB_DRIVER:org.h2.Driver}
-    username: ${DB_USER:root}
-    password: ${DB_PASSWORD:Hira2006@}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/evoting_candidate_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:Hira2006@}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: ${DB_DIALECT:org.hibernate.dialect.H2Dialect}
     hibernate:
       ddl-auto: update
     show-sql: false
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

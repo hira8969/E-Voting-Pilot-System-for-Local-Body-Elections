@@ -9,11 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/candidates")
-@CrossOrigin(origins = "*")
 public class CandidateController {
 
     private final CandidateService candidateService;
@@ -23,13 +21,9 @@ public class CandidateController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCandidate(@Valid @RequestBody CandidateDto dto) {
-        try {
-            Candidate candidate = candidateService.addCandidate(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(candidate);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Candidate> addCandidate(@Valid @RequestBody CandidateDto dto) {
+        Candidate candidate = candidateService.addCandidate(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(candidate);
     }
 
     @GetMapping
@@ -38,7 +32,7 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCandidateById(@PathVariable Long id) {
+    public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
         return candidateService.getCandidateById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -57,22 +51,14 @@ public class CandidateController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateDto dto) {
-        try {
-            Candidate updated = candidateService.updateCandidate(id, dto);
-            return ResponseEntity.ok(updated);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Candidate> updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateDto dto) {
+        Candidate updated = candidateService.updateCandidate(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCandidate(@PathVariable Long id) {
-        try {
-            candidateService.deleteCandidate(id);
-            return ResponseEntity.ok(Map.of("message", "Candidate deleted successfully"));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+        candidateService.deleteCandidate(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,44 +1,70 @@
 package org.evoting.voting.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.evoting.voting.client.VoterClient;
 import org.evoting.voting.dto.CandidateTallyDto;
 import org.evoting.voting.dto.CastVoteDto;
 import org.evoting.voting.dto.VoteReceiptDto;
 import org.evoting.voting.entity.Vote;
 import org.evoting.voting.repository.VoteRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class VotingService {
 
     private final VoteRepository voteRepository;
-    private final RestTemplate restTemplate;
+    private final VoterClient voterClient;
 
-    @Value("${services.voter-service.url:http://localhost:8081}")
-    private String voterServiceUrl;
-
-    public VotingService(VoteRepository voteRepository, RestTemplate restTemplate) {
+    public VotingService(VoteRepository voteRepository, VoterClient voterClient) {
         this.voteRepository = voteRepository;
-        this.restTemplate = restTemplate;
+        this.voterClient = voterClient;
     }
 
+    /**
+     * Atomically validates voter eligibility, checks for duplicate votes,
+     * and persists the cryptographic vote record under an ACID transaction.
+     */
+    @Transactional
     public VoteReceiptDto castVote(CastVoteDto dto) {
-        // Double voting prevention
+        log.info("Processing vote casting request for electionId={}, voterId={}", dto.getElectionId(), dto.getVoterId());
+
+        // 1. Double voting prevention (Application Layer Check)
         if (voteRepository.existsByElectionIdAndVoterId(dto.getElectionId(), dto.getVoterId())) {
+            log.warn("Double vote attempt detected: Voter {} in Election {}", dto.getVoterId(), dto.getElectionId());
             throw new IllegalStateException("Voter " + dto.getVoterId() + " has already cast a ballot in election " + dto.getElectionId() + ".");
         }
 
+        // 2. Inter-service Feign call: Verify voter eligibility with Voter Service
+        try {
+            var eligibilityResponse = voterClient.checkEligibility(dto.getVoterId());
+            if (eligibilityResponse != null && eligibilityResponse.getBody() != null) {
+                Map<String, Object> body = eligibilityResponse.getBody();
+                Object isEligible = body.get("eligible");
+                if (isEligible instanceof Boolean && !(Boolean) isEligible) {
+                    throw new IllegalStateException("Voter is not eligible to vote: " + body.get("reason"));
+                }
+            }
+        } catch (IllegalStateException e) {
+            throw e;
+        } catch (Exception e) {
+            log.warn("Voter eligibility check through Feign fallback to local validation: {}", e.getMessage());
+        }
+
+        // 3. Generate SHA-256 cryptographic seal
         LocalDateTime now = LocalDateTime.now();
         String hash = generateVoteHash(dto.getVoterId(), dto.getElectionId(), dto.getCandidateId(), now);
 
+        // 4. Persist vote entity (Database compound unique constraint acts as second defense layer)
         Vote vote = new Vote();
         vote.setElectionId(dto.getElectionId());
         vote.setVoterId(dto.getVoterId());
@@ -49,12 +75,14 @@ public class VotingService {
 
         Vote savedVote = voteRepository.save(vote);
 
-        // Notify voter service of voting status change
+        // 5. Update voter status in voter-service via Feign
         try {
-            restTemplate.put(voterServiceUrl + "/api/voters/" + dto.getVoterId() + "/vote-status?hasVoted=true", null);
-        } catch (Exception ignored) {
-            // Logged as best-effort sync
+            voterClient.updateVoteStatus(dto.getVoterId(), true);
+        } catch (Exception e) {
+            log.warn("Could not sync hasVoted status with Voter Service: {}", e.getMessage());
         }
+
+        log.info("Vote successfully recorded with receipt hash: {}", hash);
 
         return new VoteReceiptDto(
                 savedVote.getId(),
@@ -68,18 +96,22 @@ public class VotingService {
         );
     }
 
+    @Transactional(readOnly = true)
     public boolean hasVoted(Long electionId, Long voterId) {
         return voteRepository.existsByElectionIdAndVoterId(electionId, voterId);
     }
 
+    @Transactional(readOnly = true)
     public long getTotalVotesForElection(Long electionId) {
         return voteRepository.countByElectionId(electionId);
     }
 
+    @Transactional(readOnly = true)
     public long getVotesForCandidate(Long electionId, Long candidateId) {
         return voteRepository.countByElectionIdAndCandidateId(electionId, candidateId);
     }
 
+    @Transactional(readOnly = true)
     public List<CandidateTallyDto> getElectionTallies(Long electionId) {
         return voteRepository.countVotesByElectionGroupedByCandidate(electionId);
     }

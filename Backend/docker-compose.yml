@@ -1,6 +1,38 @@
 version: '3.8'
 
 services:
+  # Database Infrastructure
+  mysql:
+    image: mysql:8.0
+    container_name: evoting-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Hira2006@
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+      - mysql-data:/var/lib/mysql
+    networks:
+      - evoting-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pHira2006@"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Service Discovery
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: evoting-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - evoting-net
+
+  # API Gateway
   api-gateway:
     build:
       context: ./api-gateway
@@ -9,20 +41,34 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - VOTER_SERVICE_URL=http://voter-service:8081
-      - ELECTION_SERVICE_URL=http://election-service:8082
-      - CANDIDATE_SERVICE_URL=http://candidate-service:8083
-      - VOTING_SERVICE_URL=http://voting-service:8084
-      - RESULT_SERVICE_URL=http://result-service:8085
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
     depends_on:
-      - voter-service
-      - election-service
-      - candidate-service
-      - voting-service
-      - result-service
+      - eureka-server
     networks:
       - evoting-net
 
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: evoting-auth-service
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_auth_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - evoting-net
+
+  # Voter Service
   voter-service:
     build:
       context: ./voter-service
@@ -31,10 +77,19 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_voter_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - evoting-net
 
+  # Election Service
   election-service:
     build:
       context: ./election-service
@@ -43,10 +98,19 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_election_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - evoting-net
 
+  # Candidate Service
   candidate-service:
     build:
       context: ./candidate-service
@@ -55,10 +119,19 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - SERVER_PORT=8083
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_candidate_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - evoting-net
 
+  # Voting Service
   voting-service:
     build:
       context: ./voting-service
@@ -67,13 +140,19 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - SERVER_PORT=8084
-      - VOTER_SERVICE_URL=http://voter-service:8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_voting_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
     depends_on:
-      - voter-service
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
     networks:
       - evoting-net
 
+  # Result Service
   result-service:
     build:
       context: ./result-service
@@ -82,16 +161,35 @@ services:
     ports:
       - "8085:8085"
     environment:
-      - SERVER_PORT=8085
-      - VOTING_SERVICE_URL=http://voting-service:8084
-      - CANDIDATE_SERVICE_URL=http://candidate-service:8083
-      - ELECTION_SERVICE_URL=http://election-service:8082
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
     depends_on:
-      - voting-service
-      - candidate-service
-      - election-service
+      - eureka-server
     networks:
       - evoting-net
+
+  # Audit Service
+  audit-service:
+    build:
+      context: ./audit-service
+      dockerfile: Dockerfile
+    container_name: evoting-audit-service
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/evoting_audit_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hira2006@
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - evoting-net
+
+volumes:
+  mysql-data:
 
 networks:
   evoting-net:

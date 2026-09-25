@@ -1,0 +1,178 @@
+{
+  "state": {
+    "id": 1,
+    "name": "Bihar",
+    "code": "BR",
+    "capital": "Patna",
+    "metrics": {
+      "divisions": 9,
+      "districts": 38,
+      "subDivisions": 101,
+      "blocks": 534,
+      "gramPanchayats": 8054,
+      "revenueVillages": 45693,
+      "urbanLocalBodies": 270,
+      "municipalCorporations": 19,
+      "municipalCouncils": 85,
+      "townPanchayats": 166
+    }
+  },
+  "divisions": [
+    {
+      "id": 1,
+      "name": "Patna Division",
+      "headquarters": "Patna",
+      "districtCount": 6,
+      "districts": ["Patna", "Nalanda", "Bhojpur", "Rohtas", "Buxar", "Kaimur (Bhabua)"]
+    },
+    {
+      "id": 2,
+      "name": "Saran Division",
+      "headquarters": "Chhapra",
+      "districtCount": 3,
+      "districts": ["Saran", "Siwan", "Gopalganj"]
+    },
+    {
+      "id": 3,
+      "name": "Tirhut Division",
+      "headquarters": "Muzaffarpur",
+      "districtCount": 6,
+      "districts": ["Muzaffarpur", "West Champaran", "East Champaran", "Sitamarhi", "Sheohar", "Vaishali"]
+    },
+    {
+      "id": 4,
+      "name": "Purnia Division",
+      "headquarters": "Purnia",
+      "districtCount": 4,
+      "districts": ["Purnia", "Katihar", "Kishanganj", "Araria"]
+    },
+    {
+      "id": 5,
+      "name": "Bhagalpur Division",
+      "headquarters": "Bhagalpur",
+      "districtCount": 2,
+      "districts": ["Bhagalpur", "Banka"]
+    },
+    {
+      "id": 6,
+      "name": "Darbhanga Division",
+      "headquarters": "Darbhanga",
+      "districtCount": 3,
+      "districts": ["Darbhanga", "Madhubani", "Samastipur"]
+    },
+    {
+      "id": 7,
+      "name": "Kosi Division",
+      "headquarters": "Saharsa",
+      "districtCount": 3,
+      "districts": ["Saharsa", "Madhepura", "Supaul"]
+    },
+    {
+      "id": 8,
+      "name": "Magadh Division",
+      "headquarters": "Gaya",
+      "districtCount": 5,
+      "districts": ["Gaya", "Nawada", "Jehanabad", "Aurangabad", "Arwal"]
+    },
+    {
+      "id": 9,
+      "name": "Munger Division",
+      "headquarters": "Munger",
+      "districtCount": 6,
+      "districts": ["Munger", "Jamui", "Khagaria", "Lakhisarai", "Begusarai", "Sheikhpura"]
+    }
+  ],
+  "parliamentaryConstituencies": [
+    { "no": 1, "name": "Valmiki Nagar", "category": "GEN" },
+    { "no": 2, "name": "Paschim Champaran", "category": "GEN" },
+    { "no": 3, "name": "Purvi Champaran", "category": "GEN" },
+    { "no": 4, "name": "Sheohar", "category": "GEN" },
+    { "no": 5, "name": "Sitamarhi", "category": "GEN" },
+    { "no": 6, "name": "Madhubani", "category": "GEN" },
+    { "no": 7, "name": "Jhanjharpur", "category": "GEN" },
+    { "no": 8, "name": "Supaul", "category": "GEN" },
+    { "no": 9, "name": "Araria", "category": "GEN" },
+    { "no": 10, "name": "Kishanganj", "category": "GEN" },
+    { "no": 11, "name": "Katihar", "category": "GEN" },
+    { "no": 12, "name": "Purnia", "category": "GEN" },
+    { "no": 13, "name": "Madhepura", "category": "GEN" },
+    { "no": 14, "name": "Darbhanga", "category": "GEN" },
+    { "no": 15, "name": "Muzaffarpur", "category": "GEN" },
+    { "no": 16, "name": "Vaishali", "category": "GEN" },
+    { "no": 17, "name": "Gopalganj", "category": "SC" },
+    { "no": 18, "name": "Siwan", "category": "GEN" },
+    { "no": 19, "name": "Maharajganj", "category": "GEN" },
+    { "no": 20, "name": "Saran", "category": "GEN" },
+    { "no": 21, "name": "Hajipur", "category": "SC" },
+    { "no": 22, "name": "Ujiarpur", "category": "GEN" },
+    { "no": 23, "name": "Samastipur", "category": "SC" },
+    { "no": 24, "name": "Begusarai", "category": "GEN" },
+    { "no": 25, "name": "Khagaria", "category": "GEN" },
+    { "no": 26, "name": "Bhagalpur", "category": "GEN" },
+    { "no": 27, "name": "Banka", "category": "GEN" },
+    { "no": 28, "name": "Munger", "category": "GEN" },
+    { "no": 29, "name": "Nalanda", "category": "GEN" },
+    { "no": 30, "name": "Patna Sahib", "category": "GEN" },
+    { "no": 31, "name": "Patliputra", "category": "GEN" },
+    { "no": 32, "name": "Arrah", "category": "GEN" },
+    { "no": 33, "name": "Buxar", "category": "GEN" },
+    { "no": 34, "name": "Sasaram", "category": "SC" },
+    { "no": 35, "name": "Karakat", "category": "GEN" },
+    { "no": 36, "name": "Jehanabad", "category": "GEN" },
+    { "no": 37, "name": "Aurangabad", "category": "GEN" },
+    { "no": 38, "name": "Gaya", "category": "SC" },
+    { "no": 39, "name": "Nawada", "category": "GEN" },
+    { "no": 40, "name": "Jamui", "category": "SC" }
+  ],
+  "assemblyConstituenciesCount": 243,
+  "rajyaSabhaSeats": {
+    "totalSeats": 16,
+    "electorate": "Elected Members of Bihar Legislative Assembly (MLAs)",
+    "votingMethod": "Proportional Representation by Single Transferable Vote (STV)",
+    "publicVotingAllowed": false
+  },
+  "electionTypes": [
+    {
+      "id": 1,
+      "code": "LOK_SABHA",
+      "name": "Lok Sabha Parliamentary Election",
+      "authority": "Election Commission of India (ECI)",
+      "voterEligibility": "All Registered Citizens (Direct Voting)",
+      "seatsCount": 40
+    },
+    {
+      "id": 2,
+      "code": "VIDHAN_SABHA",
+      "name": "Bihar Legislative Assembly (Vidhan Sabha) Election",
+      "authority": "Election Commission of India (ECI)",
+      "voterEligibility": "Registered Constituency Citizens (Direct Voting)",
+      "seatsCount": 243
+    },
+    {
+      "id": 3,
+      "code": "RAJYA_SABHA",
+      "name": "Rajya Sabha Council of States Election",
+      "authority": "Election Commission of India (ECI)",
+      "voterEligibility": "Elected MLAs Only (Indirect STV Ballot)",
+      "seatsCount": 16,
+      "publicBallotRestricted": true
+    },
+    {
+      "id": 4,
+      "code": "PANCHAYAT",
+      "name": "Bihar Panchayati Raj General Election",
+      "authority": "State Election Commission (SEC) Bihar",
+      "voterEligibility": "Registered Rural Ward Citizens",
+      "tiers": ["Zila Parishad", "Panchayat Samiti", "Gram Panchayat", "Gram Kachahri"],
+      "delimitationBasis": "Population ~500 per Ward (Terms: 2021-2026, 2026-2031)"
+    },
+    {
+      "id": 5,
+      "code": "MUNICIPAL",
+      "name": "Urban Local Body (Municipal) Election",
+      "authority": "State Election Commission (SEC) Bihar",
+      "voterEligibility": "Registered Urban Ward Citizens",
+      "bodies": ["Municipal Corporation (Nagar Nigam)", "Municipal Council (Nagar Parishad)", "Town Council (Nagar Panchayat)"]
+    }
+  ]
+}

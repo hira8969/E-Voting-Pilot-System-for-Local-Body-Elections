@@ -1,121 +1,54 @@
 package org.evoting.voter.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "voters")
+@Table(name = "voter_profiles")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Voter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "epic_number", nullable = false, unique = true, length = 50)
     private String epicNumber;
 
-    @Column(nullable = false)
+    @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String constituency;
 
+    @Column(name = "is_verified", nullable = false)
+    @Builder.Default
     private boolean isVerified = false;
 
+    @Column(name = "has_voted", nullable = false)
+    @Builder.Default
     private boolean hasVoted = false;
 
-    private LocalDateTime registeredAt = LocalDateTime.now();
+    @Column(name = "registered_at", updatable = false)
+    private LocalDateTime registeredAt;
 
-    public Voter() {
-    }
-
-    public Voter(Long id, String epicNumber, String fullName, String email, String phone, String constituency, boolean isVerified, boolean hasVoted, LocalDateTime registeredAt) {
-        this.id = id;
-        this.epicNumber = epicNumber;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
-        this.constituency = constituency;
-        this.isVerified = isVerified;
-        this.hasVoted = hasVoted;
-        this.registeredAt = registeredAt != null ? registeredAt : LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEpicNumber() {
-        return epicNumber;
-    }
-
-    public void setEpicNumber(String epicNumber) {
-        this.epicNumber = epicNumber;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getConstituency() {
-        return constituency;
-    }
-
-    public void setConstituency(String constituency) {
-        this.constituency = constituency;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public boolean isHasVoted() {
-        return hasVoted;
-    }
-
-    public void setHasVoted(boolean hasVoted) {
-        this.hasVoted = hasVoted;
-    }
-
-    public LocalDateTime getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(LocalDateTime registeredAt) {
-        this.registeredAt = registeredAt;
+    @PrePersist
+    protected void onCreate() {
+        this.registeredAt = LocalDateTime.now();
     }
 }

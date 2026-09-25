@@ -194,7 +194,8 @@ export class VotingScreenComponent implements OnInit {
         // Mark current session as voted
         this.authService.markAsVoted();
 
-        // Save last receipt in storage for success screen
+        // Save real backend receipt for the success screen
+        this.votingService.saveReceipt(receipt);
         localStorage.setItem('evoting_last_receipt', JSON.stringify(receipt));
 
         // Navigate to success screen
@@ -205,8 +206,22 @@ export class VotingScreenComponent implements OnInit {
       error: (err) => {
         this.isSubmitting = false;
         this.showConfirmModal = false;
-        this.errorMessage = err?.error?.error || 'Vote submission failed. Your ballot may have already been recorded.';
+        // Surface the real backend rejection reason to the voter
+        const msg = err?.error?.error || err?.message || '';
+        if (msg.includes('already cast a ballot')) {
+          this.hasAlreadyVoted = true;
+          this.errorMessage = 'Your vote has already been recorded for this election.';
+        } else if (msg.includes('not approved to vote')) {
+          this.errorMessage = 'Your voter registration has not been approved yet. Contact the election officer.';
+        } else if (msg.includes('not currently open for voting')) {
+          this.errorMessage = 'This election is no longer open for voting.';
+        } else if (msg) {
+          this.errorMessage = msg;
+        } else {
+          this.errorMessage = 'Vote submission failed. Please try again or contact support.';
+        }
       }
     });
   }
 }
+

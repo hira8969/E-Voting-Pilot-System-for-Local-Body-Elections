@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/elections")
-@CrossOrigin(origins = "*")
 public class ElectionController {
 
     private final ElectionService electionService;
@@ -24,13 +23,9 @@ public class ElectionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createElection(@Valid @RequestBody ElectionDto dto) {
-        try {
-            Election election = electionService.createElection(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(election);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Election> createElection(@Valid @RequestBody ElectionDto dto) {
+        Election election = electionService.createElection(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(election);
     }
 
     @GetMapping
@@ -39,34 +34,34 @@ public class ElectionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getElectionById(@PathVariable Long id) {
+    public ResponseEntity<Election> getElectionById(@PathVariable Long id) {
         return electionService.getElectionById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Election>> getElectionsByStatus(@PathVariable ElectionStatus status) {
-        return ResponseEntity.ok(electionService.getElectionsByStatus(status));
+    public ResponseEntity<List<Election>> getElectionsByStatus(@PathVariable String status) {
+        ElectionStatus parsedStatus = ElectionStatus.fromString(status);
+        return ResponseEntity.ok(electionService.getElectionsByStatus(parsedStatus));
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestParam ElectionStatus status) {
-        try {
-            Election updated = electionService.updateElectionStatus(id, status);
-            return ResponseEntity.ok(updated);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Election> updateStatus(@PathVariable Long id, @RequestParam String status) {
+        ElectionStatus targetStatus = ElectionStatus.fromString(status);
+        Election updated = electionService.updateElectionStatus(id, targetStatus);
+        return ResponseEntity.ok(updated);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateElection(@PathVariable Long id, @Valid @RequestBody ElectionDto dto) {
-        try {
-            Election updated = electionService.updateElection(id, dto);
-            return ResponseEntity.ok(updated);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<Election> updateElection(@PathVariable Long id, @Valid @RequestBody ElectionDto dto) {
+        Election updated = electionService.updateElection(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/{id}/open")
+    public ResponseEntity<Map<String, Object>> isElectionOpen(@PathVariable Long id) {
+        boolean open = electionService.isElectionOpenForVoting(id);
+        return ResponseEntity.ok(Map.of("electionId", id, "open", open));
     }
 }

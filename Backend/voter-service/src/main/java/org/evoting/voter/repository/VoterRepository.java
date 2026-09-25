@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface VoterRepository extends JpaRepository<Voter, Long> {
     Optional<Voter> findByEpicNumber(String epicNumber);
     Optional<Voter> findByEmail(String email);
+    Optional<Voter> findByUserId(Long userId);
     boolean existsByEpicNumber(String epicNumber);
     boolean existsByEmail(String email);
+    boolean existsByUserId(Long userId);
 }

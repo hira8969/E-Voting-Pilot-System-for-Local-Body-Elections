@@ -1,13 +1,18 @@
 package org.evoting.voting.service;
 
+import org.evoting.candidate.entity.Candidate;
+import org.evoting.candidate.repository.CandidateRepository;
+import org.evoting.election.entity.Election;
+import org.evoting.election.repository.ElectionRepository;
+import org.evoting.voter.entity.Voter;
+import org.evoting.voter.repository.VoterRepository;
 import org.evoting.voting.dto.CandidateTallyDto;
 import org.evoting.voting.dto.CastVoteDto;
 import org.evoting.voting.dto.VoteReceiptDto;
 import org.evoting.voting.entity.Vote;
 import org.evoting.voting.repository.VoteRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -20,22 +25,77 @@ import java.util.UUID;
 public class VotingService {
 
     private final VoteRepository voteRepository;
-    private final RestTemplate restTemplate;
+    private final VoterRepository voterRepository;
+    private final ElectionRepository electionRepository;
+    private final CandidateRepository candidateRepository;
 
-    @Value("${services.voter-service.url:http://localhost:8081}")
-    private String voterServiceUrl;
-
-    public VotingService(VoteRepository voteRepository, RestTemplate restTemplate) {
+    public VotingService(
+            VoteRepository voteRepository,
+            VoterRepository voterRepository,
+            ElectionRepository electionRepository,
+            CandidateRepository candidateRepository) {
         this.voteRepository = voteRepository;
-        this.restTemplate = restTemplate;
+        this.voterRepository = voterRepository;
+        this.electionRepository = electionRepository;
+        this.candidateRepository = candidateRepository;
     }
 
+    /**
+     * Cast a vote. Validates all SRS business rules before persisting atomically.
+     *
+     * Rules enforced here (backend is the authoritative boundary):
+     * 1. Voter must exist and be approved (isVerified = true).
+     * 2. Election must exist and be in an active/open voting state.
+     * 3. Voter must not have already voted in this election.
+     * 4. Candidate must exist, be APPROVED, and belong to this election.
+     * 5. Vote is persisted atomically in a single transaction.
+     */
+    @Transactional
     public VoteReceiptDto castVote(CastVoteDto dto) {
-        // Double voting prevention
-        if (voteRepository.existsByElectionIdAndVoterId(dto.getElectionId(), dto.getVoterId())) {
-            throw new IllegalStateException("Voter " + dto.getVoterId() + " has already cast a ballot in election " + dto.getElectionId() + ".");
+
+        // Rule 1 — Voter must be approved
+        Voter voter = voterRepository.findById(dto.getVoterId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Voter not found with id: " + dto.getVoterId()));
+        if (!voter.isVerified()) {
+            throw new IllegalStateException(
+                    "Voter " + dto.getVoterId() + " is not approved to vote. "
+                    + "Contact the election officer for approval.");
         }
 
+        // Rule 2 — Election must be active/open
+        Election election = electionRepository.findById(dto.getElectionId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Election not found with id: " + dto.getElectionId()));
+        if (!election.getStatus().isVotingOpen()) {
+            throw new IllegalStateException(
+                    "Election '" + election.getTitle() + "' is not currently open for voting. "
+                    + "Current status: " + election.getStatus());
+        }
+
+        // Rule 3 — Duplicate vote prevention (application layer; DB constraint also enforces this)
+        if (voteRepository.existsByElectionIdAndVoterId(dto.getElectionId(), dto.getVoterId())) {
+            throw new IllegalStateException(
+                    "Voter " + dto.getVoterId() + " has already cast a ballot in election "
+                    + dto.getElectionId() + ". Duplicate voting is not permitted.");
+        }
+
+        // Rule 4 — Candidate must be APPROVED and belong to this election
+        Candidate candidate = candidateRepository.findById(dto.getCandidateId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Candidate not found with id: " + dto.getCandidateId()));
+        if (!"APPROVED".equalsIgnoreCase(candidate.getNominationStatus())) {
+            throw new IllegalStateException(
+                    "Candidate " + dto.getCandidateId() + " is not an approved candidate. "
+                    + "Status: " + candidate.getNominationStatus());
+        }
+        if (!candidate.getElectionId().equals(dto.getElectionId())) {
+            throw new IllegalStateException(
+                    "Candidate " + dto.getCandidateId() + " does not belong to election "
+                    + dto.getElectionId() + ". Vote rejected.");
+        }
+
+        // Rule 5 — Persist atomically
         LocalDateTime now = LocalDateTime.now();
         String hash = generateVoteHash(dto.getVoterId(), dto.getElectionId(), dto.getCandidateId(), now);
 
@@ -49,12 +109,9 @@ public class VotingService {
 
         Vote savedVote = voteRepository.save(vote);
 
-        // Notify voter service of voting status change
-        try {
-            restTemplate.put(voterServiceUrl + "/api/voters/" + dto.getVoterId() + "/vote-status?hasVoted=true", null);
-        } catch (Exception ignored) {
-            // Logged as best-effort sync
-        }
+        // Update voter's hasVoted flag within the same transaction
+        voter.setHasVoted(true);
+        voterRepository.save(voter);
 
         return new VoteReceiptDto(
                 savedVote.getId(),
@@ -64,7 +121,7 @@ public class VotingService {
                 savedVote.getConstituency(),
                 savedVote.getTimestamp(),
                 savedVote.getVoteHash(),
-                "Vote successfully recorded and encrypted."
+                "Vote successfully recorded and sealed."
         );
     }
 

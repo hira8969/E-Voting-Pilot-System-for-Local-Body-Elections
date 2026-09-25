@@ -6,45 +6,70 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**
         - id: voter-service
-          uri: ${VOTER_SERVICE_URL:http://localhost:8081}
+          uri: lb://VOTER-SERVICE
           predicates:
             - Path=/api/voters/**
         - id: election-service
-          uri: ${ELECTION_SERVICE_URL:http://localhost:8082}
+          uri: lb://ELECTION-SERVICE
           predicates:
             - Path=/api/elections/**
         - id: candidate-service
-          uri: ${CANDIDATE_SERVICE_URL:http://localhost:8083}
+          uri: lb://CANDIDATE-SERVICE
           predicates:
             - Path=/api/candidates/**
         - id: voting-service
-          uri: ${VOTING_SERVICE_URL:http://localhost:8084}
+          uri: lb://VOTING-SERVICE
           predicates:
             - Path=/api/votes/**
         - id: result-service
-          uri: ${RESULT_SERVICE_URL:http://localhost:8085}
+          uri: lb://RESULT-SERVICE
           predicates:
             - Path=/api/results/**
+        - id: audit-service
+          uri: lb://AUDIT-SERVICE
+          predicates:
+            - Path=/api/audit/**
       globalcors:
         cors-configurations:
           '[/**]':
             allowedOrigins:
               - "http://localhost:4200"
-              - "http://localhost:3000"
               - "http://127.0.0.1:4200"
+              - "http://localhost:3000"
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
+              - PATCH
               - OPTIONS
             allowedHeaders: "*"
             allowCredentials: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,gateway
