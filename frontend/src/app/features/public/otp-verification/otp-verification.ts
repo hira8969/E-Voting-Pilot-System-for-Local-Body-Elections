@@ -77,16 +77,7 @@ export class OtpVerificationComponent implements OnInit, OnDestroy {
         if (res.success && res.user) {
           this.toastService.success('Authentication Succeeded', res.message);
           const role = res.user.role;
-          const routes: Record<UserRole, string> = {
-            VOTER: '/voter/dashboard',
-            PARTY_REP: '/party/dashboard',
-            OFFICER: '/officer/dashboard',
-            OBSERVER: '/observer/dashboard',
-            ADMIN: '/admin/dashboard',
-            SUPER_ADMIN: '/admin/dashboard',
-            SYSTEM_ADMIN: '/system/dashboard'
-          };
-          this.router.navigate([routes[role] || '/voter/dashboard']);
+          this.router.navigateByUrl(this.authService.getRoleRedirectUrl(role));
         } else {
           this.toastService.error('Verification Failed', res.message);
         }

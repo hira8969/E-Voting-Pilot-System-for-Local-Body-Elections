@@ -12,29 +12,31 @@ import { User, UserRole } from '../../../core/models/user.model';
   styleUrl: './navbar.css'
 })
 export class NavbarComponent implements OnInit {
-  @Input() electionTitle: string = 'Sitamarhi Municipal Corporation Election 2026';
+  @Input() mode: 'public' | 'portal' = 'public';
+  @Input() electionTitle: string = '';
   currentUser: User | null = null;
+  notificationsOpen = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
+      this.currentUser = user || this.authService.getStoredUser();
     });
+  }
+
+  getInitials(): string {
+    const name = this.currentUser?.fullName || this.currentUser?.name || this.currentUser?.email || 'User';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   }
 
   switchRole(role: UserRole): void {
     this.authService.loginAsRole(role);
-    const routeMap: Record<UserRole, string> = {
-      VOTER: '/voter/dashboard',
-      PARTY_REP: '/party/dashboard',
-      OFFICER: '/officer/dashboard',
-      OBSERVER: '/observer/dashboard',
-      ADMIN: '/admin/dashboard',
-      SUPER_ADMIN: '/admin/dashboard',
-      SYSTEM_ADMIN: '/system/dashboard'
-    };
-    this.router.navigate([routeMap[role]]);
+    this.router.navigate([this.authService.getRoleRedirectUrl(role)]);
   }
 
   logout(): void {

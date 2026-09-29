@@ -14,10 +14,7 @@ import { Election, ElectionDto, ElectionStatus } from '../../../core/models/elec
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
-    NavbarComponent,
-    SidebarComponent,
-    LoadingComponent
+    RouterModule
   ],
   templateUrl: './manage-election.component.html',
   styleUrls: ['./manage-election.component.css']

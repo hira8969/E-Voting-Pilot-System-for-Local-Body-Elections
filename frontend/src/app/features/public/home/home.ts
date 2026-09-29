@@ -16,6 +16,8 @@ import { UserRole } from '../../../core/models/user.model';
 })
 export class HomeComponent implements OnInit {
   elections: Election[] = [];
+  activeElections: Election[] = [];
+  upcomingElections: Election[] = [];
 
   constructor(
     private electionService: ElectionService,
@@ -26,20 +28,13 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.electionService.getElections().subscribe(list => {
       this.elections = list;
+      this.activeElections = list.filter(e => e.status === 'ACTIVE');
+      this.upcomingElections = list.filter(e => e.status !== 'ACTIVE');
     });
   }
 
   openRole(role: UserRole): void {
     this.authService.loginAsRole(role);
-    const routes: Record<UserRole, string> = {
-      VOTER: '/voter/dashboard',
-      PARTY_REP: '/party/dashboard',
-      OFFICER: '/officer/dashboard',
-      OBSERVER: '/observer/dashboard',
-      ADMIN: '/admin/dashboard',
-      SUPER_ADMIN: '/admin/dashboard',
-      SYSTEM_ADMIN: '/system/dashboard'
-    };
-    this.router.navigate([routes[role]]);
+    this.router.navigate([this.authService.getRoleRedirectUrl(role)]);
   }
 }

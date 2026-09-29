@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { UserRole } from '../../../core/models/user.model';
@@ -14,45 +14,63 @@ import { UserRole } from '../../../core/models/user.model';
   styleUrl: './login.css'
 })
 export class LoginComponent {
-  identifier: string = '9876543210';
+  identifier: string = '';
+  password: string = '';
+  rememberMe: boolean = false;
+  showPassword: boolean = false;
   loading: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private authService: AuthService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   onLogin(event: Event): void {
     event.preventDefault();
-    if (!this.identifier) return;
+    this.errorMessage = '';
+
+    if (!this.identifier.trim()) {
+      this.errorMessage = 'Please enter your Email or Voter ID.';
+      return;
+    }
+
+    if (!this.password.trim()) {
+      this.errorMessage = 'Please enter your password.';
+      return;
+    }
 
     this.loading = true;
-    this.authService.sendOtp(this.identifier).subscribe({
+    this.authService.login({
+      emailOrEpic: this.identifier.trim(),
+      password: this.password.trim()
+    }).subscribe({
       next: (res) => {
         this.loading = false;
-        this.toastService.success('OTP Dispatched', res.message);
-        this.router.navigate(['/verify-otp'], { queryParams: { mobile: this.identifier } });
+        this.toastService.success('Welcome Back', `Logged in as ${res.user.role}`);
+        
+        // Redirect strictly according to role
+        const targetUrl = this.authService.getRoleRedirectUrl(res.user.role);
+        this.router.navigateByUrl(targetUrl);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toastService.error('Error', 'Failed to dispatch OTP');
+        this.errorMessage = 'Invalid credentials. Please verify your Email/Voter ID and password.';
+        this.toastService.error('Authentication Failed', this.errorMessage);
       }
     });
   }
 
   quickLogin(role: UserRole): void {
     this.authService.loginAsRole(role);
-    this.toastService.success('Logged In', `Authenticated as ${role}`);
-    const map: Record<UserRole, string> = {
-      VOTER: '/voter/dashboard',
-      PARTY_REP: '/party/dashboard',
-      OFFICER: '/officer/dashboard',
-      OBSERVER: '/observer/dashboard',
-      ADMIN: '/admin/dashboard',
-      SUPER_ADMIN: '/admin/dashboard',
-      SYSTEM_ADMIN: '/system/dashboard'
-    };
-    this.router.navigate([map[role]]);
+    this.toastService.success('Demonstration Login', `Authenticated as ${role}`);
+    const redirectUrl = this.authService.getRoleRedirectUrl(role);
+    this.router.navigateByUrl(redirectUrl);
   }
 }

@@ -1,4 +1,4 @@
-export type UserRole = 'VOTER' | 'ADMIN' | 'PARTY_REP' | 'OFFICER' | 'OBSERVER' | 'SUPER_ADMIN' | 'SYSTEM_ADMIN';
+export type UserRole = 'VOTER' | 'CANDIDATE' | 'PARTY' | 'PARTY_REP' | 'ADMIN' | 'SUPER_ADMIN' | 'AUDITOR' | 'OFFICER' | 'OBSERVER' | 'SYSTEM_ADMIN';
 
 export interface User {
   id: number | string;

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-// Guard for authenticated voter routes
+// Guard for authenticated routes
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -11,12 +11,31 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Redirect to login if not authenticated
-  router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-  return false;
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
 };
 
-// Guard for admin routes (prevents normal voters from accessing admin portal)
+// Generic Role-based Route Guard with /unauthorized redirection
+export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
+  return (route, state) => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (!authService.isAuthenticated()) {
+      return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+    }
+
+    const user = authService.currentUser() || authService.getStoredUser();
+    const role = user?.role;
+
+    if (role && allowedRoles.includes(role)) {
+      return true;
+    }
+
+    return router.createUrlTree(['/unauthorized']);
+  };
+};
+
+// Guard for admin routes
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -25,13 +44,9 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // If logged in as normal voter, redirect to voter dashboard
   if (authService.isAuthenticated()) {
-    router.navigate(['/voter/dashboard']);
-    return false;
+    return router.createUrlTree(['/unauthorized']);
   }
 
-  // Otherwise redirect to login
-  router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-  return false;
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
 };

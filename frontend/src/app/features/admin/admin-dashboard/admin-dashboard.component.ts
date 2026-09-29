@@ -16,10 +16,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    NavbarComponent,
-    SidebarComponent,
-    LoadingComponent
+    RouterModule
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']

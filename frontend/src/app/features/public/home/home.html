@@ -1,140 +1,295 @@
-<div class="min-h-screen flex flex-col bg-slate-50">
-  <app-navbar></app-navbar>
+<div class="min-h-screen flex flex-col bg-[#F8FAFC]">
+  <app-navbar mode="public"></app-navbar>
 
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-    
-    <div class="relative max-w-5xl mx-auto text-center">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-800/80 border border-blue-600/50 text-blue-200 text-xs font-semibold uppercase tracking-wider mb-6">
-        <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
-        <span>Democracy Powered by Next-Gen Digital EVM Technology</span>
-      </div>
+  <!-- HERO SECTION (Screen 1 in Reference Image) -->
+  <section class="relative bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#1E3A8A] text-white py-20 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- Subtle Grid Effect -->
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"></div>
 
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
-        Secure Digital Voting for <br class="hidden sm:block">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-teal-300">
-          Local Body Elections
-        </span>
-      </h1>
+    <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Left Content Column -->
+      <div class="lg:col-span-7 text-left space-y-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Official Digital EVM Pilot Platform</span>
+        </div>
 
-      <p class="mt-6 text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto font-normal leading-relaxed">
-        Empowering citizens with tamper-evident, cryptographic digital ballots, verifiable zero-knowledge proofs, and real-time election monitoring across Municipalities and Panchayats.
-      </p>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Your Vote <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">
+            Shapes Tomorrow
+          </span>
+        </h1>
 
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-        <a routerLink="/login" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-base font-bold rounded-xl shadow-lg hover:shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
-          🗳️ Login to Cast Vote
-        </a>
-        <a routerLink="/register" class="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white text-base font-semibold rounded-xl border border-white/20 backdrop-blur-xs transition-all">
-          📝 Register as Voter
-        </a>
-        <a href="#active-elections" class="px-6 py-3.5 text-blue-200 hover:text-white text-sm font-medium transition-colors">
-          View Active Elections ↓
-        </a>
-      </div>
-
-      <!-- Quick Role Direct Links Banner for Demo -->
-      <div class="mt-12 pt-8 border-t border-blue-800/60 max-w-4xl mx-auto">
-        <p class="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">
-          ⚡ Prototype Quick Role Navigators (Click to demo any UML actor):
+        <p class="text-lg text-slate-300 max-w-xl font-normal leading-relaxed">
+          A secure, transparent and accessible online voting platform for a stronger and fairer community. Powered by cryptographic ballot integrity and instant tally verification.
         </p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-          <button (click)="openRole('VOTER')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            🧑 Voter Portal
-          </button>
-          <button (click)="openRole('PARTY_REP')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            🏛️ Party Portal
-          </button>
-          <button (click)="openRole('OFFICER')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            🧑‍⚖️ Officer Portal
-          </button>
-          <button (click)="openRole('OBSERVER')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            👁️ Observer Portal
-          </button>
-          <button (click)="openRole('SUPER_ADMIN')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            👑 Super Admin
-          </button>
-          <button (click)="openRole('SYSTEM_ADMIN')" class="p-2.5 rounded-lg bg-blue-800/50 hover:bg-blue-700/60 border border-blue-700/50 text-xs font-semibold text-white transition-all text-center">
-            ⚙️ System Admin
-          </button>
+
+        <!-- Call to Action Buttons -->
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <a
+            routerLink="/register"
+            class="px-8 py-3.5 bg-[#2563EB] hover:bg-blue-600 text-white text-base font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all transform hover:-translate-y-0.5">
+            Get Started
+          </a>
+          <a
+            href="#how-it-works"
+            class="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white text-base font-semibold rounded-xl border border-white/20 backdrop-blur-xs transition-all">
+            Learn More
+          </a>
         </div>
       </div>
+
+      <!-- Right Visual Column: 3D Ballot Box Illustration matching Image 1 -->
+      <div class="lg:col-span-5 flex justify-center items-center">
+        <div class="relative w-full max-w-md">
+          <!-- Ambient glow -->
+          <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl blur-2xl opacity-30"></div>
+          
+          <div class="relative bg-gradient-to-b from-slate-800/80 to-slate-900/90 border border-slate-700/60 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-2xl">
+            <!-- SVG 3D Ballot Box Illustration -->
+            <svg viewBox="0 0 400 320" class="w-full h-auto drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Hand holding ballot paper -->
+              <g transform="translate(140, 10)">
+                <!-- Ballot paper going in -->
+                <rect x="35" y="45" width="70" height="95" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+                <rect x="45" y="60" width="50" height="4" rx="2" fill="#2563EB"/>
+                <rect x="45" y="70" width="40" height="3" rx="1.5" fill="#94A3B8"/>
+                <rect x="45" y="78" width="45" height="3" rx="1.5" fill="#94A3B8"/>
+                <circle cx="70" cy="100" r="10" fill="#16A34A"/>
+                <path d="M66 100L69 103L75 97" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Hand wrist/sleeve -->
+                <path d="M125 -10 L95 55 L75 50 L105 -10 Z" fill="#1E3A8A"/>
+                <!-- Hand skin -->
+                <path d="M95 55 C90 60, 75 60, 68 52 C65 48, 70 42, 75 40 L95 48 Z" fill="#FBBF24"/>
+              </g>
+
+              <!-- Ballot Box Body -->
+              <rect x="70" y="120" width="260" height="170" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="3"/>
+              
+              <!-- Slot Top Lid -->
+              <path d="M55 120 L80 90 L320 90 L345 120 Z" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="2"/>
+              <!-- Slot Opening -->
+              <rect x="150" y="100" width="100" height="8" rx="4" fill="#0F172A"/>
+
+              <!-- "VOTE" Emblem on Box -->
+              <rect x="120" y="165" width="160" height="60" rx="12" fill="#2563EB"/>
+              <text x="200" y="206" fill="#FFFFFF" font-size="28" font-weight="900" text-anchor="middle" font-family="system-ui, sans-serif" letter-spacing="4">VOTE</text>
+              
+              <!-- Status Pill on Box -->
+              <rect x="145" y="240" width="110" height="24" rx="12" fill="#DCFCE7"/>
+              <circle cx="157" cy="252" r="4" fill="#16A34A"/>
+              <text x="204" y="256" fill="#166534" font-size="10" font-weight="700" text-anchor="middle" font-family="system-ui, sans-serif">BALLOT SEALED</text>
+            </svg>
+
+            <!-- Quick Stats in Hero Card -->
+            <div class="mt-4 pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Audit Verified</span>
+              </span>
+              <span class="text-blue-400 font-semibold">256-Bit Cryptography</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- Key Statistics Banner -->
-  <section class="bg-white border-b border-slate-200 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-      <div>
-        <p class="text-3xl sm:text-4xl font-extrabold text-blue-900">45,820+</p>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Registered Citizens</p>
+  <!-- 4 FEATURE PILLS (Screen 1 in Reference Image) -->
+  <section class="bg-white border-b border-slate-200 py-6 px-4 sm:px-6 lg:px-8 shadow-xs">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <!-- Feature 1: Secure & Trusted -->
+      <div class="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl shrink-0">
+          🔒
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Secure & Trusted</h2>
+          <p class="text-xs text-slate-500">End-to-end security</p>
+        </div>
       </div>
-      <div>
-        <p class="text-3xl sm:text-4xl font-extrabold text-green-600">70.75%</p>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Live Turnout Rate</p>
+
+      <!-- Feature 2: Easy to Use -->
+      <div class="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shrink-0">
+          🎯
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Easy to Use</h2>
+          <p class="text-xs text-slate-500">Accessible for everyone</p>
+        </div>
       </div>
-      <div>
-        <p class="text-3xl sm:text-4xl font-extrabold text-blue-900">42</p>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Connected EVM Booths</p>
+
+      <!-- Feature 3: Transparent -->
+      <div class="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+          🛡️
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Transparent</h2>
+          <p class="text-xs text-slate-500">Fair and verifiable</p>
+        </div>
       </div>
-      <div>
-        <p class="text-3xl sm:text-4xl font-extrabold text-purple-600">100%</p>
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Secret Ballot Guarantee</p>
+
+      <!-- Feature 4: Real-Time Results -->
+      <div class="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+          ⏱️
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Real-Time Results</h2>
+          <p class="text-xs text-slate-500">Instant and accurate</p>
+        </div>
       </div>
+
     </div>
   </section>
 
-  <!-- Active Elections Section -->
-  <section id="active-elections" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-      <div>
-        <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Scheduled Voting Events</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Active & Upcoming Elections</h2>
-      </div>
-      <p class="text-sm text-slate-500 mt-2 md:mt-0 max-w-md">
-        Select your constituency or ward to view eligible candidates and polling schedules.
+  <!-- HOW IT WORKS SECTION (6 Steps matching prompt specification) -->
+  <section id="how-it-works" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Simple 6-Step Workflow</span>
+      <h2 class="text-3xl font-extrabold text-slate-900 mt-1">How Online Voting Works</h2>
+      <p class="text-sm text-slate-500 mt-2">
+        A seamless and verifiable democratic process designed for ease of use and strict electoral compliance.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      @for (election of elections; track election.id) {
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Step 1 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center mb-4">
+          01
+        </div>
+        <h3 class="text-base font-bold text-slate-900">Register</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Create your account with your Full Name, Email, and registered Voter ID (EPIC) or Student ID.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold text-sm flex items-center justify-center mb-4">
+          02
+        </div>
+        <h3 class="text-base font-bold text-slate-900">Verify Account</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Authenticate securely through multi-factor validation or verified credentials before accessing ballots.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-purple-600 text-white font-bold text-sm flex items-center justify-center mb-4">
+          03
+        </div>
+        <h3 class="text-base font-bold text-slate-900">View Eligible Election</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Access your assigned elections based on your verified constituency, ward, or institution.
+        </p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold text-sm flex items-center justify-center mb-4">
+          04
+        </div>
+        <h3 class="text-base font-bold text-slate-900">Select Candidate</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Review candidates, their affiliated party, symbol, and manifesto, then select your chosen candidate.
+        </p>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-amber-600 text-white font-bold text-sm flex items-center justify-center mb-4">
+          05
+        </div>
+        <h3 class="text-base font-bold text-slate-900">Review Vote</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Carefully verify your candidate selection on the explicit review screen before final submission.
+        </p>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative">
+        <div class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold text-sm flex items-center justify-center mb-4">
+          06
+        </div>
+        <h3 class="text-base font-bold text-slate-900">Confirm Vote</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          Submit your confirmed vote. Your digital ballot is cryptographically sealed and recorded in the audit trail.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIVE & UPCOMING ELECTIONS PREVIEW -->
+  <section id="elections" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Scheduled Events</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Elections in Progress</h2>
+      </div>
+      <a routerLink="/login" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">
+        Login to View All Available Ballots →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (election of (activeElections.length ? activeElections : elections); track election.id) {
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-2.5 py-1 rounded-full text-xs font-bold"
-                    [ngClass]="election.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-blue-50 text-blue-700 border border-blue-200'">
-                {{ election.status === 'ACTIVE' ? '🟢 LIVE VOTING NOW' : '📅 UPCOMING' }}
+            <!-- Banner Image / Header Placeholder -->
+            <div class="h-36 bg-gradient-to-r from-blue-900 to-indigo-800 p-4 text-white flex flex-col justify-between relative">
+              <span class="self-start px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                [ngClass]="election.status === 'ACTIVE' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'">
+                {{ election.status === 'ACTIVE' ? '● LIVE VOTING' : 'SCHEDULED' }}
               </span>
-              <span class="text-xs font-semibold text-slate-400">{{ election.type }}</span>
+              <div>
+                <p class="text-xs text-blue-200 font-medium">📍 {{ election.constituency || 'Sitamarhi' }}</p>
+                <h3 class="text-base font-bold text-white line-clamp-1 mt-0.5">{{ election.title }}</h3>
+              </div>
             </div>
 
-            <h3 class="text-lg font-bold text-slate-900 leading-snug">{{ election.title }}</h3>
-            <p class="text-xs text-slate-500 mt-1">{{ election.ward }} • {{ election.constituency }}, {{ election.district }}</p>
-
-            <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-600">
-              <div class="flex justify-between">
-                <span class="text-slate-400">Date:</span>
-                <span class="font-semibold text-slate-800">{{ election.startDate }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">Voting Hours:</span>
-                <span class="font-semibold text-slate-800">{{ election.startTime }} – {{ election.endTime }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">Registered Voters:</span>
-                <span class="font-semibold text-slate-800">{{ election.totalVoters | number }}</span>
+            <!-- Details Content -->
+            <div class="p-5 space-y-3">
+              <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                {{ election.description }}
+              </p>
+              <div class="text-[11px] text-slate-500 space-y-1">
+                <div class="flex items-center gap-1.5">
+                  <span>📅</span>
+                  <span><strong>Period:</strong> {{ election.startDate | date:'mediumDate' }} - {{ election.endDate | date:'mediumDate' }}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span>👥</span>
+                  <span><strong>Total Candidates:</strong> {{ election.totalCandidates || 4 }} Registered</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <a [routerLink]="['/voter/elections', election.id]" class="text-xs font-bold text-blue-900 hover:text-blue-950">
-              View Details →
-            </a>
+          <!-- Bottom Button -->
+          <div class="p-5 pt-0">
             @if (election.status === 'ACTIVE') {
-              <a routerLink="/login" class="px-3.5 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-xs font-semibold shadow-xs">
-                Vote in Election
+              <a
+                routerLink="/login"
+                class="block w-full py-2.5 bg-[#2563EB] hover:bg-blue-600 text-white text-xs font-bold rounded-xl text-center shadow-xs transition-colors">
+                Vote Now
+              </a>
+            } @else {
+              <a
+                routerLink="/login"
+                class="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl text-center transition-colors">
+                View Election
               </a>
             }
           </div>
@@ -143,121 +298,107 @@
     </div>
   </section>
 
-  <!-- How Voting Works Timeline -->
-  <section class="bg-slate-100/70 py-16 px-4 sm:px-6 lg:px-8 border-y border-slate-200">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Step-by-step Process</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">How Digital Voting Works</h2>
-        <p class="text-sm text-slate-600 mt-2">Transparent, authenticated, and simple for every citizen.</p>
+  <!-- QUICK ROLE NAVIGATOR FOR EVALUATION & DEMO -->
+  <section class="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
+    <div class="max-w-5xl mx-auto text-center space-y-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-blue-300 text-xs font-bold uppercase tracking-wider">
+        <span>⚡ Viva Demonstration Role Direct Navigators</span>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-xs relative">
-          <div class="w-10 h-10 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center mb-4">1</div>
-          <h4 class="text-base font-bold text-slate-900">Authenticate</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">Enter your registered Mobile or Voter ID and verify via secure 6-digit OTP passcode.</p>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-xs relative">
-          <div class="w-10 h-10 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center mb-4">2</div>
-          <h4 class="text-base font-bold text-slate-900">Explore Candidates</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">Read candidate profiles, verified affidavits, party symbols, and published ward manifestos.</p>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-xs relative">
-          <div class="w-10 h-10 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center mb-4">3</div>
-          <h4 class="text-base font-bold text-slate-900">Cast Vote on EVM</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">Press the dedicated blue vote button next to your chosen candidate or choose NOTA.</p>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-xs relative">
-          <div class="w-10 h-10 rounded-full bg-green-600 text-white font-bold flex items-center justify-center mb-4">4</div>
-          <h4 class="text-base font-bold text-slate-900">Instant Receipt</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">Receive a cryptographically signed transaction reference confirming your vote participation.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Security & Transparency Highlights -->
-  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-    <div class="text-center max-w-2xl mx-auto mb-12">
-      <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Uncompromising Integrity</span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Enterprise Security & Secret Ballot</h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="flex gap-4">
-        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-900 border border-blue-100 flex items-center justify-center text-2xl shrink-0">
-          🔒
-        </div>
-        <div>
-          <h4 class="text-base font-bold text-slate-900">Absolute Ballot Secrecy</h4>
-          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Voter identity is decoupled from ballot choices using asymmetric cryptographic separation.</p>
-        </div>
-      </div>
-
-      <div class="flex gap-4">
-        <div class="w-12 h-12 rounded-xl bg-green-50 text-green-900 border border-green-100 flex items-center justify-center text-2xl shrink-0">
-          📜
-        </div>
-        <div>
-          <h4 class="text-base font-bold text-slate-900">Immutable Audit Logs</h4>
-          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Every ballot cast event produces a tamper-proof cryptographic audit hash for observers and commission audits.</p>
-        </div>
-      </div>
-
-      <div class="flex gap-4">
-        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-900 border border-purple-100 flex items-center justify-center text-2xl shrink-0">
-          ⚡
-        </div>
-        <div>
-          <h4 class="text-base font-bold text-slate-900">Resilient Distributed Architecture</h4>
-          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Event-driven Kafka streaming paired with multi-node Cassandra cluster assures zero single-point-of-failure.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ Accordion -->
-  <section class="bg-slate-50 py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-200">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-10">
-        <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Frequently Asked Questions</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Citizen Assistance & Queries</h2>
-      </div>
-
-      <div class="space-y-4">
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
-          <h4 class="text-sm font-bold text-slate-900">Who is eligible to vote in this local election?</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">Any Indian citizen aged 18 or above whose name is enrolled in the local ward voter register with an active Voter ID.</p>
-        </div>
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
-          <h4 class="text-sm font-bold text-slate-900">Can I change my vote once cast on the EVM?</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">No. As per Election Commission regulations, once a vote is confirmed and recorded into the secure digital ledger, it cannot be altered.</p>
-        </div>
-        <div class="bg-white rounded-xl border border-slate-200 p-5">
-          <h4 class="text-sm font-bold text-slate-900">Will my vote selection appear on the receipt?</h4>
-          <p class="text-xs text-slate-600 mt-2 leading-relaxed">No. To preserve absolute ballot secrecy and prevent voter coercion, receipts contain only your cryptographic transaction stamp and booth reference.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-slate-950 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800 mt-auto">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-lg text-white font-bold">🗳️</div>
-        <div>
-          <p class="text-sm font-bold text-white">E-Voting Pilot System</p>
-          <p class="text-[11px] text-slate-500">Election Commission of India — Local Body Electoral Portal</p>
-        </div>
-      </div>
-      <p class="text-xs text-slate-500">
-        © 2026 E-Voting Pilot System. Built for secure, accessible local democracy.
+      <h2 class="text-2xl font-bold">Inspect Any User Role in One Click</h2>
+      <p class="text-xs text-slate-400 max-w-xl mx-auto">
+        Switch directly to authenticated role dashboards to inspect the respective permission boundaries and workflows.
       </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+        <button
+          type="button"
+          (click)="openRole('VOTER')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">🧑</span>
+          <span>Voter</span>
+        </button>
+        <button
+          type="button"
+          (click)="openRole('CANDIDATE')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">🧑‍💼</span>
+          <span>Candidate</span>
+        </button>
+        <button
+          type="button"
+          (click)="openRole('PARTY')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">🏛️</span>
+          <span>Party</span>
+        </button>
+        <button
+          type="button"
+          (click)="openRole('ADMIN')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">⚖️</span>
+          <span>Admin</span>
+        </button>
+        <button
+          type="button"
+          (click)="openRole('SUPER_ADMIN')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">👑</span>
+          <span>Super Admin</span>
+        </button>
+        <button
+          type="button"
+          (click)="openRole('AUDITOR')"
+          class="p-3 rounded-xl bg-slate-800 hover:bg-blue-600 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer">
+          <span class="block text-xl mb-1">👁️</span>
+          <span>Auditor</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact" class="bg-[#0F172A] text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+      <div>
+        <div class="flex items-center gap-2 text-white font-bold text-sm mb-3">
+          <span class="text-lg">🗳️</span>
+          <span>Online Voting Management System</span>
+        </div>
+        <p class="leading-relaxed text-slate-400">
+          Decentralized cryptographic election pilot system for local body elections and student council democracies.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Electoral Portals</h4>
+        <ul class="space-y-2">
+          <li><a routerLink="/login" class="hover:text-white transition-colors">Voter Portal</a></li>
+          <li><a routerLink="/login" class="hover:text-white transition-colors">Candidate Management</a></li>
+          <li><a routerLink="/login" class="hover:text-white transition-colors">Party Representative</a></li>
+          <li><a routerLink="/login" class="hover:text-white transition-colors">Election Commission Admin</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Security & Auditing</h4>
+        <ul class="space-y-2">
+          <li><span class="hover:text-white transition-colors">SHA-256 Ballot Sealing</span></li>
+          <li><span class="hover:text-white transition-colors">Role-Based Access Control (RBAC)</span></li>
+          <li><span class="hover:text-white transition-colors">Tamper-Evident Audit Ledger</span></li>
+          <li><span class="hover:text-white transition-colors">Double-Voting Prevention</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Help & Contact</h4>
+        <p class="leading-relaxed">Election Commission Helpdesk</p>
+        <p class="mt-1 font-mono text-slate-300">Toll Free: 1800-VOTE-DEMO</p>
+        <p class="mt-0.5 text-slate-300">support&#64;evoting.local</p>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-6 border-t border-slate-800 text-center text-[11px] text-slate-500">
+      © 2026 Online Voting Management System. All rights reserved. Designed for Academic Project Demonstration.
     </div>
   </footer>
 </div>

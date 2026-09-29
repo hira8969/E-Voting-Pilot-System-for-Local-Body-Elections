@@ -2,21 +2,22 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar';
-import { SidebarComponent, MenuItem } from '../../../shared/components/sidebar/sidebar';
+import { SidebarComponent } from '../../../shared/components/sidebar/sidebar';
 
 @Component({
-  selector: 'app-admin-layout',
+  selector: 'app-super-admin-layout',
   standalone: true,
   imports: [CommonModule, RouterModule, NavbarComponent, SidebarComponent],
-  templateUrl: './admin-layout.html',
-  styleUrl: './admin-layout.css'
+  template: `
+    <div class="flex min-h-screen bg-[#F8FAFC]">
+      <app-sidebar [role]="'SUPER_ADMIN'"></app-sidebar>
+      <div class="flex-1 flex flex-col min-w-0">
+        <app-navbar mode="portal" electionTitle="Supreme Electoral System Authority • Super Admin Console"></app-navbar>
+        <main class="flex-1 p-6 lg:p-8 overflow-y-auto">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
+    </div>
+  `
 })
-export class AdminLayoutComponent {
-  menuItems: MenuItem[] = [
-    { label: 'System Overview', route: '/admin/dashboard', icon: '👑', exact: true },
-    { label: 'Manage Users', route: '/admin/users', icon: '👥' },
-    { label: 'Election Config', route: '/admin/elections', icon: '⚙️' },
-    { label: 'Audit Logs', route: '/admin/audit', icon: '📜' },
-    { label: 'Generate Reports', route: '/admin/reports', icon: '📊' }
-  ];
-}
+export class SuperAdminLayoutComponent {}

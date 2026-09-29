@@ -21,11 +21,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-/**
- * Global API Gateway Filter that intercepts all incoming requests,
- * authenticates JWT Bearer tokens for non-public endpoints,
- * and passes user identity downstream via custom HTTP headers (X-User-Id, X-User-Roles).
- */
+
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 

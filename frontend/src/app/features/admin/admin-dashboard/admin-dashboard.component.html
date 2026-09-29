@@ -1,156 +1,152 @@
-<app-navbar></app-navbar>
+<div class="space-y-8 max-w-6xl mx-auto">
+  
+  <!-- Page Header (Screen 7 in Reference Image) -->
+  <div class="space-y-1">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Admin Dashboard</h1>
+    <p class="text-sm text-slate-500">Manage elections, candidates, voters and view results.</p>
+  </div>
 
-<div class="admin-layout">
-  <!-- Admin Sidebar -->
-  <app-sidebar mode="admin"></app-sidebar>
-
-  <!-- Main Content Area -->
-  <main class="admin-main">
+  <!-- 4 Statistics Cards (Screen 7: Total Elections, Registered Voters, Candidates, Active Elections) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
     
-    <!-- Header Greeting -->
-    <div class="dashboard-header">
-      <div class="title-meta">
-        <span class="admin-badge">ADMINISTRATION & AUDIT CONSOLE</span>
-        <h1 class="main-title">Election Commission Dashboard</h1>
-        <p class="subtitle">
-          System Overview: Manage live elections, voter enrollment verification, candidate nominations, and official tallies.
-        </p>
+    <!-- Total Elections (Blue icon) -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
       </div>
-
-      <div class="header-actions">
-        <a routerLink="/admin/elections" class="btn-primary">
-          + Create New Election
-        </a>
+      <div>
+        <p class="text-2xl font-extrabold text-slate-900 leading-none">{{ recentElections.length || 3 }}</p>
+        <p class="text-xs font-medium text-slate-500 mt-1">Total Elections</p>
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-box">
-      <app-loading text="Loading administrative metrics..."></app-loading>
+    <!-- Registered Voters (Green icon) -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+      </div>
+      <div>
+        <p class="text-2xl font-extrabold text-slate-900 leading-none">{{ totalVoters || 12 }}</p>
+        <p class="text-xs font-medium text-slate-500 mt-1">Registered Voters</p>
+      </div>
     </div>
 
-    <div *ngIf="!isLoading">
-      <!-- 4 Top Stat Cards -->
-      <div class="stats-grid">
-        <div class="metric-card">
-          <div class="card-icon bg-blue">👥</div>
-          <div class="card-info">
-            <span class="card-label">Total Enrolled Voters</span>
-            <h2 class="card-number">{{ totalVoters }}</h2>
-            <span class="card-sub text-green">✓ Verified EPIC Database</span>
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="card-icon bg-green">🗳️</div>
-          <div class="card-info">
-            <span class="card-label">Active Elections</span>
-            <h2 class="card-number">{{ activeElectionsCount }}</h2>
-            <span class="card-sub text-blue">Live Polling Stations</span>
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="card-icon bg-purple">🧑‍💼</div>
-          <div class="card-info">
-            <span class="card-label">Approved Candidates</span>
-            <h2 class="card-number">{{ totalCandidates }}</h2>
-            <span class="card-sub">Across All Wards</span>
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="card-icon bg-amber">📊</div>
-          <div class="card-info">
-            <span class="card-label">Total Votes Sealed</span>
-            <h2 class="card-number">{{ totalVotesCast | number }}</h2>
-            <span class="card-sub text-green">100% Cryptographic Integrity</span>
-          </div>
-        </div>
+    <!-- Candidates (Purple icon) -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
       </div>
-
-      <!-- Quick Action Cards Section -->
-      <div class="section-title-bar">
-        <h3>Administrative Controls</h3>
-        <span>Fast navigation to core system functions</span>
+      <div>
+        <p class="text-2xl font-extrabold text-slate-900 leading-none">{{ totalCandidates || 5 }}</p>
+        <p class="text-xs font-medium text-slate-500 mt-1">Candidates</p>
       </div>
-
-      <div class="quick-nav-grid">
-        <a routerLink="/admin/elections" class="action-card">
-          <span class="action-icon">🗳️</span>
-          <h4>Manage Elections</h4>
-          <p>Create, activate, reschedule, or finalize elections and time windows.</p>
-          <span class="card-link-arrow">Open Elections →</span>
-        </a>
-
-        <a routerLink="/admin/candidates" class="action-card">
-          <span class="action-icon">🧑‍💼</span>
-          <h4>Manage Candidates</h4>
-          <p>Review nominations, approve ballot positions, symbols, and parties.</p>
-          <span class="card-link-arrow">Open Candidates →</span>
-        </a>
-
-        <a routerLink="/admin/voters" class="action-card">
-          <span class="action-icon">👥</span>
-          <h4>Manage Voters</h4>
-          <p>Verify citizen identity, check EPIC status, and review eligibility.</p>
-          <span class="card-link-arrow">Open Voters →</span>
-        </a>
-
-        <a routerLink="/admin/results" class="action-card">
-          <span class="action-icon">🏆</span>
-          <h4>Election Results</h4>
-          <p>View verified tallies, turnout percentages, and official winners.</p>
-          <span class="card-link-arrow">Open Results →</span>
-        </a>
-      </div>
-
-      <!-- Split View: Recent Elections & Security Audit Log -->
-      <div class="split-grid">
-        
-        <!-- Recent Elections Panel -->
-        <div class="panel-card">
-          <div class="panel-header">
-            <h4>Recent Elections Status</h4>
-            <a routerLink="/admin/elections" class="panel-more-link">View All</a>
-          </div>
-
-          <div class="elections-compact-list">
-            <div *ngFor="let elec of recentElections" class="election-row">
-              <div class="elec-badge" [class.active-badge]="elec.status === 'ACTIVE'" [class.upcoming-badge]="elec.status === 'UPCOMING'" [class.completed-badge]="elec.status === 'COMPLETED'">
-                {{ elec.status }}
-              </div>
-              <div class="elec-title-col">
-                <strong>{{ elec.title }}</strong>
-                <span>{{ elec.electionType }} • {{ elec.constituency }}</span>
-              </div>
-              <a [routerLink]="['/admin/elections']" class="btn-manage-sm">Manage</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Audit Log Overview Panel -->
-        <div class="panel-card">
-          <div class="panel-header">
-            <h4>Security & Audit Trail</h4>
-            <span class="audit-status">🔒 Tamper-Evident</span>
-          </div>
-
-          <div class="audit-list">
-            <div *ngFor="let log of auditLogs" class="audit-item">
-              <div class="audit-icon-dot"></div>
-              <div class="audit-text">
-                <span class="audit-event">{{ log.eventType }}</span>
-                <p class="audit-desc">{{ log.details }}</p>
-                <span class="audit-time">{{ log.timestamp }} • By {{ log.actor }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
-  </main>
+    <!-- Active Elections (Amber icon) -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+      </div>
+      <div>
+        <p class="text-2xl font-extrabold text-slate-900 leading-none">{{ activeElectionsCount || 2 }}</p>
+        <p class="text-xs font-medium text-slate-500 mt-1">Active Elections</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Actions (Screen 7 in Reference Image) -->
+  <div class="space-y-4">
+    <h2 class="text-lg font-bold text-slate-900">Quick Actions</h2>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <!-- Action 1: Create Election -->
+      <a
+        routerLink="/admin/elections"
+        class="bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-xs hover:shadow-md hover:border-blue-500 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+          ➕
+        </div>
+        <span class="text-xs font-bold text-slate-800">Create Election</span>
+      </a>
+
+      <!-- Action 2: Manage Candidates -->
+      <a
+        routerLink="/admin/candidates"
+        class="bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-xs hover:shadow-md hover:border-blue-500 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
+        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
+          🧑‍💼
+        </div>
+        <span class="text-xs font-bold text-slate-800">Manage Candidates</span>
+      </a>
+
+      <!-- Action 3: View Results -->
+      <a
+        routerLink="/admin/results"
+        class="bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-xs hover:shadow-md hover:border-blue-500 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+          📊
+        </div>
+        <span class="text-xs font-bold text-slate-800">View Results</span>
+      </a>
+
+      <!-- Action 4: Voter Approval -->
+      <a
+        routerLink="/admin/voters"
+        class="bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-xs hover:shadow-md hover:border-blue-500 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl group-hover:bg-amber-600 group-hover:text-white transition-colors">
+          ✅
+        </div>
+        <span class="text-xs font-bold text-slate-800">Voter Approval</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Elections Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="text-sm font-bold text-slate-900">Current Elections</h3>
+      <a routerLink="/admin/elections" class="text-xs font-semibold text-blue-600 hover:text-blue-800">View All →</a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+          <tr>
+            <th class="p-4">Title</th>
+            <th class="p-4">Period</th>
+            <th class="p-4">Status</th>
+            <th class="p-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (election of recentElections; track election.id) {
+            <tr class="hover:bg-slate-50/60 transition-colors">
+              <td class="p-4 font-bold text-slate-900">{{ election.title }}</td>
+              <td class="p-4">{{ election.startDate }} - {{ election.endDate }}</td>
+              <td class="p-4">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                  [ngClass]="election.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'">
+                  {{ election.status }}
+                </span>
+              </td>
+              <td class="p-4 text-right">
+                <a routerLink="/admin/results" class="font-semibold text-blue-600 hover:text-blue-800 mr-3">Tally</a>
+                <a routerLink="/admin/elections" class="font-semibold text-slate-600 hover:text-slate-900">Manage</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>

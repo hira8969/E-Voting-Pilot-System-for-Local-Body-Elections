@@ -1,0 +1,137 @@
+<div class="space-y-6 max-w-6xl mx-auto">
+  
+  <!-- READ-ONLY ACCESS BANNER (Required by Prompt & SRS) -->
+  <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between text-blue-900 shadow-2xs">
+    <div class="flex items-center gap-2.5">
+      <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+      <span class="text-xs font-extrabold uppercase tracking-wider">READ-ONLY ACCESS — OPERATIONAL AUDIT MONITORING ONLY</span>
+    </div>
+    <span class="text-[11px] font-semibold text-blue-700 bg-blue-100/80 px-2.5 py-0.5 rounded-full border border-blue-200">
+      Tamper-Proof Audit Mode
+    </span>
+  </div>
+
+  <!-- Header -->
+  <div class="space-y-1">
+    <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Electoral Audit Log Ledger</h1>
+    <p class="text-xs text-slate-500">Cryptographically verifiable sequence of all authenticated election transactions.</p>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      
+      <!-- Search Input -->
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Search Keyword</label>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="filterLogs()"
+          placeholder="Actor, Action, Reference ID..."
+          class="w-full rounded-xl border border-slate-200 py-2 px-3 text-xs focus:border-blue-600 focus:outline-none">
+      </div>
+
+      <!-- Role Filter -->
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Role Filter</label>
+        <select
+          [(ngModel)]="roleFilter"
+          (change)="filterLogs()"
+          class="w-full rounded-xl border border-slate-200 py-2 px-3 text-xs focus:border-blue-600 focus:outline-none">
+          <option value="ALL">All Roles</option>
+          <option value="VOTER">VOTER</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+          <option value="PARTY">PARTY</option>
+          <option value="SYSTEM">SYSTEM</option>
+        </select>
+      </div>
+
+      <!-- Module Filter -->
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Module Filter</label>
+        <select
+          [(ngModel)]="moduleFilter"
+          (change)="filterLogs()"
+          class="w-full rounded-xl border border-slate-200 py-2 px-3 text-xs focus:border-blue-600 focus:outline-none">
+          <option value="ALL">All Modules</option>
+          <option value="VOTING_ENGINE">VOTING_ENGINE</option>
+          <option value="ELECTION_MGMT">ELECTION_MGMT</option>
+          <option value="CRYPTO_SEAL">CRYPTO_SEAL</option>
+          <option value="AUTH_GATEWAY">AUTH_GATEWAY</option>
+          <option value="CANDIDATE_MGMT">CANDIDATE_MGMT</option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Status Filter</label>
+        <select
+          [(ngModel)]="statusFilter"
+          (change)="filterLogs()"
+          class="w-full rounded-xl border border-slate-200 py-2 px-3 text-xs focus:border-blue-600 focus:outline-none">
+          <option value="ALL">All Statuses</option>
+          <option value="VERIFIED">VERIFIED</option>
+          <option value="SUCCESS">SUCCESS</option>
+          <option value="FLAGGED">FLAGGED</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Audit Table (Read-Only: No edit or delete buttons) -->
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+    <div class="p-4 border-b border-slate-100 flex items-center justify-between text-xs">
+      <span class="font-bold text-slate-900">Audit Events Log</span>
+      <span class="text-slate-500">Showing {{ filteredLogs.length }} events</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+          <tr>
+            <th class="p-3.5 pl-4">Timestamp</th>
+            <th class="p-3.5">Actor</th>
+            <th class="p-3.5">Role</th>
+            <th class="p-3.5">Action</th>
+            <th class="p-3.5">Module</th>
+            <th class="p-3.5">Status</th>
+            <th class="p-3.5 pr-4 text-right">Reference ID</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (log of filteredLogs; track log.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="p-3.5 pl-4 font-mono text-[11px] text-slate-500">{{ log.timestamp }}</td>
+              <td class="p-3.5 font-bold text-slate-900 font-mono">{{ log.actor }}</td>
+              <td class="p-3.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
+                  {{ log.role }}
+                </span>
+              </td>
+              <td class="p-3.5 font-semibold text-slate-800">{{ log.action }}</td>
+              <td class="p-3.5 font-mono text-[11px] text-slate-500">{{ log.module }}</td>
+              <td class="p-3.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                  [ngClass]="log.status === 'VERIFIED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : (log.status === 'FLAGGED' ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-blue-100 text-blue-800 border border-blue-200')">
+                  {{ log.status }}
+                </span>
+              </td>
+              <td class="p-3.5 pr-4 text-right font-mono text-[11px] text-slate-400">{{ log.referenceId }}</td>
+            </tr>
+          }
+          @if (filteredLogs.length === 0) {
+            <tr>
+              <td colspan="7" class="p-8 text-center text-slate-400">
+                No matching audit ledger events found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

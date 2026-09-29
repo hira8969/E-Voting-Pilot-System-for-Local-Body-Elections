@@ -1,173 +1,162 @@
-<app-navbar></app-navbar>
+<div class="space-y-8 max-w-5xl mx-auto">
+  
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Election Management</h1>
+      <p class="text-xs text-slate-500 mt-1">Configure elections, schedules, and active polling windows.</p>
+    </div>
+    <button
+      (click)="openAddModal()"
+      class="px-5 py-2.5 bg-[#2563EB] hover:bg-blue-600 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer self-start sm:self-auto">
+      + Create Election
+    </button>
+  </div>
 
-<div class="admin-layout">
-  <app-sidebar mode="admin"></app-sidebar>
+  <!-- CREATE ELECTION FORM CARD (Screen 8 in Reference Image) -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+    <div class="border-b border-slate-100 pb-4 mb-6">
+      <h2 class="text-lg font-bold text-slate-900">Create Election</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Fill out the election details and upload a banner image.</p>
+    </div>
 
-  <main class="admin-main">
-    <div class="page-header">
-      <div class="title-meta">
-        <span class="admin-badge">ELECTION LIFECYCLE</span>
-        <h1 class="main-title">Manage Elections</h1>
-        <p class="subtitle">
-          Configure voting schedules, define constituencies, activate polling windows, and monitor election status.
-        </p>
+    @if (successMessage) {
+      <div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between">
+        <span>✓ {{ successMessage }}</span>
+        <button (click)="successMessage = ''" class="font-bold text-emerald-900">×</button>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex items-center justify-between">
+        <span>⚠️ {{ errorMessage }}</span>
+        <button (click)="errorMessage = ''" class="font-bold text-red-900">×</button>
+      </div>
+    }
+
+    <form [formGroup]="electionForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      
+      <!-- Election Title -->
+      <div>
+        <label for="title" class="block text-xs font-semibold text-slate-700 mb-1.5">Election Title</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="e.g. Student Council Election 2024"
+          class="block w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+          required>
       </div>
 
-      <div class="header-actions">
-        <button (click)="openAddModal()" class="btn-create">
-          + Add New Election
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-xs font-semibold text-slate-700 mb-1.5">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          placeholder="Provide brief background and eligibility instructions for voters..."
+          class="block w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+          required></textarea>
+      </div>
+
+      <!-- Date Range (Start Date & End Date) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="startDate" class="block text-xs font-semibold text-slate-700 mb-1.5">Start Date</label>
+          <div class="relative">
+            <input
+              id="startDate"
+              type="date"
+              formControlName="startDate"
+              class="block w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+              required>
+          </div>
+        </div>
+
+        <div>
+          <label for="endDate" class="block text-xs font-semibold text-slate-700 mb-1.5">End Date</label>
+          <div class="relative">
+            <input
+              id="endDate"
+              type="date"
+              formControlName="endDate"
+              class="block w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+              required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Banner Image (Screen 8 in Reference Image: Dotted upload box) -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Upload Banner Image</label>
+        <div class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center hover:border-blue-500 hover:bg-blue-50/20 transition-all cursor-pointer">
+          <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-2xl mx-auto mb-2">
+            ☁️
+          </div>
+          <p class="text-xs font-bold text-slate-700">Upload Banner Image</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">PNG, JPG (Max 5MB)</p>
+        </div>
+      </div>
+
+      <!-- Submit Button (Screen 8: Blue [Create Election] button) -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          class="w-full py-3 bg-[#2563EB] hover:bg-blue-600 text-white text-sm font-bold rounded-xl shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 transition-all cursor-pointer">
+          {{ isEditing ? 'Save Changes' : 'Create Election' }}
         </button>
       </div>
+
+    </form>
+  </div>
+
+  <!-- Existing Elections Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="text-sm font-bold text-slate-900">Configured Elections</h3>
+      <span class="text-xs text-slate-500">Total: {{ elections.length }}</span>
     </div>
 
-    <!-- Feedback messages -->
-    <div *ngIf="successMessage" class="alert alert-success">
-      <span>✓ {{ successMessage }}</span>
-      <button (click)="successMessage = ''" class="close-alert">×</button>
-    </div>
-
-    <div *ngIf="errorMessage" class="alert alert-error">
-      <span>⚠️ {{ errorMessage }}</span>
-      <button (click)="errorMessage = ''" class="close-alert">×</button>
-    </div>
-
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-container">
-      <app-loading text="Loading elections records..."></app-loading>
-    </div>
-
-    <!-- Table of Elections -->
-    <div *ngIf="!isLoading" class="table-card">
-      <table class="data-table">
-        <thead>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
           <tr>
-            <th>ID</th>
-            <th>Election Title</th>
-            <th>Type</th>
-            <th>Schedule</th>
-            <th>Status</th>
-            <th>Total Voters</th>
-            <th class="text-right">Actions</th>
+            <th class="p-4">ID</th>
+            <th class="p-4">Title</th>
+            <th class="p-4">Dates</th>
+            <th class="p-4">Status</th>
+            <th class="p-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let elec of elections">
-            <td class="font-mono">#{{ elec.id }}</td>
-            <td>
-              <div class="cell-title">
-                <strong>{{ elec.title }}</strong>
-                <span class="cell-sub">{{ elec.constituency }}</span>
-              </div>
-            </td>
-            <td><span class="type-pill">{{ elec.electionType || 'General' }}</span></td>
-            <td>
-              <div class="date-range">
-                <span>From: {{ elec.startDate | date:'mediumDate' }}</span>
-                <span>To: {{ elec.endDate | date:'mediumDate' }}</span>
-              </div>
-            </td>
-            <td>
-              <span class="status-badge" [class.active]="elec.status === 'ACTIVE'" [class.upcoming]="elec.status === 'UPCOMING'" [class.completed]="elec.status === 'COMPLETED'">
-                {{ elec.status }}
-              </span>
-            </td>
-            <td>{{ elec.totalVoters | number }}</td>
-            <td>
-              <div class="actions-group">
-                <button 
-                  (click)="toggleStatus(elec)" 
-                  class="btn-action" 
-                  [title]="elec.status === 'ACTIVE' ? 'Close Election' : 'Activate Election'">
-                  {{ elec.status === 'ACTIVE' ? 'Close' : 'Activate' }}
-                </button>
-                <button (click)="openEditModal(elec)" class="btn-action edit" title="Edit Details">
+        <tbody class="divide-y divide-slate-100">
+          @for (elec of elections; track elec.id) {
+            <tr class="hover:bg-slate-50/60 transition-colors">
+              <td class="p-4 font-mono font-bold text-slate-900">#{{ elec.id }}</td>
+              <td class="p-4">
+                <p class="font-bold text-slate-800">{{ elec.title }}</p>
+                <span class="text-[11px] text-slate-400">{{ elec.constituency }}</span>
+              </td>
+              <td class="p-4">{{ elec.startDate }} - {{ elec.endDate }}</td>
+              <td class="p-4">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                  [ngClass]="elec.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'">
+                  {{ elec.status }}
+                </span>
+              </td>
+              <td class="p-4 text-right space-x-2">
+                <button (click)="openEditModal(elec)" class="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
                   Edit
                 </button>
-                <button (click)="deleteElection(elec.id)" class="btn-action delete" title="Delete Election">
-                  Delete
+                <button (click)="toggleStatus(elec)" class="text-slate-600 hover:text-slate-900 font-semibold cursor-pointer">
+                  Toggle
                 </button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="elections.length === 0">
-            <td colspan="7" class="text-center empty-cell">No elections configured yet. Click "Add New Election" to begin.</td>
-          </tr>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
+  </div>
 
-    <!-- Add / Edit Election Modal -->
-    <div *ngIf="showModal" class="modal-backdrop">
-      <div class="modal-dialog">
-        <div class="modal-header">
-          <h3>{{ isEditing ? 'Edit Election Event' : 'Create New Election Event' }}</h3>
-          <button (click)="closeModal()" class="btn-close-modal">×</button>
-        </div>
-
-        <form [formGroup]="electionForm" (ngSubmit)="onSubmit()" class="modal-form">
-          <div class="form-group">
-            <label for="title">Election Title *</label>
-            <input id="title" type="text" formControlName="title" placeholder="e.g. Municipal Ward Council 2026" class="form-control" />
-            <span *ngIf="electionForm.get('title')?.touched && electionForm.get('title')?.invalid" class="field-error">
-              Title is required (min 4 characters).
-            </span>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="electionType">Election Type *</label>
-              <select id="electionType" formControlName="electionType" class="form-control">
-                <option value="General">General Election</option>
-                <option value="Municipal Ward">Municipal Ward</option>
-                <option value="Assembly">Legislative Assembly</option>
-                <option value="Panchayat">Gram Panchayat</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="constituency">Constituency / Ward *</label>
-              <input id="constituency" type="text" formControlName="constituency" placeholder="e.g. Ward 12 - Indiranagar" class="form-control" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="startDate">Start Date & Time *</label>
-              <input id="startDate" type="datetime-local" formControlName="startDate" class="form-control" />
-            </div>
-
-            <div class="form-group">
-              <label for="endDate">End Date & Time *</label>
-              <input id="endDate" type="datetime-local" formControlName="endDate" class="form-control" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="status">Initial Lifecycle Status *</label>
-            <select id="status" formControlName="status" class="form-control">
-              <option value="UPCOMING">UPCOMING (Scheduled for future)</option>
-              <option value="ACTIVE">ACTIVE (Polling Open)</option>
-              <option value="COMPLETED">COMPLETED (Polls Closed)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="description">Election Description & Citizen Instructions *</label>
-            <textarea id="description" rows="3" formControlName="description" placeholder="Brief summary of eligibility, rules, and voting instructions..." class="form-control"></textarea>
-            <span *ngIf="electionForm.get('description')?.touched && electionForm.get('description')?.invalid" class="field-error">
-              Description is required (min 10 characters).
-            </span>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" (click)="closeModal()" class="btn-cancel">Cancel</button>
-            <button type="submit" [disabled]="electionForm.invalid" class="btn-submit">
-              {{ isEditing ? 'Save Changes' : 'Create Election' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-  </main>
 </div>

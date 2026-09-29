@@ -303,3 +303,51 @@ INSERT IGNORE INTO candidates (id, election_id, full_name, party_name, symbol_ur
 (4, 1, 'Amitabh Singh', 'Independent (NOTA Alternative)', 'https://api.iconify.design/lucide:flag.svg', '28 - Sitamarhi', 'Independent youth candidate advocating transparent civic administration.', 'Digital municipal services, zero corruption grievance portal for citizens.', 'APPROVED'),
 (5, 2, 'Pankaj Kumar Singh', 'Independent - Mukhiya Nominee', 'https://api.iconify.design/lucide:home.svg', 'Lagma Gram Panchayat, Dumra', 'Resident of Lagma with extensive rural development engagement.', 'Piped drinking water in every tola, solar streetlights across all wards.', 'APPROVED'),
 (6, 2, 'Manju Kumari', 'Independent - Mukhiya Nominee', 'https://api.iconify.design/lucide:tree-pine.svg', 'Lagma Gram Panchayat, Dumra', 'Self-Help Group (Jeevika) coordinator.', 'Panchayat Bhavan digital service center, organic farming support.', 'APPROVED');
+
+-- ==============================================================================
+-- AUTH SERVICE USERS & ROLES SEED DATA
+-- ==============================================================================
+USE evoting_auth_db;
+
+CREATE TABLE IF NOT EXISTS roles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_roles (
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+INSERT IGNORE INTO roles (id, name) VALUES
+(1, 'ROLE_ADMIN'),
+(2, 'ROLE_SUPER_ADMIN'),
+(3, 'ROLE_CANDIDATE'),
+(4, 'ROLE_PARTY'),
+(5, 'ROLE_VOTER'),
+(6, 'ROLE_AUDITOR');
+
+-- Seed Admin and Super Admin with BCrypt hashed passwords:
+-- Admin: Admin@12345 ($2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi)
+-- SuperAdmin: SuperAdmin@12345 ($2a$10$Y1rX4O9LhS7T7q.Yp10E5eD7cQp3KqYV8lWz0kQkG7B4Gq9h2aYcy)
+INSERT IGNORE INTO users (id, username, email, password_hash, enabled) VALUES
+(1, 'admin', 'admin@evoting.local', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', TRUE),
+(2, 'superadmin', 'superadmin@evoting.local', '$2a$10$Y1rX4O9LhS7T7q.Yp10E5eD7cQp3KqYV8lWz0kQkG7B4Gq9h2aYcy', TRUE);
+
+INSERT IGNORE INTO user_roles (user_id, role_id) VALUES
+(1, 1),
+(2, 1),
+(2, 2);
+

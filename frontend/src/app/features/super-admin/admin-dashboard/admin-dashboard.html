@@ -1,136 +1,145 @@
-<div class="space-y-6">
+<div class="space-y-8 max-w-6xl mx-auto">
   
+  <!-- Welcome Banner -->
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-extrabold text-slate-900">Super Administrator Console</h1>
-      <p class="text-xs text-slate-500 mt-0.5">High-privilege system governance, election lifecycle, and identity administration</p>
+    <div class="space-y-1">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+        <span>👑 HIGHEST SYSTEM AUTHORITY</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Welcome, {{ currentUser?.fullName || currentUser?.name || 'Super Admin' }}
+      </h1>
+      <p class="text-sm text-slate-500">System-wide governance, administrator provisioning, and election authority.</p>
     </div>
-    <div class="flex items-center gap-2">
-      <a routerLink="/admin/elections" class="px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-1.5">
-        <span>⚙️</span>
-        <span>Configure Election</span>
+
+    <div class="flex items-center gap-2.5">
+      <a
+        routerLink="/super-admin/admins"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors">
+        🛡️ Manage Admins
+      </a>
+      <a
+        routerLink="/super-admin/settings"
+        class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl shadow-2xs transition-colors">
+        ⚙️ Settings
       </a>
     </div>
   </div>
 
-  <!-- Stat Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <app-stat-card
-      title="Registered Users"
-      value="12,842"
-      icon="👥"
-      color="blue"
-      subtitle="Citizens & Election Staff">
-    </app-stat-card>
-
-    <app-stat-card
-      title="Active Elections"
-      value="1 Active"
-      icon="🟢"
-      color="green"
-      subtitle="2 Scheduled Upcoming">
-    </app-stat-card>
-
-    <app-stat-card
-      title="Audit Trail Logs"
-      value="24,582"
-      icon="📜"
-      color="purple"
-      subtitle="Immutable event entries">
-    </app-stat-card>
-
-    <app-stat-card
-      title="Key Ring & Root HSM"
-      value="HEALTHY"
-      icon="🔐"
-      color="green"
-      subtitle="ECC-256 Master Root Active">
-    </app-stat-card>
-  </div>
-
-  <!-- Active Election Governance Card -->
-  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
-            🟢 Active Production Run
-          </span>
-          <span class="text-xs font-semibold text-slate-400">ID: elec-2026-01</span>
-        </div>
-        <h2 class="text-lg font-bold text-slate-900 mt-2">Sitamarhi Municipal Corporation Election 2026</h2>
-        <p class="text-xs text-slate-500 mt-1">Voting Window: 22 Aug 2026 (07:00 AM – 06:00 PM IST) • Ward 12</p>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <a routerLink="/admin/elections" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
-          Edit Configuration
-        </a>
-        <a routerLink="/admin/reports" class="px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg shadow-xs transition-all">
-          Generate Turnout Report
-        </a>
-      </div>
+  <!-- 6 Statistics Cards (Super Admin Cards requested) -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+    
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">👥</span>
+      <p class="text-xl font-black text-slate-900 mt-2">{{ stats.totalUsers }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Total Users</p>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 text-xs">
-      <div>
-        <span class="text-slate-400 text-[10px] uppercase font-bold block">Total Electorate</span>
-        <span class="font-bold text-slate-900">45,820 Citizens</span>
-      </div>
-      <div>
-        <span class="text-slate-400 text-[10px] uppercase font-bold block">Booths Allocated</span>
-        <span class="font-bold text-slate-900">42 Online Terminals</span>
-      </div>
-      <div>
-        <span class="text-slate-400 text-[10px] uppercase font-bold block">Nominated Candidates</span>
-        <span class="font-bold text-slate-900">5 + NOTA</span>
-      </div>
-      <div>
-        <span class="text-slate-400 text-[10px] uppercase font-bold block">Zero-Knowledge Proofs</span>
-        <span class="font-bold text-green-700">Validated 100%</span>
-      </div>
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">🛡️</span>
+      <p class="text-xl font-black text-indigo-600 mt-2">{{ stats.totalAdmins }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Total Admins</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">🏛️</span>
+      <p class="text-xl font-black text-slate-900 mt-2">{{ stats.totalParties }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Total Parties</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">🧑‍💼</span>
+      <p class="text-xl font-black text-slate-900 mt-2">{{ stats.totalCandidates }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Candidates</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">🗳️</span>
+      <p class="text-xl font-black text-slate-900 mt-2">{{ stats.totalVoters }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Total Voters</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <span class="text-xl">⚡</span>
+      <p class="text-xl font-black text-emerald-600 mt-2">{{ stats.activeElections }}</p>
+      <p class="text-[11px] font-semibold text-slate-400 mt-0.5">Active Elections</p>
+    </div>
+
+  </div>
+
+  <!-- System Administration Quick Launch Section -->
+  <div class="space-y-4">
+    <h2 class="text-base font-bold text-slate-900">System Administration Controls</h2>
+
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+      <a routerLink="/super-admin/admins" class="bg-white rounded-2xl border border-slate-200 p-4 text-center hover:border-indigo-500 hover:shadow-xs transition-all">
+        <span class="text-2xl block mb-2">🛡️</span>
+        <span class="text-xs font-bold text-slate-800">Admin Management</span>
+      </a>
+
+      <a routerLink="/super-admin/users" class="bg-white rounded-2xl border border-slate-200 p-4 text-center hover:border-indigo-500 hover:shadow-xs transition-all">
+        <span class="text-2xl block mb-2">👥</span>
+        <span class="text-xs font-bold text-slate-800">User Directory</span>
+      </a>
+
+      <a routerLink="/super-admin/roles" class="bg-white rounded-2xl border border-slate-200 p-4 text-center hover:border-indigo-500 hover:shadow-xs transition-all">
+        <span class="text-2xl block mb-2">🔑</span>
+        <span class="text-xs font-bold text-slate-800">Roles & RBAC</span>
+      </a>
+
+      <a routerLink="/super-admin/elections" class="bg-white rounded-2xl border border-slate-200 p-4 text-center hover:border-indigo-500 hover:shadow-xs transition-all">
+        <span class="text-2xl block mb-2">🗳️</span>
+        <span class="text-xs font-bold text-slate-800">Election Config</span>
+      </a>
+
+      <a routerLink="/super-admin/settings" class="bg-white rounded-2xl border border-slate-200 p-4 text-center hover:border-indigo-500 hover:shadow-xs transition-all">
+        <span class="text-2xl block mb-2">⚙️</span>
+        <span class="text-xs font-bold text-slate-800">System Settings</span>
+      </a>
     </div>
   </div>
 
-  <!-- Admin Quick Navigation Panels -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-      <div>
-        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-3">
-          👥
-        </div>
-        <h3 class="text-sm font-bold text-slate-900">User & Role Management</h3>
-        <p class="text-xs text-slate-500 mt-1">Assign returning officer badges, grant observer credentials, and manage system roles.</p>
-      </div>
-      <a routerLink="/admin/users" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
-        Manage Users →
-      </a>
+  <!-- Recent Administrative Activity Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="text-sm font-bold text-slate-900">Recent Administrative Activity</h2>
+      <a routerLink="/super-admin/audit" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">Full Audit Log →</a>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-      <div>
-        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-900 flex items-center justify-center text-xl mb-3">
-          📜
-        </div>
-        <h3 class="text-sm font-bold text-slate-900">Security & Audit Trails</h3>
-        <p class="text-xs text-slate-500 mt-1">Export signed compliance certificates, inspect tamper flags, and download audit logs.</p>
-      </div>
-      <a routerLink="/admin/audit" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
-        View Audit Trail →
-      </a>
-    </div>
-
-    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-      <div>
-        <div class="w-10 h-10 rounded-xl bg-green-50 text-green-900 flex items-center justify-center text-xl mb-3">
-          📊
-        </div>
-        <h3 class="text-sm font-bold text-slate-900">Statutory Election Reports</h3>
-        <p class="text-xs text-slate-500 mt-1">Generate official Form 20 final result sheets, booth turnout summaries, and observer reports.</p>
-      </div>
-      <a routerLink="/admin/reports" class="mt-4 text-xs font-bold text-blue-900 hover:underline">
-        Generate Reports →
-      </a>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+          <tr>
+            <th class="p-4">Actor</th>
+            <th class="p-4">Role</th>
+            <th class="p-4">Action</th>
+            <th class="p-4">Module</th>
+            <th class="p-4">Timestamp</th>
+            <th class="p-4 text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (act of recentActivity; track act.timestamp) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="p-4 font-mono font-bold text-slate-800">{{ act.actor }}</td>
+              <td class="p-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
+                  {{ act.role }}
+                </span>
+              </td>
+              <td class="p-4 font-medium text-slate-900">{{ act.action }}</td>
+              <td class="p-4 font-mono text-[11px] text-slate-500">{{ act.module }}</td>
+              <td class="p-4 text-slate-500">{{ act.timestamp }}</td>
+              <td class="p-4 text-right">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                  [ngClass]="act.status === 'SUCCESS' ? 'bg-emerald-100 text-emerald-800' : (act.status === 'ALERT' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800')">
+                  {{ act.status }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 
