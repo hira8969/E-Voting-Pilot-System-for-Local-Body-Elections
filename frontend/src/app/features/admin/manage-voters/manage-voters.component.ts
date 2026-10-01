@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { AdminService } from '../../../core/services/admin.service';
 import { User } from '../../../core/models/user.model';
@@ -15,8 +13,6 @@ import { User } from '../../../core/models/user.model';
     CommonModule,
     FormsModule,
     RouterModule,
-    NavbarComponent,
-    SidebarComponent,
     LoadingComponent
   ],
   templateUrl: './manage-voters.component.html',

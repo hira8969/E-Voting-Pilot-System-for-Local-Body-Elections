@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { ElectionService } from '../../../core/services/election.service';
 import { CandidateService } from '../../../core/services/candidate.service';
 import { AdminService } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Election } from '../../../core/models/election.model';
 import { AuditEvent } from '../../../core/models/audit.model';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin-dashboard',

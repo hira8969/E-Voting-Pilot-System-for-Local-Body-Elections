@@ -1,0 +1,48 @@
+# Compiled output
+dist/
+tmp/
+out-tsc/
+bazel-out/
+**/target/
+**/build/
+
+# Node & Frontend dependencies
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+**/.angular/
+
+# JVM & Application Logs
+*.log
+hs_err_*.log
+replay_*.log
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache
+.factorypath
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secrets & Environment
+.env
+.env.local
+*.pem
+*.key

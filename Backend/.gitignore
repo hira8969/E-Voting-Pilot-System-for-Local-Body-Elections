@@ -1,5 +1,9 @@
 HELP.md
 target/
+**/target/
+*.log
+hs_err_*.log
+replay_*.log
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

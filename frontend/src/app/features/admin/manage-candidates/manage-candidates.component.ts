@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
-import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { CandidateService } from '../../../core/services/candidate.service';
 import { ElectionService } from '../../../core/services/election.service';
@@ -17,8 +15,6 @@ import { Election } from '../../../core/models/election.model';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    NavbarComponent,
-    SidebarComponent,
     LoadingComponent
   ],
   templateUrl: './manage-candidates.component.html',
