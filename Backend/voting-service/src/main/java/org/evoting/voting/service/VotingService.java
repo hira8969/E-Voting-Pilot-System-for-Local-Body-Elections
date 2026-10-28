@@ -1,7 +1,9 @@
 package org.evoting.voting.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.evoting.voting.client.AuditClient;
 import org.evoting.voting.client.VoterClient;
+import org.evoting.voting.dto.AuditLogRequestDto;
 import org.evoting.voting.dto.CandidateTallyDto;
 import org.evoting.voting.dto.CastVoteDto;
 import org.evoting.voting.dto.VoteReceiptDto;
@@ -24,10 +26,12 @@ public class VotingService {
 
     private final VoteRepository voteRepository;
     private final VoterClient voterClient;
+    private final AuditClient auditClient;
 
-    public VotingService(VoteRepository voteRepository, VoterClient voterClient) {
+    public VotingService(VoteRepository voteRepository, VoterClient voterClient, AuditClient auditClient) {
         this.voteRepository = voteRepository;
         this.voterClient = voterClient;
+        this.auditClient = auditClient;
     }
 
     /**
@@ -80,6 +84,23 @@ public class VotingService {
             voterClient.updateVoteStatus(dto.getVoterId(), true);
         } catch (Exception e) {
             log.warn("Could not sync hasVoted status with Voter Service: {}", e.getMessage());
+        }
+
+        // 6. Record immutable audit entry via Audit Service
+        if (auditClient != null) {
+            try {
+                AuditLogRequestDto auditRequest = AuditLogRequestDto.builder()
+                        .action("BALLOT_CAST")
+                        .actorId(dto.getVoterId())
+                        .actorRole("ROLE_VOTER")
+                        .entityType("VOTE")
+                        .entityId(String.valueOf(savedVote.getId()))
+                        .details("Ballot cast securely for electionId=" + dto.getElectionId() + ", hash=" + hash)
+                        .build();
+                auditClient.logEvent(auditRequest);
+            } catch (Exception e) {
+                log.warn("Could not dispatch audit event to Audit Service: {}", e.getMessage());
+            }
         }
 
         log.info("Vote successfully recorded with receipt hash: {}", hash);

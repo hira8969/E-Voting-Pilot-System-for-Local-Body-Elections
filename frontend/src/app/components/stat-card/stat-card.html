@@ -1,0 +1,28 @@
+<div class="bg-[#FCFCFA] rounded-md border border-[#DCE2E8] p-4 sm:p-5 shadow-xs transition-colors hover:border-[#183153]/40">
+  <div class="flex items-start justify-between gap-3">
+    <div class="space-y-1 min-w-0">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-[#64748B] truncate">{{ title }}</p>
+      <h3 class="text-2xl font-extrabold text-[#183153] font-mono leading-none">{{ value }}</h3>
+      @if (trend || subtitle) {
+        <div class="flex items-center gap-1.5 pt-1 text-[11px]">
+          @if (trend) {
+            <span class="font-bold inline-flex items-center"
+              [ngClass]="{'text-[#1E7E34]': trendDirection === 'up', 'text-[#C53030]': trendDirection === 'down', 'text-[#64748B]': trendDirection === 'neutral'}">
+              @if (trendDirection === 'up') { ↑ }
+              @if (trendDirection === 'down') { ↓ }
+              {{ trend }}
+            </span>
+          }
+          @if (subtitle) {
+            <span class="text-[#64748B] truncate">{{ subtitle }}</span>
+          }
+        </div>
+      }
+    </div>
+    @if (icon) {
+      <div class="w-10 h-10 rounded-md flex items-center justify-center shrink-0" [ngClass]="getIconBgClasses()">
+        <app-icon [name]="icon" className="w-5 h-5"></app-icon>
+      </div>
+    }
+  </div>
+</div>

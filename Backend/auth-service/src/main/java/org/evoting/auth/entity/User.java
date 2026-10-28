@@ -42,6 +42,18 @@ public class User {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "epic_number", unique = true, length = 50)
+    private String epicNumber;
+
+    @Column(name = "full_name", length = 100)
+    private String fullName;
+
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "constituency", length = 100)
+    private String constituency;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

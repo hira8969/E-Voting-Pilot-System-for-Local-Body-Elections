@@ -1,0 +1,32 @@
+<div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+  @for (toast of toasts$ | async; track toast.id) {
+    <div
+      class="pointer-events-auto rounded-lg p-3.5 shadow-md border flex items-start gap-3 transition-all duration-300 transform translate-y-0 bg-[#FCFCFA]"
+      [ngClass]="getToastClasses(toast.type)">
+      <div class="shrink-0 mt-0.5">
+        @if (toast.type === 'success') {
+          <app-icon name="check-circle" [size]="18" class="text-emerald-700" />
+        }
+        @if (toast.type === 'error') {
+          <app-icon name="alert-triangle" [size]="18" class="text-red-700" />
+        }
+        @if (toast.type === 'warning') {
+          <app-icon name="alert-triangle" [size]="18" class="text-amber-700" />
+        }
+        @if (toast.type === 'info') {
+          <app-icon name="info" [size]="18" class="text-[#237C78]" />
+        }
+      </div>
+      <div class="flex-1">
+        <h4 class="text-xs font-bold text-[#253247]">{{ toast.title }}</h4>
+        <p class="text-[11px] text-[#64748B] mt-0.5 leading-relaxed">{{ toast.message }}</p>
+      </div>
+      <button
+        type="button"
+        class="text-[#64748B] hover:text-[#253247] -mr-1 -mt-1 p-1 rounded cursor-pointer"
+        (click)="dismiss(toast.id)">
+        <app-icon name="close" [size]="14" />
+      </button>
+    </div>
+  }
+</div>

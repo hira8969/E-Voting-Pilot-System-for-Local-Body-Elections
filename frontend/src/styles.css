@@ -1,58 +1,73 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #183153;
+  --color-primary-hover: #12243e;
+  --color-primary-light: #eef3f8;
+  --color-secondary: #237C78;
+  --color-secondary-hover: #1a605d;
+  --color-secondary-light: #eaf4f3;
+  --color-surface: #FCFCFA;
+  --color-app-bg: #F3F5F7;
+  --color-main: #253247;
+  --color-muted-text: #64748B;
+  --color-subtle-border: #DCE2E8;
+  --color-civic-green: #1E7E34;
+  --color-civic-green-light: #e8f5e9;
+  --color-civic-amber: #D97706;
+  --color-civic-amber-light: #fef3c7;
+  --color-civic-red: #C53030;
+  --color-civic-red-light: #fee2e2;
+  --font-sans: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 @layer base {
   :root {
-    --primary: #2563EB;
-    --primary-dark: #1E40AF;
-    --secondary: #4F46E5;
-    --dark: #0F172A;
-    --success: #16A34A;
+    --primary: #183153;
+    --primary-dark: #12243e;
+    --secondary: #237C78;
+    --dark: #183153;
+    --success: #1E7E34;
     --warning: #D97706;
-    --danger: #DC2626;
-    --background: #F8FAFC;
-    --surface: #FFFFFF;
-    --text: #0F172A;
+    --danger: #C53030;
+    --background: #F3F5F7;
+    --surface: #FCFCFA;
+    --text: #253247;
     --muted: #64748B;
-    --border: #E2E8F0;
+    --border: #DCE2E8;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--background);
     color: var(--text);
     overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom EVM LED Blink & Pulse Animation */
-@keyframes evm-pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+/* Accessible focus outlines for civic digital service standards */
+:focus-visible {
+  outline: 2px solid #183153;
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference respect */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.95);
-    box-shadow: 0 0 4px rgba(34, 197, 94, 0.3);
-  }
 }
 
-@keyframes evm-beep {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
-.evm-active-led {
-  animation: evm-pulse 1.5s infinite ease-in-out;
-}
-
-.evm-btn-press {
-  animation: evm-beep 0.2s ease-in-out;
-}
-
-/* Custom Scrollbar for dashboards */
+/* Subtle clean scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -64,14 +79,14 @@
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Printing styling for Vote Receipt */
+/* Official Print Layout for Vote Participation Verification Receipt */
 @media print {
   body * {
     visibility: hidden;
@@ -84,5 +99,9 @@
     left: 0;
     top: 0;
     width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-shadow: none !important;
+    border: 1px solid #94a3b8 !important;
   }
 }

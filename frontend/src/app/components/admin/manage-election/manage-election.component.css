@@ -1,0 +1,4 @@
+/* Scoped election management styles - Tailwind handles layouts */
+:host {
+  display: block;
+}

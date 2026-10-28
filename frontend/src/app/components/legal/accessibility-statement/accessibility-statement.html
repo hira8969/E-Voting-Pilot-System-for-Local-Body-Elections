@@ -1,0 +1,102 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Accessibility Statement</li>
+      </ol>
+    </nav>
+
+    <!-- Draft Legal Notice -->
+    <div class="p-4 mb-8 rounded-lg bg-[#fef3c7] border border-[#fde68a] text-xs text-[#92400e]">
+      <div class="flex items-start gap-2.5">
+        <app-icon name="alert" className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5"></app-icon>
+        <div>
+          <strong class="font-bold block text-sm mb-0.5">DRAFT ACCESSIBILITY STANDARD DECLARATION</strong>
+          <span>This election portal targets Web Content Accessibility Guidelines (WCAG) 2.2 Level AA compliance to guarantee equitable voting access for citizens with disabilities. Formal audit by an accredited assistive technology testing laboratory is required before production rollout.</span>
+        </div>
+      </div>
+    </div>
+
+    <article class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-10 shadow-xs space-y-8">
+      <header class="border-b border-[#DCE2E8] pb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Accessibility & Universal Inclusivity Statement</h1>
+        <p class="text-xs text-[#64748B] mt-1.5">Compliance Target: WCAG 2.2 Level AA • Last Updated: October 2026</p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">1. Commitment to Accessible Civic Participation</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Every eligible citizen has a democratic right to vote privately and independently. This digital election platform is engineered according to the principles of Perceivability, Operability, Understandability, and Robustness (POUR).
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">2. Implemented Accessibility Features</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8] space-y-1.5">
+            <h3 class="font-bold text-[#183153] flex items-center gap-2">
+              <app-icon name="check-circle" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+              High Contrast & Readable Typography
+            </h3>
+            <p class="text-[#64748B] leading-relaxed">
+              Tested against 4.5:1 minimum contrast ratios for body copy (#253247 on #FCFCFA) and 3:1 for graphical UI elements and form borders (#DCE2E8). Clean Source Sans 3 typography with comfortable proportional leading.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8] space-y-1.5">
+            <h3 class="font-bold text-[#183153] flex items-center gap-2">
+              <app-icon name="check-circle" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+              Full Keyboard Navigation
+            </h3>
+            <p class="text-[#64748B] leading-relaxed">
+              Every interactive control, ballot radio choice, modal action, and table navigation element is reachable and operable using Tab, Shift+Tab, Enter, and Spacebar, accompanied by distinct 2px focus indicators.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8] space-y-1.5">
+            <h3 class="font-bold text-[#183153] flex items-center gap-2">
+              <app-icon name="check-circle" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+              Screen Reader Semantic Hierarchy
+            </h3>
+            <p class="text-[#64748B] leading-relaxed">
+              Proper HTML5 landmarks (&lt;main&gt;, &lt;nav&gt;, &lt;header&gt;, &lt;footer&gt;, &lt;article&gt;), single &lt;h1&gt; hierarchy, descriptive alt tags, and ARIA labels on modal overlays and live regions.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8] space-y-1.5">
+            <h3 class="font-bold text-[#183153] flex items-center gap-2">
+              <app-icon name="check-circle" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+              Respect for Reduced Motion
+            </h3>
+            <p class="text-[#64748B] leading-relaxed">
+              All CSS transitions and animations are suppressed automatically when users have set <code class="bg-[#e2e8f0] px-1 rounded">prefers-reduced-motion: reduce</code> in their operating system preferences.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">3. Neutral and Non-Biased Candidate Presentation</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          To avoid perceptual priming or accidental ballot bias:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li>All candidates on the EVM ballot are rendered with uniform rectangular geometry, identical padding, and equal typography sizing.</li>
+          <li>No candidate is highlighted with primary action colors, glowing borders, or preferential visual weight before voter selection.</li>
+          <li>Selected choices are communicated through dual indicators (checkbox marker + text label "Selected") rather than color alone.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3 border-t border-[#DCE2E8] pt-6">
+        <h2 class="text-base font-bold text-[#183153]">4. Accessibility Feedback and Remediation</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          If you encounter any barrier while accessing elections or ballots on assistive technology, please notify our accessibility coordinator through the <a routerLink="/contact" class="text-[#237C78] font-semibold hover:underline">Support Desk</a>. We prioritize accessibility bug reports for immediate technical remediation.
+        </p>
+      </section>
+    </article>
+  </main>
+</div>

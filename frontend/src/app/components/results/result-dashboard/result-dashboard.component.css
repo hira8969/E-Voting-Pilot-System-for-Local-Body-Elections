@@ -1,0 +1,4 @@
+/* Scoped result dashboard styles - Tailwind handles layouts */
+:host {
+  display: block;
+}

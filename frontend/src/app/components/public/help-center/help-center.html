@@ -1,0 +1,99 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <nav aria-label="Breadcrumb" class="text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Help Center & Accessibility</li>
+      </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-8 shadow-xs">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#eef3f8] text-[#183153] border border-[#d3dfea] uppercase tracking-wider mb-2">
+          Electoral Help Desk & Support
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Citizen Help Center</h1>
+        <p class="text-xs text-[#64748B] mt-2 leading-relaxed">
+          Comprehensive guides on voter authentication, navigation of the digital ballot, voter receipt printing, and technical grievance submission.
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Help Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <a routerLink="/voter-info" class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs hover:border-[#183153] transition-colors space-y-2 block">
+        <app-icon name="user-check" className="w-5 h-5 text-[#237C78]"></app-icon>
+        <h2 class="text-sm font-bold text-[#183153]">Voter Roll Verification</h2>
+        <p class="text-xs text-[#64748B]">Check eligibility criteria, ward assignments, and EPIC document requirements.</p>
+      </a>
+
+      <a routerLink="/login" class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs hover:border-[#183153] transition-colors space-y-2 block">
+        <app-icon name="vote" className="w-5 h-5 text-[#183153]"></app-icon>
+        <h2 class="text-sm font-bold text-[#183153]">How to Vote (EVM)</h2>
+        <p class="text-xs text-[#64748B]">Step-by-step walkthrough of ballot selection, review modal, and confirmation.</p>
+      </a>
+
+      <a routerLink="/accessibility" class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs hover:border-[#183153] transition-colors space-y-2 block">
+        <app-icon name="check-circle" className="w-5 h-5 text-[#1E7E34]"></app-icon>
+        <h2 class="text-sm font-bold text-[#183153]">Accessibility Options</h2>
+        <p class="text-xs text-[#64748B]">Screen reader support, keyboard navigation shortcuts, and contrast details.</p>
+      </a>
+    </div>
+
+    <!-- Help Topics Accordion -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs space-y-4">
+      <h2 class="text-base font-bold text-[#183153]">Step-by-Step Voting Assistance</h2>
+
+      <div class="space-y-3 text-xs">
+        <div class="border border-[#DCE2E8] rounded-md overflow-hidden">
+          <button
+            type="button"
+            (click)="toggle(0)"
+            class="w-full p-4 text-left font-bold text-[#183153] bg-[#F3F5F7] hover:bg-[#eef3f8] flex items-center justify-between cursor-pointer">
+            <span>1. What credentials do I need to log in to the voter portal?</span>
+            <app-icon name="chevron-down" className="w-4 h-4 text-[#64748B]"></app-icon>
+          </button>
+          @if (openSection === 0) {
+            <div class="p-4 bg-white text-[#253247] leading-relaxed border-t border-[#DCE2E8]">
+              You can log in with your registered Email address or your official Voter ID (EPIC) number, along with your secure password. For demonstration sessions, predefined test accounts are seeded in the system.
+            </div>
+          }
+        </div>
+
+        <div class="border border-[#DCE2E8] rounded-md overflow-hidden">
+          <button
+            type="button"
+            (click)="toggle(1)"
+            class="w-full p-4 text-left font-bold text-[#183153] bg-[#F3F5F7] hover:bg-[#eef3f8] flex items-center justify-between cursor-pointer">
+            <span>2. Can I change my vote after confirming it?</span>
+            <app-icon name="chevron-down" className="w-4 h-4 text-[#64748B]"></app-icon>
+          </button>
+          @if (openSection === 1) {
+            <div class="p-4 bg-white text-[#253247] leading-relaxed border-t border-[#DCE2E8]">
+              No. In compliance with election law, confirmed votes are cryptographically sealed and permanently tallied. An explicit review dialog is shown before submission so you can check your choice carefully before casting.
+            </div>
+          }
+        </div>
+
+        <div class="border border-[#DCE2E8] rounded-md overflow-hidden">
+          <button
+            type="button"
+            (click)="toggle(2)"
+            class="w-full p-4 text-left font-bold text-[#183153] bg-[#F3F5F7] hover:bg-[#eef3f8] flex items-center justify-between cursor-pointer">
+            <span>3. How do I print or save my electoral participation receipt?</span>
+            <app-icon name="chevron-down" className="w-4 h-4 text-[#64748B]"></app-icon>
+          </button>
+          @if (openSection === 2) {
+            <div class="p-4 bg-white text-[#253247] leading-relaxed border-t border-[#DCE2E8]">
+              After casting your ballot, navigate to "Vote Receipt" or tap the "Print Receipt" button on the confirmation screen. You can use your browser's Print dialog to save a clean PDF or print a hard copy. The receipt displays your participation token and timestamp without exposing your candidate choice.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

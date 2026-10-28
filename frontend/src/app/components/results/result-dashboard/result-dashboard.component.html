@@ -1,0 +1,365 @@
+<div class="space-y-6 max-w-6xl mx-auto" id="printable-receipt">
+
+  <!-- Header Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
+    <div class="space-y-1">
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <h1 class="text-2xl font-extrabold text-[#183153] tracking-tight">Election Results & Official Tally</h1>
+        
+        @if (isPublished) {
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-[11px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+            <span class="w-2 h-2 rounded-full bg-[#1E7E34] animate-pulse"></span>
+            <span>OFFICIALLY PUBLISHED & CERTIFIED</span>
+          </span>
+        } @else if (isCompletedOrPublished) {
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>SCRUTINY MODE (PENDING PUBLICATION)</span>
+          </span>
+        } @else {
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span>POLLING IN PROGRESS</span>
+          </span>
+        }
+      </div>
+      <p class="text-xs text-[#64748B]">
+        Official vote aggregation with cryptographic terminal ledger verification.
+      </p>
+    </div>
+
+    <!-- Actions & Election Selector -->
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="w-full sm:w-64">
+        <select
+          [ngModel]="selectedElectionId"
+          (ngModelChange)="onElectionChange($event)"
+          class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs font-semibold text-[#253247] shadow-xs focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
+          @for (elec of elections; track elec.id) {
+            <option [value]="elec.id">{{ elec.title }} ({{ elec.status }})</option>
+          }
+        </select>
+      </div>
+
+      <button
+        type="button"
+        (click)="printTally()"
+        class="inline-flex items-center gap-1.5 px-4 py-2 border border-[#DCE2E8] hover:bg-[#F3F5F7] text-[#183153] text-xs font-semibold rounded-md transition-colors cursor-pointer shadow-xs bg-white">
+        <app-icon name="printer" className="w-4 h-4"></app-icon>
+        <span>Print Tally</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ADMIN SCRUTINY & PUBLICATION CONTROL PANEL (Visible to Admin & SuperAdmin) -->
+  @if (isAdmin) {
+    <div class="rounded-lg border p-5 shadow-xs transition-all"
+         [ngClass]="isPublished ? 'bg-emerald-50/70 border-emerald-300' : 'bg-amber-50/80 border-amber-300'">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2">
+            <app-icon [name]="isPublished ? 'shield-check' : 'lock'" 
+                      [className]="isPublished ? 'w-5 h-5 text-emerald-700' : 'w-5 h-5 text-amber-700'"></app-icon>
+            <h2 class="text-sm font-bold text-[#183153]">
+              Admin Control: {{ isPublished ? 'Election Results Live to Public' : 'Internal Scrutiny Mode (Automatic Count)' }}
+            </h2>
+            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide border"
+                  [ngClass]="isPublished ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-900 border-amber-300'">
+              {{ isPublished ? 'Publicly Visible' : 'Restricted to Admin Only' }}
+            </span>
+          </div>
+
+          <p class="text-xs text-[#253247] max-w-3xl leading-relaxed">
+            @if (isPublished) {
+              Official results have been certified and released. All Voters, Candidates, and Political Parties can now see the declared winner, candidate vote counts, and analytical charts.
+            } @else {
+              Ballot counting is automatically reconciled from the encrypted voting ledger. As Administrator, you can review the candidate totals and margins below. Voters and candidates will NOT see the results until you click <strong>Publish Official Results</strong>.
+            }
+          </p>
+        </div>
+
+        <!-- Action Button -->
+        <div class="shrink-0 flex items-center gap-3">
+          @if (!isPublished) {
+            <button
+              type="button"
+              (click)="publishResults()"
+              [disabled]="isPublishing"
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E7E34] hover:bg-[#186429] text-white text-xs font-bold rounded-md shadow-sm transition-all cursor-pointer disabled:opacity-50">
+              <app-icon name="check" className="w-4 h-4"></app-icon>
+              <span>{{ isPublishing ? 'Publishing...' : 'Publish Official Results' }}</span>
+            </button>
+          } @else {
+            <button
+              type="button"
+              (click)="unpublishResults()"
+              [disabled]="isPublishing"
+              class="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-semibold rounded-md shadow-xs transition-all cursor-pointer disabled:opacity-50">
+              <app-icon name="lock" className="w-3.5 h-3.5"></app-icon>
+              <span>{{ isPublishing ? 'Reverting...' : 'Revert to Scrutiny (Unpublish)' }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Feedback toast/alert if action performed -->
+      @if (actionFeedback) {
+        <div class="mt-3 p-3 rounded text-xs font-semibold flex items-center justify-between"
+             [ngClass]="feedbackType === 'success' ? 'bg-white border border-emerald-300 text-emerald-900' : 'bg-red-50 border border-red-200 text-red-800'">
+          <span>{{ actionFeedback }}</span>
+          <button type="button" (click)="actionFeedback = ''" class="text-xs font-bold px-2 py-0.5 hover:opacity-75">✕</button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- NON-ADMIN VIEW WHEN UNPUBLISHED: Gated Informational Screen -->
+  @if (!isAdmin && !isPublished) {
+    <div class="bg-[#FCFCFA] rounded-xl border border-[#DCE2E8] p-8 sm:p-12 shadow-sm text-center space-y-6">
+      <div class="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 mx-auto flex items-center justify-center text-amber-700 shadow-xs">
+        <app-icon name="lock" className="w-8 h-8 text-amber-600"></app-icon>
+      </div>
+
+      <div class="space-y-2 max-w-xl mx-auto">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+          <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
+          <span>OFFICIAL RESULTS UNDER SCRUTINY</span>
+        </span>
+        <h2 class="text-2xl font-extrabold text-[#183153] tracking-tight">
+          Results Awaiting Election Commission Certification
+        </h2>
+        <p class="text-xs text-[#64748B] leading-relaxed">
+          Voting for <strong>{{ currentElection?.title || 'this election' }}</strong> is complete. The District Returning Officer and State Election Commission are currently conducting mandatory ballot ledger reconciliation and cryptographic audit checks.
+        </p>
+      </div>
+
+      <!-- Statutory Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
+        <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-4 space-y-1">
+          <span class="text-[11px] font-semibold text-[#64748B] block">Jurisdiction</span>
+          <span class="text-xs font-bold text-[#183153] block truncate">{{ currentElection?.constituency || 'Ward 12' }}</span>
+        </div>
+        <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-4 space-y-1">
+          <span class="text-[11px] font-semibold text-[#64748B] block">Ballot Audits</span>
+          <span class="text-xs font-bold text-[#1E7E34] flex items-center gap-1">
+            <app-icon name="check" className="w-3.5 h-3.5"></app-icon>
+            <span>Seals Verified</span>
+          </span>
+        </div>
+        <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-4 space-y-1">
+          <span class="text-[11px] font-semibold text-[#64748B] block">Release Schedule</span>
+          <span class="text-xs font-bold text-amber-800 block">Upon Admin Publication</span>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button
+          type="button"
+          (click)="fetchResults()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#183153] hover:bg-[#253247] text-white text-xs font-bold rounded-md shadow-xs transition-colors cursor-pointer">
+          <app-icon name="chart" className="w-4 h-4"></app-icon>
+          <span>Refresh Publication Status</span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-[#64748B]">
+        Notice for Voters, Candidates & Parties: Candidate vote shares will appear here immediately once the Returning Officer certifies the election ledger.
+      </p>
+    </div>
+  }
+
+  <!-- RESULTS BODY (Visible to Admin in scrutiny mode, OR to everyone once Published) -->
+  @if (isAdmin || isPublished) {
+
+    <!-- Statutory Publication Metadata Strip -->
+    <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-4 text-xs text-[#64748B] flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <app-icon name="shield-check" className="w-4 h-4 text-[#1E7E34] shrink-0"></app-icon>
+        <span><strong>Data Source:</strong> {{ dataSource }}</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <span><strong>Timestamp:</strong> {{ publicationTimestamp }}</span>
+        <span>•</span>
+        <span class="text-[#183153] font-semibold">Ballot Secrecy: Fully Preserved</span>
+        <span>•</span>
+        <span class="font-bold" [ngClass]="isPublished ? 'text-[#1E7E34]' : 'text-amber-800'">
+          Status: {{ isPublished ? 'OFFICIALLY PUBLISHED' : 'PRE-PUBLICATION SCRUTINY' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Key Electoral Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Total Ballots -->
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-[#64748B]">Total Ballots Cast</span>
+          <div class="w-8 h-8 rounded-md bg-[#eef3f8] text-[#183153] flex items-center justify-center font-bold text-xs">
+            <app-icon name="vote" className="w-4 h-4 text-[#183153]"></app-icon>
+          </div>
+        </div>
+        <p class="text-2xl font-extrabold text-[#183153] font-mono">{{ totalVotes }}</p>
+        <div class="text-[11px] text-[#1E7E34] font-medium flex items-center gap-1">
+          <app-icon name="check" className="w-3.5 h-3.5"></app-icon>
+          <span>Cryptographic ledger reconciled</span>
+        </div>
+      </div>
+
+      <!-- Certified Winner -->
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-[#64748B]">{{ isPublished ? 'Elected Representative' : 'Leading Candidate' }}</span>
+          <div class="w-8 h-8 rounded-md bg-[#eaf4f3] text-[#237C78] flex items-center justify-center font-bold text-xs">
+            <app-icon name="candidate" className="w-4 h-4 text-[#237C78]"></app-icon>
+          </div>
+        </div>
+        <p class="text-base font-extrabold text-[#183153] truncate">{{ winner?.candidateName || 'N/A' }}</p>
+        <div class="text-[11px] text-[#64748B]">
+          <span>{{ winner?.percentage || 0 }}% of valid votes polled</span>
+        </div>
+      </div>
+
+      <!-- Victory Margin -->
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-[#64748B]">Margin of Victory</span>
+          <div class="w-8 h-8 rounded-md bg-[#eef3f8] text-[#183153] flex items-center justify-center font-bold text-xs">
+            <app-icon name="chart" className="w-4 h-4 text-[#183153]"></app-icon>
+          </div>
+        </div>
+        <p class="text-2xl font-extrabold text-[#183153] font-mono">+{{ margin }}</p>
+        <div class="text-[11px] text-[#64748B] truncate">
+          <span>Ahead of {{ runnerUp?.candidateName || 'nearest contender' }}</span>
+        </div>
+      </div>
+
+      <!-- Verified Turnout -->
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-[#64748B]">Voter Turnout</span>
+          <div class="w-8 h-8 rounded-md bg-[#e8f5e9] text-[#1E7E34] flex items-center justify-center font-bold text-xs">
+            <app-icon name="user-check" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+          </div>
+        </div>
+        <p class="text-2xl font-extrabold text-[#1E7E34] font-mono">{{ turnoutPercentage }}%</p>
+        <p class="text-[11px] text-[#64748B]">Electoral Roll Participation</p>
+      </div>
+    </div>
+
+    <!-- Main Card with Graph & Table -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-8 shadow-xs space-y-8">
+      
+      <!-- BAR GRAPH VISUALIZATION -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between border-b border-[#DCE2E8] pb-3">
+          <div>
+            <h2 class="text-sm font-bold text-[#183153]">Vote Share Distribution by Candidate</h2>
+            <p class="text-xs text-[#64748B]">Percentage of valid ballots polled in the declared constituency.</p>
+          </div>
+          <span class="text-xs text-[#64748B] font-mono">Total Ballots: {{ totalVotes }}</span>
+        </div>
+        
+        <!-- Chart Container with Vertical Bars -->
+        <div class="h-64 bg-[#F3F5F7] border border-[#DCE2E8] rounded-md p-6 flex items-end justify-around gap-4 pt-12 overflow-x-auto">
+          @for (cand of candidateResults; track cand.candidateId) {
+            <div class="flex-1 flex flex-col items-center h-full justify-end min-w-20 max-w-28 group">
+              
+              <!-- Percentage & Vote Count Label -->
+              <div class="flex flex-col items-center mb-2">
+                <span class="text-xs font-bold text-[#183153] font-mono">{{ cand.percentage }}%</span>
+                <span class="text-[10px] text-[#64748B] font-mono">({{ cand.votes }} votes)</span>
+              </div>
+
+              <!-- Colored Bar -->
+              <div
+                class="w-full rounded-t-sm transition-all duration-500 shadow-2xs"
+                [style.height.%]="cand.percentage * 1.6 + 5"
+                [style.background-color]="cand.color">
+              </div>
+
+              <!-- Candidate Name below bar -->
+              <span class="text-xs font-bold text-[#183153] truncate max-w-full text-center mt-3">
+                {{ cand.candidateName }}
+              </span>
+              <span class="text-[10px] text-[#64748B] truncate max-w-full text-center">
+                {{ cand.partyName }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- CANDIDATE RESULTS TABLE -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-[#183153]">Certified Candidate Tally Sheet</h3>
+        <div class="overflow-x-auto border border-[#DCE2E8] rounded-md">
+          <table class="w-full text-left text-xs text-[#253247]">
+            <thead class="bg-[#F3F5F7] text-[#64748B] font-semibold border-b border-[#DCE2E8]">
+              <tr>
+                <th class="p-3 pl-4 w-12 text-center">#</th>
+                <th class="p-3">Candidate & Party Affiliation</th>
+                <th class="p-3">Votes Polled</th>
+                <th class="p-3 pr-4 text-right">Vote Share</th>
+                <th class="p-3 pr-4 text-right">Electoral Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#DCE2E8]">
+              @for (cand of candidateResults; track cand.candidateId; let idx = $index) {
+                <tr class="hover:bg-[#F3F5F7] transition-colors">
+                  <td class="p-3 pl-4 text-center font-mono font-bold text-[#64748B]">
+                    {{ idx + 1 }}
+                  </td>
+                  <td class="p-3">
+                    <div class="flex items-center gap-3">
+                      <span class="w-3 h-3 rounded-sm shrink-0" [style.background-color]="cand.color"></span>
+                      <div>
+                        <span class="block font-bold text-[#183153] text-sm">{{ cand.candidateName }}</span>
+                        <span class="block text-[11px] text-[#64748B]">{{ cand.partyName }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-3 font-mono font-bold text-[#183153] text-sm">
+                    {{ cand.votes }}
+                  </td>
+                  <td class="p-3 pr-4 text-right font-mono font-bold text-[#183153] text-sm">
+                    {{ cand.percentage }}%
+                  </td>
+                  <td class="p-3 pr-4 text-right">
+                    @if (idx === 0) {
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+                        <app-icon name="check" className="w-3 h-3"></app-icon>
+                        <span>{{ isPublished ? 'ELECTED' : 'LEADING' }}</span>
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#F3F5F7] text-[#64748B] border border-[#DCE2E8]">
+                        CONTENDER
+                      </span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Official Certification Signature Stamp -->
+      <div class="pt-6 border-t border-[#DCE2E8] flex flex-col sm:flex-row items-center justify-between text-xs text-[#64748B] gap-4">
+        <div class="flex items-center gap-2">
+          <app-icon name="scale" className="w-5 h-5 text-[#237C78]"></app-icon>
+          <div>
+            <span class="font-bold text-[#183153] block">Certified by State Election Returning Officer</span>
+            <span>Local Body Election Authority • Ward 12</span>
+          </div>
+        </div>
+        <div class="text-right text-[11px]">
+          <span>Digital Signature: </span>
+          <code class="font-mono text-[#183153]">SHA256:RO-CERT-89021-LOCAL-BODY</code>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

@@ -1,0 +1,134 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <nav aria-label="Breadcrumb" class="text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Voter Information & Guidance</li>
+      </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-8 shadow-xs">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#eef3f8] text-[#183153] border border-[#d3dfea] uppercase tracking-wider mb-2">
+          Civic Guidance & Electoral Roll Scrutiny
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Citizen Voter Information</h1>
+        <p class="text-xs text-[#64748B] mt-2 leading-relaxed">
+          Guidance on elector registration, eligibility criteria for local body elections, polling station verification, and step-by-step electronic voting procedures.
+        </p>
+      </div>
+    </div>
+
+    <!-- 4 Key Steps Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#eef3f8] text-[#183153] font-bold text-xs flex items-center justify-center">
+          01
+        </div>
+        <h2 class="text-sm font-bold text-[#183153]">Check Electoral Roll</h2>
+        <p class="text-xs text-[#64748B] leading-relaxed">
+          Verify that your legal name and Voter ID (EPIC) are enrolled in the current municipal ward list.
+        </p>
+      </div>
+
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#eaf4f3] text-[#237C78] font-bold text-xs flex items-center justify-center">
+          02
+        </div>
+        <h2 class="text-sm font-bold text-[#183153]">Secure Authentication</h2>
+        <p class="text-xs text-[#64748B] leading-relaxed">
+          Access the system using your registered credentials or verified one-time passcodes (OTP).
+        </p>
+      </div>
+
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#fef3c7] text-[#92400e] font-bold text-xs flex items-center justify-center">
+          03
+        </div>
+        <h2 class="text-sm font-bold text-[#183153]">Cast Private Ballot</h2>
+        <p class="text-xs text-[#64748B] leading-relaxed">
+          Review candidates in a neutral layout, select your representative, and confirm through the two-step verification modal.
+        </p>
+      </div>
+
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#e8f5e9] text-[#1E7E34] font-bold text-xs flex items-center justify-center">
+          04
+        </div>
+        <h2 class="text-sm font-bold text-[#183153]">Obtain Audit Receipt</h2>
+        <p class="text-xs text-[#64748B] leading-relaxed">
+          Receive a verifiable participation token verifying ballot registration while preserving secret ballot confidentiality.
+        </p>
+      </div>
+    </div>
+
+    <!-- Eligibility Criteria Table -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs space-y-4">
+      <h2 class="text-base font-bold text-[#183153]">Voter Eligibility Rules (Local Body Elections)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-[#253247]">
+          <thead class="bg-[#F3F5F7] text-[#64748B] uppercase tracking-wider font-semibold border-b border-[#DCE2E8]">
+            <tr>
+              <th class="p-3">Criterion</th>
+              <th class="p-3">Statutory Requirement</th>
+              <th class="p-3">Verification Mechanism</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#DCE2E8]">
+            <tr>
+              <td class="p-3 font-semibold text-[#183153]">Age of Majority</td>
+              <td class="p-3">Must be 18 years or older on qualifying date</td>
+              <td class="p-3 text-[#64748B]">EPIC database date-of-birth check</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-[#183153]">Territorial Ward Residence</td>
+              <td class="p-3">Ordinarily resident in the declared municipal ward or panchayat</td>
+              <td class="p-3 text-[#64748B]">Assigned booth and ward code mapping</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-[#183153]">Single Electoral Entry</td>
+              <td class="p-3">Enrolled in only one polling booth roll across the jurisdiction</td>
+              <td class="p-3 text-[#64748B]">Backend uniqueness constraint on Voter ID</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-[#183153]">Electoral Disqualification</td>
+              <td class="p-3">Not disqualified under statutory provisions</td>
+              <td class="p-3 text-[#64748B]">Returning officer scrutiny status flag</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Voter FAQs -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs space-y-4">
+      <h2 class="text-base font-bold text-[#183153]">Frequently Asked Questions</h2>
+      <div class="space-y-3 text-xs">
+        <div class="p-4 rounded-md border border-[#DCE2E8] bg-[#F3F5F7]">
+          <h3 class="font-bold text-[#183153] text-sm mb-1">Is my vote choice visible to system administrators or returning officers?</h3>
+          <p class="text-[#64748B] leading-relaxed">
+            No. The election architecture cryptographically separates voter identity from the cast ballot. While the system marks your record as "Voted" to prevent duplicate voting, your individual candidate choice is never linked to your identity in the database or server logs.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-md border border-[#DCE2E8] bg-[#F3F5F7]">
+          <h3 class="font-bold text-[#183153] text-sm mb-1">What happens if my network connection drops during voting?</h3>
+          <p class="text-[#64748B] leading-relaxed">
+            Your vote is only committed when you tap "Confirm Vote" in the final review modal. If disconnected before confirmation, your voter record remains open. If disconnected after confirmation, the backend idempotency key ensures your vote is safely registered once without duplicates.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-md border border-[#DCE2E8] bg-[#F3F5F7]">
+          <h3 class="font-bold text-[#183153] text-sm mb-1">How can I check the results after polling closes?</h3>
+          <p class="text-[#64748B] leading-relaxed">
+            Official aggregated counts and ward-wise turnout become publicly accessible on the <a routerLink="/results" class="text-[#237C78] font-semibold hover:underline">Public Results Dashboard</a> once counting is certified by the Returning Officer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

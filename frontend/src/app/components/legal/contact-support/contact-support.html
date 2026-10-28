@@ -1,0 +1,135 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Contact & Support</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <!-- Left Contact Details -->
+      <div class="md:col-span-5 space-y-6">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Electoral Inquiries & Grievances</h1>
+          <p class="text-xs text-[#64748B] mt-2 leading-relaxed">
+            State Election Commission Pilot Assistance Desk. Contact us for voter verification assistance, polling booth queries, or technical reporting.
+          </p>
+        </div>
+
+        <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-4 text-xs">
+          <div class="flex items-start gap-3">
+            <app-icon name="map-pin" className="w-5 h-5 text-[#237C78] shrink-0 mt-0.5"></app-icon>
+            <div>
+              <strong class="text-[#183153] block text-sm">State Election Commission Office</strong>
+              <span class="text-[#64748B]">Civic Election Control Centre, Nirvachan Bhavan, Sector 4</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 border-t border-[#DCE2E8] pt-4">
+            <app-icon name="clock" className="w-5 h-5 text-[#237C78] shrink-0 mt-0.5"></app-icon>
+            <div>
+              <strong class="text-[#183153] block text-sm">Operating Hours</strong>
+              <span class="text-[#64748B]">Monday to Saturday: 09:00 - 18:00 IST<br>Polling Days: 24-Hour Continuous Monitoring</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 border-t border-[#DCE2E8] pt-4">
+            <app-icon name="phone" className="w-5 h-5 text-[#237C78] shrink-0 mt-0.5"></app-icon>
+            <div>
+              <strong class="text-[#183153] block text-sm">Electoral Helpline</strong>
+              <span class="text-[#64748B]">Toll Free: 1800-ELEC-PILOT (Demo Hotline)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form -->
+      <div class="md:col-span-7">
+        <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-8 shadow-xs">
+          @if (submitted) {
+            <div class="text-center py-8 space-y-4">
+              <div class="w-14 h-14 rounded-full bg-[#e8f5e9] text-[#1E7E34] flex items-center justify-center mx-auto border border-[#c8e6c9]">
+                <app-icon name="check-circle" className="w-7 h-7"></app-icon>
+              </div>
+              <h2 class="text-lg font-bold text-[#183153]">Inquiry Successfully Recorded</h2>
+              <p class="text-xs text-[#64748B] max-w-sm mx-auto leading-relaxed">
+                Your inquiry has been submitted to the pilot returning officer desk. Reference ticket token: <strong class="font-mono text-[#183153]">SEC-PILOT-8924</strong>.
+              </p>
+              <button
+                type="button"
+                (click)="resetForm()"
+                class="px-4 py-2 bg-[#183153] hover:bg-[#12243e] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer">
+                Submit Another Request
+              </button>
+            </div>
+          } @else {
+            <h2 class="text-base font-bold text-[#183153] mb-1">Submit an Inquiry or Grievance</h2>
+            <p class="text-xs text-[#64748B] mb-5">Fill out the official form below. Do not share confidential passwords or voting selections.</p>
+
+            <form (submit)="onSubmit($event)" class="space-y-4 text-xs">
+              <div>
+                <label for="fullName" class="block font-semibold text-[#253247] mb-1">Full Legal Name *</label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  [(ngModel)]="fullName"
+                  placeholder="e.g. Ramesh Kumar"
+                  class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153] outline-none"
+                  required>
+              </div>
+
+              <div>
+                <label for="voterId" class="block font-semibold text-[#253247] mb-1">Voter ID / EPIC Number (Optional)</label>
+                <input
+                  id="voterId"
+                  name="voterId"
+                  type="text"
+                  [(ngModel)]="voterId"
+                  placeholder="e.g. BR/04/234/987123"
+                  class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153] outline-none">
+              </div>
+
+              <div>
+                <label for="category" class="block font-semibold text-[#253247] mb-1">Grievance Category *</label>
+                <select
+                  id="category"
+                  name="category"
+                  [(ngModel)]="category"
+                  class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153] outline-none">
+                  <option value="voter_registration">Voter Registration & Roll Scrutiny</option>
+                  <option value="polling_booth">Polling Station & Ward Assignment</option>
+                  <option value="evm_terminal">Digital EVM Terminal Operation</option>
+                  <option value="candidate_nomination">Candidate Nomination Inquiries</option>
+                  <option value="technical_bug">Technical Bug or Accessibility Feedback</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="block font-semibold text-[#253247] mb-1">Details of Inquiry / Grievance *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  [(ngModel)]="message"
+                  placeholder="Provide complete details including your constituency name or specific technical observation..."
+                  class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153] outline-none"
+                  required></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-2.5 bg-[#183153] hover:bg-[#12243e] text-white font-bold rounded-lg transition-colors cursor-pointer shadow-xs">
+                Submit Official Inquiry
+              </button>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

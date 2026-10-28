@@ -1,0 +1,23 @@
+<div class="relative w-full">
+  <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#64748B]">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+    </svg>
+  </div>
+  <input
+    type="text"
+    [value]="value"
+    [placeholder]="placeholder"
+    class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 pl-9 pr-8 text-xs text-[#253247] placeholder-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153] transition-colors shadow-2xs"
+    (input)="onInput($event)">
+  @if (value) {
+    <button
+      type="button"
+      class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-[#64748B] hover:text-[#183153] cursor-pointer"
+      (click)="clear()">
+      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  }
+</div>

@@ -1,0 +1,533 @@
+<div class="max-w-6xl mx-auto space-y-6 pb-12">
+
+  <!-- TOP POLICE/POLLING STATION AUTHENTIC BANNER -->
+  <div class="bg-white rounded-xl border border-slate-300 p-4 sm:p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-inner shrink-0 border border-slate-700">
+        🏛️
+      </div>
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[11px] font-bold tracking-wider uppercase text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded">
+            राज्य निर्वाचन आयोग | STATE ELECTION COMMISSION
+          </span>
+          <span class="text-[11px] font-semibold text-slate-500">
+            POLLING BOOTH: <strong>PB-12-01 (CIVIC COMMUNITY HALL)</strong>
+          </span>
+        </div>
+        <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5 tracking-tight">
+          {{ election?.title || 'Municipal Local Body General Election 2026' }}
+        </h1>
+        <p class="text-xs text-slate-500">
+          Constituency / Ward: <strong class="text-slate-800">{{ election?.constituency || 'Ward 12 - Indiranagar' }}</strong> &bull; ECI Standard M3 Dual Electronic Voting Console
+        </p>
+      </div>
+    </div>
+
+    <!-- Sound & Status Controls -->
+    <div class="flex items-center gap-2.5">
+      <button
+        type="button"
+        (click)="soundEnabled = !soundEnabled"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer"
+        [class]="soundEnabled ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100' : 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200'">
+        <span>{{ soundEnabled ? '🔊 EVM Sound ON (1000 Hz Beep)' : '🔇 EVM Sound Muted' }}</span>
+      </button>
+
+      @if (alreadyVoted) {
+        <button
+          type="button"
+          (click)="resetForTesting()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-800 border border-blue-300 hover:bg-blue-100 transition-colors cursor-pointer shadow-xs"
+          title="Reset EVM and clear local vote lock for testing">
+          <span>🔄 Reset EVM for Testing</span>
+        </button>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300">
+          <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+          <span>BALLOT SEALED</span>
+        </span>
+      } @else {
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          <span>POLL ACTIVE</span>
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- ALREADY VOTED NOTIFICATION -->
+  @if (alreadyVoted && evmState === 'IDLE') {
+    <div class="bg-amber-50 border-2 border-amber-400 rounded-xl p-5 text-amber-950 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm animate-in fade-in">
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">🔒</span>
+        <div>
+          <h2 class="text-sm font-bold text-amber-900">Ballot Already Cast & Sealed for this Election</h2>
+          <p class="text-xs text-amber-800 mt-0.5 leading-relaxed">
+            Your secret franchise has been cryptographically recorded in the decentralized audit ledger. Under ECI statutory rules, each elector can only vote once per registered election.
+          </p>
+          @if (existingReceipt) {
+            <p class="text-[11px] font-mono text-amber-900 mt-1">
+              Receipt No: <strong>{{ existingReceipt.receiptNumber }}</strong> &bull; Ledger Ref: <strong>{{ existingReceipt.voteHash.slice(0, 16) }}...</strong>
+            </p>
+          }
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+        <button
+          type="button"
+          (click)="resetForTesting()"
+          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-lg transition-colors shadow-xs cursor-pointer flex items-center gap-1.5">
+          <span>🔄 Unlock & Test EVM Again</span>
+        </button>
+        <button
+          type="button"
+          (click)="viewReceipt()"
+          class="px-4 py-2 bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs rounded-lg transition-colors shadow-xs cursor-pointer">
+          View Receipt
+        </button>
+        <button
+          type="button"
+          (click)="goToDashboard()"
+          class="px-4 py-2 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs rounded-lg transition-colors cursor-pointer">
+          Return to Dashboard
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- REAL EVM AUDIO-VISUAL ALERT OVERLAY WHEN BEEPING -->
+  @if (evmState === 'BEEPING') {
+    <div class="bg-red-600 text-white rounded-xl p-4 shadow-lg border-2 border-red-700 animate-pulse flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl animate-bounce">🔊</span>
+        <div>
+          <div class="text-xs uppercase font-extrabold tracking-widest text-red-200">
+            Bharat Electronics Ltd (BEL) / ECIL Control Unit
+          </div>
+          <h2 class="text-base font-black tracking-tight">
+            RECORDING BALLOT: 1000 Hz CONTINUOUS BEEP SOUNDING...
+          </h2>
+          <p class="text-xs text-red-100">
+            Control Unit acknowledging secure receipt from Ballot Unit. Voted lamp illuminated.
+          </p>
+        </div>
+      </div>
+      <div class="hidden sm:flex items-center gap-1.5 bg-red-700 px-3 py-1.5 rounded-lg border border-red-500 font-mono text-xs font-bold">
+        <span>BEEP: 3.2s</span>
+      </div>
+    </div>
+  }
+
+  <!-- VOTE RECORDED SUCCESS BANNER -->
+  @if (evmState === 'RECORDED') {
+    <div class="bg-emerald-700 text-white rounded-xl p-6 shadow-xl border-2 border-emerald-800 flex flex-col sm:flex-row items-center justify-between gap-5 animate-in zoom-in-95">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-emerald-800 border-2 border-emerald-400 flex items-center justify-center text-2xl font-bold shrink-0">
+          ✓
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-widest font-extrabold text-emerald-200 block">
+            मतदान सफलतापूर्वक संपन्न | BALLOT SECURELY RECORDED
+          </span>
+          <h2 class="text-xl font-black">
+            Your Vote has been Cast on EVM & Verified via VVPAT!
+          </h2>
+          <p class="text-xs text-emerald-100 mt-1 max-w-xl leading-relaxed">
+            Your VVPAT slip was verified for 7 seconds and sealed into the tamper-proof drop box. Your cryptographic ballot token has been written into the election tally ledger.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <button
+          type="button"
+          (click)="viewReceipt()"
+          class="px-5 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 font-bold text-xs rounded-lg transition-colors shadow-md cursor-pointer flex items-center gap-2">
+          <span>📜 Print Official Receipt</span>
+        </button>
+        <button
+          type="button"
+          (click)="goToDashboard()"
+          class="px-5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs rounded-lg border border-emerald-600 transition-colors shadow-md cursor-pointer">
+          Dashboard
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- MAIN EVM HARDWARE SYSTEM: BALLOT UNIT (LEFT) + VVPAT UNIT (RIGHT) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- ======================================================== -->
+    <!-- 1. BALLOTING UNIT (BU) - MODEL M3 (BEL / ECIL CERTIFIED) -->
+    <!-- ======================================================== -->
+    <div class="lg:col-span-8 bg-[#E6EBF0] rounded-2xl border-4 border-[#CBD5E1] shadow-2xl p-4 sm:p-6 relative select-none bu-machine-enclosure">
+      
+      <!-- Hardware Screws in 4 Corners -->
+      <div class="bu-screw top-2.5 left-2.5"></div>
+      <div class="bu-screw top-2.5 right-2.5"></div>
+      <div class="bu-screw bottom-2.5 left-2.5"></div>
+      <div class="bu-screw bottom-2.5 right-2.5"></div>
+
+      <!-- MACHINE TOP HEADER CONSOLE -->
+      <div class="bg-[#2D3748] rounded-xl p-3.5 sm:p-4 text-white shadow-inner mb-5 border-2 border-[#1A202C]">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          
+          <!-- Machine Identity & Emblem -->
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded bg-[#1A202C] border border-slate-600 flex items-center justify-center text-lg">
+              🇮🇳
+            </div>
+            <div>
+              <div class="text-[11px] font-black tracking-widest uppercase text-slate-300">
+                STATE ELECTION COMMISSION | राज्य निर्वाचन आयोग
+              </div>
+              <div class="text-xs sm:text-sm font-extrabold text-emerald-400 font-mono tracking-tight">
+                BALLOTING UNIT (BU) - MODEL M3
+              </div>
+              <div class="text-[10px] text-slate-400 font-mono">
+                SL NO: BU-2026-IND-{{ electionId }}-BEL
+              </div>
+            </div>
+          </div>
+
+          <!-- STATUS LAMPS (READY GREEN LED & VOTED RED LED) -->
+          <div class="flex items-center gap-6 bg-[#1A202C] px-4 py-2 rounded-lg border border-slate-700">
+            
+            <!-- READY LED (GREEN) -->
+            <div class="flex flex-col items-center gap-1">
+              <div
+                class="w-5 h-5 rounded-full border-2 transition-all duration-300"
+                [class]="readyLedOn ? 'bg-[#22c55e] border-[#4ade80] shadow-[0_0_16px_#22c55e] animate-pulse' : 'bg-[#14532d] border-[#166534] opacity-50'">
+              </div>
+              <span class="text-[9px] font-bold tracking-wider font-mono uppercase" [class]="readyLedOn ? 'text-emerald-300' : 'text-slate-500'">
+                तैयार / READY
+              </span>
+            </div>
+
+            <!-- VOTED / BUSY LED (RED) -->
+            <div class="flex flex-col items-center gap-1">
+              <div
+                class="w-5 h-5 rounded-full border-2 transition-all duration-300"
+                [class]="votedLedOn ? 'bg-[#ef4444] border-[#f87171] shadow-[0_0_18px_#ef4444]' : 'bg-[#450a0a] border-[#7f1d1d] opacity-50'">
+              </div>
+              <span class="text-[9px] font-bold tracking-wider font-mono uppercase" [class]="votedLedOn ? 'text-red-300' : 'text-slate-500'">
+                मतदान / VOTED
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- OFFICIAL BALLOT PAPER INSERT (CREAM PAPER TRACK) -->
+      <div class="bg-[#FFFDF7] rounded-xl border-2 border-slate-400 shadow-md overflow-hidden">
+        
+        <!-- Ballot Paper Header -->
+        <div class="bg-[#F8F9FA] px-4 py-2.5 border-b-2 border-slate-400 grid grid-cols-12 text-[10px] sm:text-xs font-black text-slate-700 uppercase tracking-wider text-center">
+          <div class="col-span-1 text-left">क्र. सं.<br><span class="text-[9px] text-slate-500 font-normal">SL NO</span></div>
+          <div class="col-span-6 text-left pl-2">उम्मीदवार एवं दल का नाम<br><span class="text-[9px] text-slate-500 font-normal">CANDIDATE & PARTY NAME</span></div>
+          <div class="col-span-2">चुनाव चिन्ह<br><span class="text-[9px] text-slate-500 font-normal">SYMBOL</span></div>
+          <div class="col-span-1">दीप<br><span class="text-[9px] text-slate-500 font-normal">LAMP</span></div>
+          <div class="col-span-2 text-right pr-2">नीला बटन<br><span class="text-[9px] text-slate-500 font-normal">VOTE BUTTON</span></div>
+        </div>
+
+        <!-- CANDIDATE ROWS (AUTHENTIC ECI BALLOT FORMAT) -->
+        <div class="divide-y-2 divide-slate-300">
+          @for (candidate of candidates; track candidate.id; let idx = $index) {
+            <div
+              (click)="onPressBlueButton(candidate)"
+              class="grid grid-cols-12 items-center p-2.5 sm:p-3 transition-colors candidate-ballot-row cursor-pointer"
+              [class.bg-blue-50]="activeCandidate?.id === candidate.id"
+              [class.hover:bg-slate-50]="!alreadyVoted && evmState === 'IDLE'">
+              
+              <!-- 1. Serial Number Circle -->
+              <div class="col-span-1 flex items-center">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#183153] text-white font-mono font-black text-xs sm:text-sm flex items-center justify-center shadow-xs">
+                  {{ (idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1) }}
+                </div>
+              </div>
+
+              <!-- 2. Candidate Name (Bilingual) & Party -->
+              <div class="col-span-6 pl-2 pr-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <h2 class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight uppercase">
+                    {{ candidate.fullName || candidate.name }}
+                  </h2>
+                </div>
+                <div class="text-[11px] sm:text-xs font-bold text-slate-600 font-devanagari mt-0.5">
+                  {{ getHindiName(candidate) }}
+                </div>
+                <div class="flex items-center gap-2 mt-1 text-[10px] text-slate-500">
+                  <span class="font-semibold text-emerald-800">{{ candidate.partyName }}</span>
+                  @if (candidate.partyCode && candidate.partyCode !== 'NOTA') {
+                    <span class="bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-mono font-bold">{{ candidate.partyCode }}</span>
+                  }
+                  <button
+                    type="button"
+                    (click)="toggleCandidateDetails(candidate.id, $event)"
+                    class="text-blue-700 hover:underline font-semibold cursor-pointer">
+                    {{ expandedCandidateId === candidate.id ? 'Hide Manifesto ▲' : 'Info / घोषणापत्र ▼' }}
+                  </button>
+                </div>
+
+                <!-- Accordion Manifesto Drawer (Non-destructive info preview) -->
+                @if (expandedCandidateId === candidate.id) {
+                  <div class="mt-2 p-2.5 bg-slate-100 rounded border border-slate-300 text-xs text-slate-700 space-y-1 animate-in fade-in">
+                    <p><strong>Bio:</strong> {{ candidate.bio || 'Public representative contesting in local municipal ward.' }}</p>
+                    <p><strong>Key Manifesto:</strong> {{ candidate.manifesto || candidate.manifestoSummary || 'Clean civic administration and rapid local development.' }}</p>
+                  </div>
+                }
+              </div>
+
+              <!-- 3. Candidate Election Symbol Box -->
+              <div class="col-span-2 flex flex-col items-center justify-center">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-md border-2 border-slate-700 bg-white flex items-center justify-center shadow-inner overflow-hidden p-1">
+                  @if (candidate.symbolUrl && candidate.symbolUrl.startsWith('http')) {
+                    <img [src]="candidate.symbolUrl" [alt]="candidate.name" class="w-full h-full object-contain">
+                  } @else {
+                    <span class="text-2xl sm:text-3xl select-none">{{ candidate.symbol || candidate.symbolUrl || '🗳️' }}</span>
+                  }
+                </div>
+                <span class="text-[9px] font-semibold text-slate-500 text-center line-clamp-1 mt-0.5">
+                  {{ candidate.symbolName || candidate.partyCode || 'Symbol' }}
+                </span>
+              </div>
+
+              <!-- 4. Candidate Red LED Lamp -->
+              <div class="col-span-1 flex items-center justify-center">
+                <div
+                  class="candidate-led-lamp"
+                  [class.candidate-led-lit]="activeCandidate?.id === candidate.id"
+                  [title]="activeCandidate?.id === candidate.id ? 'Candidate Selected' : 'LED Standby'">
+                </div>
+              </div>
+
+              <!-- 5. Iconic Tactile Blue Push Button -->
+              <div class="col-span-2 flex items-center justify-end pr-1 sm:pr-2">
+                <button
+                  type="button"
+                  (click)="onPressBlueButton(candidate)"
+                  [disabled]="alreadyVoted || evmState !== 'IDLE'"
+                  [class.evm-button-pressed]="activeCandidate?.id === candidate.id"
+                  class="evm-blue-button group"
+                  [title]="'Press to Vote for ' + (candidate.name || candidate.fullName)">
+                  <div class="evm-button-ridges">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="evm-button-text">
+                    {{ activeCandidate?.id === candidate.id ? 'VOTED' : 'VOTE' }}
+                  </span>
+                </button>
+              </div>
+
+            </div>
+          }
+        </div>
+
+        <!-- Ballot Sheet Footer Seal -->
+        <div class="bg-[#F1F3F5] px-4 py-2 border-t-2 border-slate-300 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+          <span>ECI SECRET BALLOT SHEET 2026 &bull; RULE 49B CONDUCT OF ELECTIONS</span>
+          <span>UNIT BU-01 &bull; TOTAL SLOTS: {{ candidates.length }}</span>
+        </div>
+
+      </div>
+
+      <!-- MACHINE BOTTOM TAMPER SEAL -->
+      <div class="mt-4 flex items-center justify-between text-xs text-slate-600 font-mono px-2">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
+          <span>ECI GREEN PAPER SEAL: <strong>GPS-2026-9812-OK</strong></span>
+        </div>
+        <div class="text-[11px] text-slate-500">
+          ELECTRONICALLY LOCKED & SECURED
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 2. VVPAT UNIT - MODEL M3 (VOTER VERIFIABLE PAPER AUDIT)  -->
+    <!-- ======================================================== -->
+    <div class="lg:col-span-4 bg-[#1E293B] rounded-2xl border-4 border-[#334155] shadow-2xl p-4 sm:p-5 text-white select-none relative vvpat-machine-enclosure">
+      
+      <!-- Top VVPAT Emblem Header -->
+      <div class="border-b border-slate-700 pb-3 mb-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🖨️</span>
+            <div>
+              <h2 class="text-xs font-black tracking-widest uppercase text-emerald-400">
+                VVPAT UNIT - MODEL M3
+              </h2>
+              <p class="text-[10px] text-slate-400">
+                Voter Verifiable Paper Audit Trail
+              </p>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+            BEL / ECIL
+          </span>
+        </div>
+      </div>
+
+      <!-- GLASS OBSERVATION VIEWING WINDOW -->
+      <div class="relative">
+        
+        <!-- Transparent Inspection Glass Frame -->
+        <div
+          class="vvpat-glass-chamber"
+          [class.vvpat-chamber-lit]="vvpatWindowLit">
+          
+          <!-- Specular Light Reflection Sheen -->
+          <div class="vvpat-glass-reflection"></div>
+
+          <!-- Internal Window Chamber Header -->
+          <div class="text-center pt-2 pb-1 text-[9px] font-mono tracking-wider text-slate-400 border-b border-slate-700/50">
+            TRANSPARENT OBSERVATION WINDOW &bull; 7 SECONDS VIEW
+          </div>
+
+          <!-- THE PRINTED THERMAL PAPER SLIP -->
+          <div class="vvpat-slip-container">
+            @if (vvpatSlipVisible && activeCandidate) {
+              <div
+                class="vvpat-paper-slip"
+                [class.vvpat-slip-enter]="evmState === 'VVPAT_DISPLAY'"
+                [class.vvpat-slip-drop]="vvpatSlipDropped">
+                
+                <!-- Slip Header -->
+                <div class="text-center border-b border-slate-800 pb-1 mb-1">
+                  <div class="text-[8px] font-black uppercase tracking-wider text-slate-900">
+                    ELECTION COMMISSION OF INDIA
+                  </div>
+                  <div class="text-[7px] text-slate-600 font-mono">
+                    VVPAT AUDIT VERIFICATION SLIP
+                  </div>
+                </div>
+
+                <!-- Candidate Info On Paper Slip -->
+                <div class="flex items-center justify-between gap-2 py-1 border-b border-slate-800">
+                  <div class="text-left">
+                    <span class="text-[8px] font-bold text-slate-500 block">SL NO:</span>
+                    <span class="text-base font-black font-mono text-slate-900">
+                      {{ activeCandidate.candidateNumber || activeCandidate.ballotPosition || '01' }}
+                    </span>
+                  </div>
+                  <div class="text-center flex-1">
+                    <span class="text-[10px] font-black text-slate-900 block uppercase leading-tight">
+                      {{ activeCandidate.name || activeCandidate.fullName }}
+                    </span>
+                    <span class="text-[8px] font-bold text-slate-700 font-devanagari">
+                      {{ getHindiName(activeCandidate) }}
+                    </span>
+                  </div>
+                  <div class="text-center">
+                    <div class="w-9 h-9 border border-slate-900 bg-white flex items-center justify-center text-xl font-bold">
+                      {{ activeCandidate.symbol || activeCandidate.symbolUrl || '🌸' }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Slip Footer & Security Watermark -->
+                <div class="pt-1 text-[7px] font-mono text-slate-600 flex items-center justify-between">
+                  <span>TIME: {{ vvpatTimestamp }}</span>
+                  <span>{{ vvpatSerialHash }}</span>
+                </div>
+                
+                <!-- Serrated Tear Edge Bottom -->
+                <div class="vvpat-serrated-edge"></div>
+              </div>
+            } @else {
+              <!-- Idle Chamber Display -->
+              <div class="h-44 flex flex-col items-center justify-center text-center p-4 text-slate-500 space-y-2">
+                <span class="text-3xl opacity-40">🗳️</span>
+                <p class="text-[11px] font-mono leading-tight">
+                  CHAMBER STANDBY<br>
+                  <span class="text-[9px] text-slate-600">Press blue button on Ballot Unit to generate audit slip</span>
+                </p>
+              </div>
+            }
+          </div>
+
+        </div>
+
+        <!-- STATUTORY 7-SECOND COUNTDOWN STATUS -->
+        @if (evmState === 'VVPAT_DISPLAY') {
+          <div class="mt-3 bg-amber-500/20 border border-amber-400 rounded-lg p-3 text-center space-y-1 animate-in fade-in">
+            <div class="flex items-center justify-center gap-2 text-amber-300 font-black text-sm">
+              <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
+              <span>VERIFICATION ACTIVE: {{ vvpatTimer }}s</span>
+            </div>
+            <p class="text-[11px] text-amber-100 leading-snug">
+              Please verify your chosen candidate details through the transparent window before the slip drops into the sealed box.
+            </p>
+            <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div
+                class="bg-amber-400 h-full transition-all duration-1000 ease-linear"
+                [style.width.%]="(vvpatTimer / 7) * 100">
+              </div>
+            </div>
+          </div>
+        } @else if (evmState === 'PAPER_CUT' || evmState === 'BEEPING') {
+          <div class="mt-3 bg-red-950/60 border border-red-500 rounded-lg p-3 text-center text-red-200 animate-pulse">
+            <span class="text-xs font-black block">✂️ SLIP CUT & STORED IN DROP BOX</span>
+            <span class="text-[10px] text-red-300">Audible 1000 Hz continuous confirmation tone sounding...</span>
+          </div>
+        } @else if (evmState === 'RECORDED') {
+          <div class="mt-3 bg-emerald-950/60 border border-emerald-500 rounded-lg p-3 text-center text-emerald-200">
+            <span class="text-xs font-black block">✓ VVPAT AUDIT VERIFIED & SEALED</span>
+            <span class="text-[10px] text-emerald-300">Statutory 7-second paper trail verification completed</span>
+          </div>
+        }
+
+      </div>
+
+      <!-- SEALED BALLOT AUDIT DROP BOX COMPARTMENT -->
+      <div class="mt-5 bg-[#0F172A] border-2 border-slate-700 rounded-xl p-3 text-center space-y-1.5 shadow-inner">
+        <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <span>DROP COMPARTMENT</span>
+          <span class="text-emerald-400 font-bold">LOCKED & SEALED</span>
+        </div>
+        <div class="flex items-center justify-center gap-2 py-2 text-slate-400">
+          <span class="text-xl">🔒</span>
+          <div class="text-left">
+            <div class="text-[11px] font-bold text-slate-200">SEALED BALLOT DROP BOX</div>
+            <div class="text-[9px] text-slate-500">TAMPER EVIDENT ECI LEAD SEAL #9910</div>
+          </div>
+        </div>
+        <p class="text-[9px] text-slate-500 leading-tight">
+          Rule 49M Conduct of Elections: Printed paper slips are securely collected for mandatory audit verification count.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- HOW TO VOTE INSTRUCTIONS (ECI OFFICIAL CITIZEN GUIDE) -->
+  <div class="bg-white rounded-xl border border-slate-300 p-5 shadow-xs">
+    <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-3 flex items-center gap-2">
+      <span>ℹ️</span>
+      <span>Official Polling Booth EVM Guide / मतदान मार्गदर्शिका</span>
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs text-slate-600">
+      <div class="space-y-1 p-3 bg-slate-50 rounded-lg border border-slate-200">
+        <strong class="text-slate-900 font-bold block">1. Check Green Ready Lamp</strong>
+        <p class="text-[11px] text-slate-500">Ensure the READY lamp at the top of the Ballot Unit glows GREEN before pressing any button.</p>
+      </div>
+      <div class="space-y-1 p-3 bg-slate-50 rounded-lg border border-slate-200">
+        <strong class="text-slate-900 font-bold block">2. Press Tactile Blue Button</strong>
+        <p class="text-[11px] text-slate-500">Locate your preferred candidate's serial number, name, and symbol, then press the large BLUE button once.</p>
+      </div>
+      <div class="space-y-1 p-3 bg-slate-50 rounded-lg border border-slate-200">
+        <strong class="text-slate-900 font-bold block">3. Watch VVPAT for 7 Seconds</strong>
+        <p class="text-[11px] text-slate-500">The candidate's RED lamp will light up, and the VVPAT paper slip will appear behind the glass for exactly 7 seconds.</p>
+      </div>
+      <div class="space-y-1 p-3 bg-slate-50 rounded-lg border border-slate-200">
+        <strong class="text-slate-900 font-bold block">4. Hear Continuous 1000Hz Beep</strong>
+        <p class="text-[11px] text-slate-500">The paper slip will cut and drop into the sealed box, followed by the iconic long continuous EVM beep confirming your vote.</p>
+      </div>
+    </div>
+  </div>
+
+</div>

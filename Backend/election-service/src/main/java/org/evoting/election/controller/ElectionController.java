@@ -34,33 +34,33 @@ public class ElectionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Election> getElectionById(@PathVariable Long id) {
+    public ResponseEntity<Election> getElectionById(@PathVariable("id") Long id) {
         return electionService.getElectionById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Election>> getElectionsByStatus(@PathVariable String status) {
+    public ResponseEntity<List<Election>> getElectionsByStatus(@PathVariable("status") String status) {
         ElectionStatus parsedStatus = ElectionStatus.fromString(status);
         return ResponseEntity.ok(electionService.getElectionsByStatus(parsedStatus));
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Election> updateStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<Election> updateStatus(@PathVariable("id") Long id, @RequestParam("status") String status) {
         ElectionStatus targetStatus = ElectionStatus.fromString(status);
         Election updated = electionService.updateElectionStatus(id, targetStatus);
         return ResponseEntity.ok(updated);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Election> updateElection(@PathVariable Long id, @Valid @RequestBody ElectionDto dto) {
+    public ResponseEntity<Election> updateElection(@PathVariable("id") Long id, @Valid @RequestBody ElectionDto dto) {
         Election updated = electionService.updateElection(id, dto);
         return ResponseEntity.ok(updated);
     }
 
     @GetMapping("/{id}/open")
-    public ResponseEntity<Map<String, Object>> isElectionOpen(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> isElectionOpen(@PathVariable("id") Long id) {
         boolean open = electionService.isElectionOpenForVoting(id);
         return ResponseEntity.ok(Map.of("electionId", id, "open", open));
     }

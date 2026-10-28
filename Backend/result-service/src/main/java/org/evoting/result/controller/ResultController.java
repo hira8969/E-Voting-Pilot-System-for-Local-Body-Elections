@@ -20,12 +20,12 @@ public class ResultController {
     }
 
     @GetMapping("/election/{electionId}")
-    public ResponseEntity<ElectionResultResponse> getElectionResults(@PathVariable Long electionId) {
+    public ResponseEntity<ElectionResultResponse> getElectionResults(@PathVariable("electionId") Long electionId) {
         return ResponseEntity.ok(resultService.getElectionResults(electionId));
     }
 
     @GetMapping("/election/{electionId}/winner")
-    public ResponseEntity<?> getWinner(@PathVariable Long electionId) {
+    public ResponseEntity<?> getWinner(@PathVariable("electionId") Long electionId) {
         CandidateResultDto winner = resultService.getWinner(electionId);
         if (winner == null) {
             return ResponseEntity.ok(Map.of("message", "No votes or winner declared yet for election " + electionId));

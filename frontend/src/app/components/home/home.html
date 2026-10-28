@@ -1,0 +1,382 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <!-- HERO SECTION: Institutional, Authoritative Civic Portal -->
+  <section class="bg-[#FCFCFA] border-b border-[#DCE2E8] py-14 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      
+      <!-- Left Column: Official Declaration & Identity -->
+      <div class="lg:col-span-7 space-y-5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#eef3f8] border border-[#d3dfea] text-[#183153] text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-[#237C78]"></span>
+          <span>State Election Commission • Local Body Elections Pilot</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#183153] leading-tight">
+          E-Voting Pilot System for Local Body Elections
+        </h1>
+
+        <p class="text-sm sm:text-base text-[#64748B] font-normal leading-relaxed max-w-2xl">
+          An institutional civic digital platform demonstrating verified citizen electoral roll scrutiny, candidate nomination certification, secure EVM balloting, duplicate vote prevention, and certified election results.
+        </p>
+
+        <!-- Official Portals Access Buttons -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a
+            routerLink="/login"
+            class="px-6 py-3 bg-[#183153] hover:bg-[#12243e] text-white text-xs font-bold rounded-md shadow-xs transition-colors flex items-center gap-2">
+            <span>Access Voter Portal</span>
+            <app-icon name="arrow-right" className="w-4 h-4"></app-icon>
+          </a>
+          <a
+            routerLink="/voter-info"
+            class="px-5 py-3 bg-[#FCFCFA] hover:bg-[#F3F5F7] text-[#183153] text-xs font-bold rounded-md border border-[#DCE2E8] transition-colors flex items-center gap-2">
+            <app-icon name="user-check" className="w-4 h-4 text-[#237C78]"></app-icon>
+            <span>Voter Eligibility Guide</span>
+          </a>
+          <a
+            routerLink="/results"
+            class="px-5 py-3 bg-[#FCFCFA] hover:bg-[#F3F5F7] text-[#253247] text-xs font-semibold rounded-md border border-[#DCE2E8] transition-colors flex items-center gap-2">
+            <app-icon name="chart" className="w-4 h-4 text-[#64748B]"></app-icon>
+            <span>Official Tally</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Verification & Environment Specification Card -->
+      <div class="lg:col-span-5">
+        <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-6 shadow-xs space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-[#DCE2E8]">
+            <span class="text-xs font-bold text-[#183153] uppercase tracking-wider flex items-center gap-1.5">
+              <app-icon name="shield-check" className="w-4 h-4 text-[#1E7E34]"></app-icon>
+              <span>Pilot Governance Status</span>
+            </span>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+              Active Demonstration
+            </span>
+          </div>
+
+          <div class="space-y-3.5 text-xs text-[#253247]">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded bg-[#FCFCFA] border border-[#DCE2E8] text-[#183153] flex items-center justify-center shrink-0">
+                <app-icon name="party" className="w-4 h-4 text-[#183153]"></app-icon>
+              </div>
+              <div>
+                <strong class="text-[#183153] block font-bold">Local Body Electoral Hierarchy</strong>
+                <span class="text-[#64748B]">Configured for Municipal Corporation, Town Council, and Gram Panchayat elections.</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded bg-[#FCFCFA] border border-[#DCE2E8] text-[#183153] flex items-center justify-center shrink-0">
+                <app-icon name="lock" className="w-4 h-4 text-[#237C78]"></app-icon>
+              </div>
+              <div>
+                <strong class="text-[#183153] block font-bold">Statutory Ballot Secrecy</strong>
+                <span class="text-[#64748B]">Cryptographic decoupling separates voter identification tokens from ballot payloads.</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded bg-[#FCFCFA] border border-[#DCE2E8] text-[#183153] flex items-center justify-center shrink-0">
+                <app-icon name="receipt" className="w-4 h-4 text-[#183153]"></app-icon>
+              </div>
+              <div>
+                <strong class="text-[#183153] block font-bold">Voter Participation Receipts</strong>
+                <span class="text-[#64748B]">Verifiable participation hash issued to electors without recording candidate choice.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#DCE2E8] flex items-center justify-between text-[11px] text-[#64748B]">
+            <span>Architecture: Angular 22 & Spring Boot</span>
+            <a routerLink="/login" class="text-[#183153] font-bold hover:underline flex items-center gap-1">
+              <span>Sign In</span>
+              <app-icon name="arrow-right" className="w-3 h-3"></app-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4 CIVIC PILLARS (Clean Institutional Design, Zero Emojis) -->
+  <section class="bg-[#FCFCFA] border-b border-[#DCE2E8] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <div class="flex items-center gap-3 p-3.5 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+        <div class="w-10 h-10 rounded-md bg-[#eef3f8] text-[#183153] flex items-center justify-center shrink-0">
+          <app-icon name="user-check" className="w-5 h-5 text-[#183153]"></app-icon>
+        </div>
+        <div>
+          <h2 class="text-xs font-bold text-[#183153]">Voter Roll Scrutiny</h2>
+          <p class="text-[11px] text-[#64748B]">Verified EPIC roll registration</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3.5 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+        <div class="w-10 h-10 rounded-md bg-[#e8f5e9] text-[#1E7E34] flex items-center justify-center shrink-0">
+          <app-icon name="shield-check" className="w-5 h-5 text-[#1E7E34]"></app-icon>
+        </div>
+        <div>
+          <h2 class="text-xs font-bold text-[#183153]">One Citizen, One Vote</h2>
+          <p class="text-[11px] text-[#64748B]">Backend-enforced idempotency</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3.5 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+        <div class="w-10 h-10 rounded-md bg-[#eaf4f3] text-[#237C78] flex items-center justify-center shrink-0">
+          <app-icon name="vote" className="w-5 h-5 text-[#237C78]"></app-icon>
+        </div>
+        <div>
+          <h2 class="text-xs font-bold text-[#183153]">Digital EVM Balloting</h2>
+          <p class="text-[11px] text-[#64748B]">Neutral layout & review dialogue</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3.5 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+        <div class="w-10 h-10 rounded-md bg-[#eef3f8] text-[#183153] flex items-center justify-center shrink-0">
+          <app-icon name="chart" className="w-5 h-5 text-[#183153]"></app-icon>
+        </div>
+        <div>
+          <h2 class="text-xs font-bold text-[#183153]">Certified Tally</h2>
+          <p class="text-[11px] text-[#64748B]">Aggregated audit logs & turnout</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROMINENT CURRENT ELECTIONS SECTION (Populated from Real Backend) -->
+  <section id="elections" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 border-b border-[#DCE2E8] pb-4">
+      <div>
+        <span class="text-xs font-bold text-[#237C78] uppercase tracking-wider">Verified Electoral Schedules</span>
+        <h2 class="text-2xl font-extrabold text-[#183153] mt-1">Elections in the Pilot System</h2>
+        <p class="text-xs text-[#64748B] mt-1">
+          Active and scheduled local body elections fetched directly from the backend election service.
+        </p>
+      </div>
+      <a routerLink="/login" class="text-xs font-bold text-[#183153] hover:text-[#12243e] flex items-center gap-1 transition-colors">
+        <span>Log In to View My Ballot</span>
+        <app-icon name="arrow-right" className="w-3.5 h-3.5"></app-icon>
+      </a>
+    </div>
+
+    @if (isLoading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 animate-pulse space-y-3">
+            <div class="h-4 bg-[#e2e8f0] rounded w-1/3"></div>
+            <div class="h-5 bg-[#e2e8f0] rounded w-3/4"></div>
+            <div class="h-12 bg-[#e2e8f0] rounded"></div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (election of (activeElections.length ? activeElections : elections); track election.id) {
+          <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] overflow-hidden shadow-xs flex flex-col justify-between hover:border-[#183153]/40 transition-colors">
+            <div>
+              <div class="p-4 bg-[#F3F5F7] border-b border-[#DCE2E8] flex items-center justify-between">
+                <span class="text-xs font-semibold text-[#183153] flex items-center gap-1.5">
+                  <app-icon name="map-pin" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+                  <span>{{ election.constituency || 'Ward 12' }}</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold"
+                  [ngClass]="election.status === 'ACTIVE' ? 'bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]' : 'bg-[#eef3f8] text-[#183153] border border-[#d3dfea]'">
+                  {{ election.status === 'ACTIVE' ? 'LIVE VOTING' : 'SCHEDULED' }}
+                </span>
+              </div>
+
+              <div class="p-5 space-y-3">
+                <h3 class="text-base font-bold text-[#183153] line-clamp-1">{{ election.title }}</h3>
+                <p class="text-xs text-[#64748B] line-clamp-2 leading-relaxed">
+                  {{ election.description }}
+                </p>
+                <div class="text-[11px] text-[#64748B] pt-2 border-t border-[#DCE2E8] space-y-1">
+                  <div class="flex items-center gap-1.5">
+                    <app-icon name="calendar" className="w-3.5 h-3.5 text-[#64748B]"></app-icon>
+                    <span><strong>Schedule:</strong> {{ election.startDate | date:'mediumDate' }} — {{ election.endDate | date:'mediumDate' }}</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <app-icon name="candidate" className="w-3.5 h-3.5 text-[#64748B]"></app-icon>
+                    <span><strong>Candidates:</strong> {{ election.totalCandidates || 4 }} Approved Nominations</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5 pt-0">
+              @if (election.status === 'ACTIVE') {
+                <a
+                  routerLink="/login"
+                  class="block w-full py-2.5 bg-[#183153] hover:bg-[#12243e] text-white text-xs font-bold rounded-md text-center transition-colors shadow-xs">
+                  Cast Official Ballot
+                </a>
+              } @else {
+                <a
+                  routerLink="/voter-info"
+                  class="block w-full py-2.5 bg-[#F3F5F7] hover:bg-[#eef3f8] text-[#183153] text-xs font-bold rounded-md text-center border border-[#DCE2E8] transition-colors">
+                  View Polling Schedule
+                </a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- OFFICIAL NOTICES & GAZETTE ANNOUNCEMENTS BOARD -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-[#DCE2E8]">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+      <div>
+        <span class="text-xs font-bold text-[#237C78] uppercase tracking-wider">Public Notices</span>
+        <h2 class="text-2xl font-extrabold text-[#183153] mt-1">Official Commission Announcements</h2>
+      </div>
+      <a routerLink="/contact" class="text-xs font-semibold text-[#183153] hover:underline">File Inquiries With Returning Officer →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      @for (notice of officialNotices; track notice.id) {
+        <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="px-2 py-0.5 rounded font-semibold bg-[#eef3f8] text-[#183153] border border-[#d3dfea]">
+              {{ notice.category }}
+            </span>
+            <span class="text-[#64748B]">{{ notice.date }}</span>
+          </div>
+          <h3 class="text-sm font-bold text-[#183153] leading-snug">{{ notice.title }}</h3>
+          <p class="text-xs text-[#64748B] leading-relaxed">{{ notice.summary }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- VIVA EVALUATION & DEMONSTRATION ROLE NAVIGATOR -->
+  <section class="bg-[#183153] text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-[#12243e]">
+    <div class="max-w-5xl mx-auto text-center space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#237C78]/30 text-teal-200 text-xs font-bold uppercase tracking-wider border border-[#237C78]/50">
+        <app-icon name="shield-check" className="w-3.5 h-3.5 text-teal-300"></app-icon>
+        <span>Evaluation & Viva Role Direct Navigators</span>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Inspect Any Role in One Click</h2>
+      <p class="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed">
+        Switch directly to authenticated role dashboards to examine their respective interfaces, permissions, and administrative capabilities without re-entering credentials.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4 text-xs font-semibold">
+        <button
+          type="button"
+          (click)="openRole('VOTER')"
+          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
+          <app-icon name="user" className="w-5 h-5 text-teal-300"></app-icon>
+          <span>Voter Portal</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="openRole('CANDIDATE')"
+          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
+          <app-icon name="candidate" className="w-5 h-5 text-teal-300"></app-icon>
+          <span>Candidate Portal</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="openRole('PARTY')"
+          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
+          <app-icon name="party" className="w-5 h-5 text-teal-300"></app-icon>
+          <span>Party Representative</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="openRole('ADMIN')"
+          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
+          <app-icon name="scale" className="w-5 h-5 text-teal-300"></app-icon>
+          <span>Election Admin</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="openRole('AUDITOR')"
+          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
+          <app-icon name="receipt" className="w-5 h-5 text-teal-300"></app-icon>
+          <span>Auditor Portal</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICIAL FOOTER WITH STATUTORY LINKS -->
+  <footer class="bg-[#12243e] text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+      <!-- Col 1: Platform Brand & Scope -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-white font-bold text-sm">
+          <div class="w-7 h-7 rounded bg-[#237C78] flex items-center justify-center text-white">
+            <app-icon name="vote" className="w-4 h-4"></app-icon>
+          </div>
+          <span>State Election Commission</span>
+        </div>
+        <p class="leading-relaxed text-slate-400">
+          E-Voting Pilot Platform for Local Body & Municipal Elections. Academic prototype demonstration environment.
+        </p>
+        <p class="text-[11px] text-slate-500">
+          Demonstration data is clearly partitioned from statutory election registries.
+        </p>
+      </div>
+
+      <!-- Col 2: Public Navigation -->
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Electoral Portals</h4>
+        <ul class="space-y-2 text-slate-400">
+          <li><a routerLink="/login" class="hover:text-white transition-colors">Voter Login & EVM</a></li>
+          <li><a routerLink="/voter-info" class="hover:text-white transition-colors">Voter Information & Roll</a></li>
+          <li><a routerLink="/candidate-info" class="hover:text-white transition-colors">Approved Candidate Directory</a></li>
+          <li><a routerLink="/results" class="hover:text-white transition-colors">Public Results & Tally</a></li>
+          <li><a routerLink="/help" class="hover:text-white transition-colors">Help & FAQ Center</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Legal, Privacy & Accessibility -->
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Statutory & Trust</h4>
+        <ul class="space-y-2 text-slate-400">
+          <li><a routerLink="/privacy" class="hover:text-white transition-colors">Privacy Policy (Draft)</a></li>
+          <li><a routerLink="/terms" class="hover:text-white transition-colors">Terms of Service (Draft)</a></li>
+          <li><a routerLink="/accessibility" class="hover:text-white transition-colors">Accessibility Statement (WCAG 2.2 AA)</a></li>
+          <li><a routerLink="/security" class="hover:text-white transition-colors">Security & Responsible Disclosure</a></li>
+          <li><a routerLink="/contact" class="hover:text-white transition-colors">Grievances & Support</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Technical Notice -->
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider mb-3 text-[11px]">Technical Architecture</h4>
+        <p class="text-slate-400 leading-relaxed">
+          Spring Boot Microservices, Angular 22, JWT-based RBAC, and Cryptographic Ballot Decoupling.
+        </p>
+        <div class="mt-3 p-2.5 rounded bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
+          <strong class="text-slate-200 block">Notice on Legal Validity:</strong>
+          <span>Pilot software evaluation requires independent security, privacy, and statutory review before public election adoption.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3">
+      <div>
+        © 2026 State Election Commission • Local Body Electronic Voting Pilot.
+      </div>
+      <div class="flex items-center gap-4">
+        <a routerLink="/privacy" class="hover:text-slate-300">Privacy</a>
+        <a routerLink="/terms" class="hover:text-slate-300">Terms</a>
+        <a routerLink="/accessibility" class="hover:text-slate-300">Accessibility</a>
+        <a routerLink="/contact" class="hover:text-slate-300">Contact</a>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -32,32 +32,32 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
+    public ResponseEntity<Candidate> getCandidateById(@PathVariable("id") Long id) {
         return candidateService.getCandidateById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/election/{electionId}")
-    public ResponseEntity<List<Candidate>> getCandidatesByElection(@PathVariable Long electionId) {
+    public ResponseEntity<List<Candidate>> getCandidatesByElection(@PathVariable("electionId") Long electionId) {
         return ResponseEntity.ok(candidateService.getCandidatesByElection(electionId));
     }
 
     @GetMapping("/election/{electionId}/constituency/{constituency}")
     public ResponseEntity<List<Candidate>> getCandidatesByElectionAndConstituency(
-            @PathVariable Long electionId,
-            @PathVariable String constituency) {
+            @PathVariable("electionId") Long electionId,
+            @PathVariable("constituency") String constituency) {
         return ResponseEntity.ok(candidateService.getCandidatesByElectionAndConstituency(electionId, constituency));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Candidate> updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateDto dto) {
+    public ResponseEntity<Candidate> updateCandidate(@PathVariable("id") Long id, @Valid @RequestBody CandidateDto dto) {
         Candidate updated = candidateService.updateCandidate(id, dto);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCandidate(@PathVariable("id") Long id) {
         candidateService.deleteCandidate(id);
         return ResponseEntity.noContent().build();
     }

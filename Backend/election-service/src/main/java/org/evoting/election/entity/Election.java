@@ -38,6 +38,12 @@ public class Election {
     @Column(name = "election_type", nullable = false, length = 50)
     private String electionType;
 
+    @Column(length = 150)
+    private String constituency;
+
+    @Column(length = 50)
+    private String ward;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

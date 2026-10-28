@@ -1,0 +1,348 @@
+<div class="space-y-6 max-w-5xl mx-auto">
+  
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
+    <div>
+      <span class="inline-block text-[11px] font-bold text-[#237C78] bg-[#237C78]/10 border border-[#237C78]/20 px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
+        Electoral Commission Oversight
+      </span>
+      <h1 class="text-2xl font-bold text-[#253247] tracking-tight">Election Management</h1>
+      <p class="text-xs text-[#64748B] mt-1">Configure elections, schedules, polling windows, and constituency boundaries. Elections created here immediately sync to Voter Portals.</p>
+    </div>
+    <button
+      type="button"
+      (click)="openAddModal()"
+      class="inline-flex items-center gap-2 px-4 py-2 bg-[#183153] hover:bg-[#10223b] text-white text-xs font-semibold rounded shadow-xs transition-colors cursor-pointer self-start sm:self-auto">
+      <app-icon name="plus" [size]="14" />
+      <span>New Election</span>
+    </button>
+  </div>
+
+  <!-- CREATE / EDIT ELECTION FORM CARD -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-7 shadow-xs">
+    <div class="border-b border-[#DCE2E8] pb-4 mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-base font-bold text-[#253247]">{{ isEditing ? 'Edit Election #' + currentElectionId : 'Create Election Configuration' }}</h2>
+        <p class="text-xs text-[#64748B] mt-0.5">Define official polling parameters and statutory deadlines.</p>
+      </div>
+      @if (isEditing) {
+        <button
+          type="button"
+          (click)="closeModal(); initForm()"
+          class="px-3 py-1.5 rounded text-xs font-semibold text-[#64748B] bg-[#F3F5F7] hover:bg-[#DCE2E8] transition-colors cursor-pointer">
+          Cancel Edit
+        </button>
+      }
+    </div>
+
+    @if (successMessage) {
+      <div class="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 rounded text-xs text-emerald-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <app-icon name="check-circle" [size]="15" class="text-emerald-700" />
+          <span class="font-medium">{{ successMessage }}</span>
+        </div>
+        <button (click)="successMessage = ''" class="font-bold text-emerald-900 hover:text-emerald-700 cursor-pointer">×</button>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="mb-5 p-3.5 bg-red-50 border border-red-200 rounded text-xs text-red-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <app-icon name="alert-triangle" [size]="15" class="text-red-700" />
+          <span class="font-medium">{{ errorMessage }}</span>
+        </div>
+        <button (click)="errorMessage = ''" class="font-bold text-red-900 hover:text-red-700 cursor-pointer">×</button>
+      </div>
+    }
+
+    <form [formGroup]="electionForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      
+      <!-- Election Title -->
+      <div>
+        <label for="title" class="block text-xs font-semibold text-[#253247] mb-1.5">
+          Election Title <span class="text-red-600">*</span>
+        </label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="e.g. Municipal Ward Council General Election 2026"
+          class="block w-full rounded border bg-white py-2 px-3 text-xs text-[#253247] focus:outline-none focus:ring-1"
+          [ngClass]="electionForm.get('title')?.touched && electionForm.get('title')?.invalid ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-[#DCE2E8] focus:border-[#183153] focus:ring-[#183153]/20'"
+          required>
+        @if (electionForm.get('title')?.touched && electionForm.get('title')?.invalid) {
+          <p class="text-xs text-red-600 mt-1 font-medium">Election title is required (minimum 2 characters).</p>
+        }
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-xs font-semibold text-[#253247] mb-1.5">
+          Statutory Description & Voter Notice <span class="text-red-600">*</span>
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          placeholder="Provide official notification, voter eligibility parameters, and administrative terms..."
+          class="block w-full rounded border bg-white py-2 px-3 text-xs text-[#253247] focus:outline-none focus:ring-1"
+          [ngClass]="electionForm.get('description')?.touched && electionForm.get('description')?.invalid ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-[#DCE2E8] focus:border-[#183153] focus:ring-[#183153]/20'"
+          required></textarea>
+        @if (electionForm.get('description')?.touched && electionForm.get('description')?.invalid) {
+          <p class="text-xs text-red-600 mt-1 font-medium">Description is required (minimum 3 characters).</p>
+        }
+      </div>
+
+      <!-- Election Type & Initial Status -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="electionType" class="block text-xs font-semibold text-[#253247] mb-1.5">Election Jurisdiction Type</label>
+          <select
+            id="electionType"
+            formControlName="electionType"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20">
+            <option value="Municipal Ward">Municipal Ward Council</option>
+            <option value="General">General Municipal Election</option>
+            <option value="Assembly">Legislative Assembly</option>
+            <option value="Panchayat">Local Gram Panchayat</option>
+            <option value="MLC">Constituency Council</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="status" class="block text-xs font-semibold text-[#253247] mb-1.5">
+            Initial Election Status <span class="text-red-600">*</span>
+          </label>
+          <select
+            id="status"
+            formControlName="status"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20">
+            <option value="ACTIVE">🟢 ACTIVE (Polling open now on EVM)</option>
+            <option value="UPCOMING">📅 UPCOMING (Scheduled for future date)</option>
+            <option value="COMPLETED">🏁 COMPLETED (Tallying / Internal Scrutiny)</option>
+            <option value="PUBLISHED">📢 PUBLISHED (Official Results Released)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Designated 4 Wards & Constituency -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="ward" class="block text-xs font-semibold text-[#253247] mb-1.5">
+            Designated Electoral Ward <span class="text-red-600">*</span>
+          </label>
+          <select
+            id="ward"
+            formControlName="ward"
+            (change)="onWardSelect($any($event.target).value)"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] font-semibold focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20">
+            @for (w of WARDS; track w.ward) {
+              <option [value]="w.ward">{{ w.ward }} — {{ w.constituency }}</option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label for="constituency" class="block text-xs font-semibold text-[#253247] mb-1.5">
+            Constituency / Division <span class="text-red-600">*</span>
+          </label>
+          <input
+            id="constituency"
+            type="text"
+            formControlName="constituency"
+            readonly
+            class="block w-full rounded border border-[#DCE2E8] bg-[#F3F5F7] py-2 px-3 text-xs text-[#253247] font-medium cursor-not-allowed">
+        </div>
+      </div>
+
+      <!-- Date Range (Start Date & End Date) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="startDate" class="block text-xs font-semibold text-[#253247] mb-1.5">
+            Polling Start Date <span class="text-red-600">*</span>
+          </label>
+          <input
+            id="startDate"
+            type="date"
+            formControlName="startDate"
+            class="block w-full rounded border bg-white py-2 px-3 text-xs text-[#253247] focus:outline-none focus:ring-1"
+            [ngClass]="electionForm.get('startDate')?.touched && electionForm.get('startDate')?.invalid ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-[#DCE2E8] focus:border-[#183153] focus:ring-[#183153]/20'"
+            required>
+          @if (electionForm.get('startDate')?.touched && electionForm.get('startDate')?.invalid) {
+            <p class="text-xs text-red-600 mt-1 font-medium">Start date is required.</p>
+          }
+        </div>
+
+        <div>
+          <label for="endDate" class="block text-xs font-semibold text-[#253247] mb-1.5">
+            Polling Close Date <span class="text-red-600">*</span>
+          </label>
+          <input
+            id="endDate"
+            type="date"
+            formControlName="endDate"
+            class="block w-full rounded border bg-white py-2 px-3 text-xs text-[#253247] focus:outline-none focus:ring-1"
+            [ngClass]="electionForm.get('endDate')?.touched && electionForm.get('endDate')?.invalid ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-[#DCE2E8] focus:border-[#183153] focus:ring-[#183153]/20'"
+            required>
+          @if (electionForm.get('endDate')?.touched && electionForm.get('endDate')?.invalid) {
+            <p class="text-xs text-red-600 mt-1 font-medium">End date is required.</p>
+          }
+        </div>
+      </div>
+
+      <!-- Polling Hours & Elector Count -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label for="startTime" class="block text-xs font-semibold text-[#253247] mb-1.5">Opening Time</label>
+          <input
+            id="startTime"
+            type="text"
+            formControlName="startTime"
+            placeholder="07:00 AM"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1">
+        </div>
+        <div>
+          <label for="endTime" class="block text-xs font-semibold text-[#253247] mb-1.5">Closing Time</label>
+          <input
+            id="endTime"
+            type="text"
+            formControlName="endTime"
+            placeholder="06:00 PM"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1">
+        </div>
+        <div>
+          <label for="totalVoters" class="block text-xs font-semibold text-[#253247] mb-1.5">Enrolled Electors</label>
+          <input
+            id="totalVoters"
+            type="number"
+            formControlName="totalVoters"
+            placeholder="12500"
+            class="block w-full rounded border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          [disabled]="isSubmitting"
+          class="w-full py-2.5 bg-[#183153] hover:bg-[#10223b] disabled:opacity-50 text-white text-xs font-semibold rounded shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2">
+          @if (isSubmitting) {
+            <span class="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            <span>Publishing to Electoral Registry & Voter Views...</span>
+          } @else {
+            <span>{{ isEditing ? 'Save Election Changes' : 'Confirm & Publish Election Schedule' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Existing Elections Table -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] overflow-hidden shadow-xs">
+    <div class="p-4 border-b border-[#DCE2E8] flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <app-icon name="vote" [size]="16" class="text-[#183153]" />
+        <h3 class="text-sm font-bold text-[#253247]">Configured Election Registry</h3>
+      </div>
+      <span class="text-xs text-[#64748B]">Total Entries: {{ elections.length }}</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#253247]">
+        <thead class="bg-[#F3F5F7] text-[#64748B] uppercase tracking-wider font-semibold border-b border-[#DCE2E8] text-[10px]">
+          <tr>
+            <th class="p-3.5">Ref</th>
+            <th class="p-3.5">Title & Jurisdiction</th>
+            <th class="p-3.5">Schedule</th>
+            <th class="p-3.5">Status</th>
+            <th class="p-3.5 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2E8]">
+          @for (elec of elections; track elec.id) {
+            <tr class="hover:bg-[#F3F5F7]/60 transition-colors">
+              <td class="p-3.5 font-mono font-semibold text-[#183153]">#{{ elec.id }}</td>
+              <td class="p-3.5">
+                <p class="font-bold text-[#253247]">{{ elec.title }}</p>
+                <span class="text-[11px] text-[#64748B]">{{ elec.constituency }}</span>
+              </td>
+              <td class="p-3.5 text-[#64748B]">
+                {{ (elec.startDate | date:'dd MMM yyyy') || elec.startDate }} — {{ (elec.endDate | date:'dd MMM yyyy') || elec.endDate }}
+                <div class="text-[10px] text-[#64748B] mt-0.5">{{ elec.startTime || '07:00 AM' }} - {{ elec.endTime || '06:00 PM' }}</div>
+              </td>
+              <td class="p-3.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border cursor-pointer select-none"
+                  (click)="toggleStatus(elec)"
+                  title="Click to toggle status"
+                  [ngClass]="elec.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : (elec.status === 'PUBLISHED' ? 'bg-purple-50 text-purple-800 border-purple-200' : (elec.status === 'UPCOMING' ? 'bg-blue-50 text-blue-800 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-300'))">
+                  {{ elec.status }}
+                </span>
+              </td>
+              <td class="p-3.5 text-right space-x-2">
+                <button (click)="openEditModal(elec)" class="text-[#237C78] hover:text-[#183153] font-semibold cursor-pointer">
+                  Edit
+                </button>
+                <button (click)="toggleStatus(elec)" class="text-[#183153] hover:underline font-semibold cursor-pointer">
+                  Toggle
+                </button>
+                <a [routerLink]="['/admin/candidates']" class="text-[#237C78] hover:underline font-semibold cursor-pointer">
+                  Candidates
+                </a>
+                <button (click)="promptDelete(elec)" class="text-red-600 hover:text-red-800 font-semibold cursor-pointer">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+          @if (elections.length === 0 && !isLoading) {
+            <tr>
+              <td colspan="5" class="p-8 text-center text-[#64748B]">
+                No elections configured yet. Use the form above to initialize an election cycle.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal Dialog -->
+  @if (electionToDelete) {
+    <div class="fixed inset-0 z-50 bg-[#253247]/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] max-w-md w-full p-6 shadow-lg space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 shrink-0">
+            <app-icon name="alert-triangle" [size]="20" />
+          </div>
+          <div>
+            <h3 id="modal-title" class="text-sm font-bold text-[#253247]">Confirm Election Deletion</h3>
+            <p class="text-xs text-[#64748B] mt-0.5">Statutory Action Confirmation</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#253247] leading-relaxed">
+          Are you sure you want to permanently delete <strong class="font-bold text-red-700">"{{ electionToDelete.title }}"</strong> (ID #{{ electionToDelete.id }})?
+          This will purge all corresponding ballot configurations and candidate allocations from active registry.
+        </p>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            (click)="cancelDelete()"
+            class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#253247] bg-[#F3F5F7] hover:bg-[#DCE2E8] rounded transition-colors cursor-pointer">
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="confirmDelete()"
+            class="px-4 py-2 text-xs font-semibold text-white bg-red-700 hover:bg-red-800 rounded transition-colors cursor-pointer">
+            Confirm & Expunge
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

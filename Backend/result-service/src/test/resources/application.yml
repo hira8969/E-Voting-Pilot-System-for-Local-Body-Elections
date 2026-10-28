@@ -1,0 +1,20 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: result-service-test
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+services:
+  voting-service:
+    url: http://localhost:8084
+  candidate-service:
+    url: http://localhost:8083
+  election-service:
+    url: http://localhost:8082

@@ -1,0 +1,57 @@
+<div class="min-h-[70vh] flex items-center justify-center p-4">
+  <div class="max-w-md w-full bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-8 sm:p-10 text-center shadow-xs space-y-6">
+    
+    <!-- Muted Green Check Circle Icon -->
+    <div class="w-16 h-16 rounded-full bg-[#e8f5e9] text-[#1E7E34] flex items-center justify-center mx-auto border border-[#c8e6c9]">
+      <app-icon name="check" className="w-8 h-8 text-[#1E7E34]"></app-icon>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <div class="space-y-1.5">
+      <h1 class="text-2xl font-extrabold text-[#183153] tracking-tight">
+        Ballot Successfully Sealed
+      </h1>
+      <p class="text-xs text-[#64748B] leading-relaxed max-w-sm mx-auto">
+        Thank you for exercising your democratic franchise. Your ballot has been recorded into the encrypted tally ledger.
+      </p>
+    </div>
+
+    <!-- Verifiable Participation Details (Without candidate choice!) -->
+    <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-md p-4 text-left text-xs space-y-2">
+      <div class="flex justify-between items-center text-[#64748B]">
+        <span>Electoral Status:</span>
+        <span class="font-bold text-[#1E7E34]">PARTICIPATION RECORDED</span>
+      </div>
+      <div class="flex justify-between items-center text-[#64748B]">
+        <span>Submission Timestamp:</span>
+        <span class="font-mono text-[#253247]">{{ timestamp }}</span>
+      </div>
+      <div class="flex justify-between items-center text-[#64748B]">
+        <span>Ledger Reference:</span>
+        <span class="font-mono text-[#183153] font-bold">{{ verificationReference }}</span>
+      </div>
+    </div>
+
+    <!-- Secrecy Clause -->
+    <div class="p-3 bg-[#eef3f8] rounded-md border border-[#d3dfea] text-[11px] text-[#183153] text-left leading-relaxed">
+      <strong>Statutory Ballot Secrecy Protection:</strong> In compliance with constitutional election standards, your individual candidate selection has been severed from your voter ID and is not retained on confirmation receipts.
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+      <a
+        routerLink="/voter/receipt"
+        class="flex-1 py-2.5 px-4 bg-[#FCFCFA] hover:bg-[#F3F5F7] border border-[#DCE2E8] text-[#183153] text-xs font-bold rounded-md transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+        <app-icon name="receipt" className="w-3.5 h-3.5"></app-icon>
+        <span>Print Receipt</span>
+      </a>
+      <button
+        type="button"
+        (click)="backToDashboard()"
+        class="flex-1 py-2.5 px-4 bg-[#183153] hover:bg-[#12243e] text-white text-xs font-bold rounded-md shadow-xs transition-colors cursor-pointer">
+        Back to Dashboard
+      </button>
+    </div>
+
+  </div>
+</div>

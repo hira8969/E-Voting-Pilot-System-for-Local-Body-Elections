@@ -1,0 +1,143 @@
+<!-- TOP OFFICIAL BANNER: Pilot Demonstration Notice -->
+<div class="bg-[#183153] text-[#FCFCFA] text-[11px] px-4 py-1 border-b border-[#237C78]/40">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-[#237C78]"></span>
+      <span class="font-semibold uppercase tracking-wider">Pilot System Demonstration Environment</span>
+      <span class="hidden sm:inline text-slate-300">• Demonstration data for academic and procedural verification</span>
+    </div>
+    <div class="flex items-center gap-4 text-slate-300">
+      <a routerLink="/accessibility" class="hover:text-white transition-colors">Accessibility</a>
+      <span>|</span>
+      <a routerLink="/help" class="hover:text-white transition-colors">Help</a>
+    </div>
+  </div>
+</div>
+
+@if (mode === 'public') {
+  <header class="bg-[#FCFCFA] border-b border-[#DCE2E8] sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Official Logo & Branding -->
+        <a routerLink="/" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-md bg-[#183153] flex items-center justify-center text-white shadow-xs">
+            <app-icon name="vote" className="w-5 h-5 text-white"></app-icon>
+          </div>
+          <div class="leading-tight">
+            <span class="block text-sm font-extrabold text-[#183153] tracking-tight">State Election Commission</span>
+            <span class="block text-[11px] font-medium text-[#64748B]">E-Voting Pilot Platform • Local Body Elections</span>
+          </div>
+        </a>
+
+        <!-- Center Navigation -->
+        <nav class="hidden lg:flex items-center gap-7 text-xs font-semibold">
+          <a routerLink="/" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" [routerLinkActiveOptions]="{ exact: true }" class="py-5 text-[#253247] hover:text-[#183153] transition-colors">Home</a>
+          <a routerLink="/voter-info" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" class="py-5 text-[#64748B] hover:text-[#183153] transition-colors">Voter Information</a>
+          <a routerLink="/candidate-info" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" class="py-5 text-[#64748B] hover:text-[#183153] transition-colors">Candidate Directory</a>
+          <a routerLink="/results" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" class="py-5 text-[#64748B] hover:text-[#183153] transition-colors">Election Results</a>
+          <a routerLink="/help" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" class="py-5 text-[#64748B] hover:text-[#183153] transition-colors">Help Center</a>
+          <a routerLink="/contact" routerLinkActive="text-[#183153] border-b-2 border-[#183153]" class="py-5 text-[#64748B] hover:text-[#183153] transition-colors">Support Desk</a>
+        </nav>
+
+        <!-- Right Action Buttons -->
+        <div class="hidden sm:flex items-center gap-3">
+          @if (currentUser) {
+            <a
+              [routerLink]="authService.getRoleRedirectUrl()"
+              class="px-4 py-2 text-xs font-bold text-white bg-[#183153] hover:bg-[#12243e] rounded-md shadow-xs transition-colors flex items-center gap-1.5">
+              <span>Go to Dashboard</span>
+              <app-icon name="arrow-right" className="w-3.5 h-3.5"></app-icon>
+            </a>
+          } @else {
+            <a
+              routerLink="/login"
+              class="px-3.5 py-1.5 text-xs font-bold text-[#183153] hover:bg-[#eef3f8] border border-[#DCE2E8] rounded-md transition-colors">
+              Voter Login
+            </a>
+            <a
+              routerLink="/register"
+              class="px-4 py-1.5 text-xs font-bold text-white bg-[#237C78] hover:bg-[#1a605d] rounded-md shadow-xs transition-colors">
+              Register Elector
+            </a>
+          }
+        </div>
+
+        <!-- Mobile Burger Button -->
+        <button
+          type="button"
+          (click)="toggleMobileMenu()"
+          class="lg:hidden p-2 rounded-md text-[#253247] hover:bg-[#F3F5F7] border border-[#DCE2E8] cursor-pointer"
+          aria-label="Toggle navigation menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      @if (mobileMenuOpen) {
+        <div class="lg:hidden py-4 border-t border-[#DCE2E8] space-y-2 text-xs">
+          <a routerLink="/" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded font-semibold text-[#183153] hover:bg-[#F3F5F7]">Home</a>
+          <a routerLink="/voter-info" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded text-[#253247] hover:bg-[#F3F5F7]">Voter Information</a>
+          <a routerLink="/candidate-info" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded text-[#253247] hover:bg-[#F3F5F7]">Candidate Directory</a>
+          <a routerLink="/results" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded text-[#253247] hover:bg-[#F3F5F7]">Election Results</a>
+          <a routerLink="/help" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded text-[#253247] hover:bg-[#F3F5F7]">Help Center</a>
+          <a routerLink="/contact" (click)="mobileMenuOpen = false" class="block px-3 py-2 rounded text-[#253247] hover:bg-[#F3F5F7]">Support Desk</a>
+          <div class="pt-3 border-t border-[#DCE2E8] flex gap-2">
+            <a routerLink="/login" (click)="mobileMenuOpen = false" class="flex-1 text-center py-2 border border-[#DCE2E8] font-bold text-[#183153] rounded-md">Voter Login</a>
+            <a routerLink="/register" (click)="mobileMenuOpen = false" class="flex-1 text-center py-2 bg-[#237C78] text-white font-bold rounded-md">Register</a>
+          </div>
+        </div>
+      }
+    </div>
+  </header>
+} @else {
+  <!-- PORTAL TOP HEADER: Government Digital Service Style -->
+  <header class="bg-[#FCFCFA] border-b border-[#DCE2E8] px-6 py-3 sticky top-0 z-40 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a routerLink="/" class="text-xs font-semibold text-[#64748B] hover:text-[#183153] flex items-center gap-1.5 transition-colors">
+        <app-icon name="arrow-right" className="w-3.5 h-3.5 rotate-180"></app-icon>
+        <span>Public Portal</span>
+      </a>
+
+      @if (electionTitle) {
+        <span class="text-xs font-semibold text-[#253247] bg-[#F3F5F7] px-3 py-1 rounded-md border border-[#DCE2E8] flex items-center gap-1.5">
+          <app-icon name="map-pin" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+          <span>{{ electionTitle }}</span>
+        </span>
+      }
+    </div>
+
+    <!-- Right Controls: Role Badge, User Info, Logout -->
+    <div class="flex items-center gap-4">
+      <!-- Authenticated Role Badge -->
+      @if (currentUser) {
+        <div class="flex items-center gap-1.5 bg-[#eef3f8] px-3 py-1 rounded-md border border-[#d3dfea] text-xs">
+          <span class="text-[#64748B] font-bold text-[10px] uppercase tracking-wider">PORTAL:</span>
+          <span class="font-extrabold text-[#183153] text-xs tracking-wide">{{ getDisplayRole() }}</span>
+        </div>
+      }
+
+      <!-- User Avatar & Profile Badge -->
+      <div class="flex items-center gap-2.5 pl-3 border-l border-[#DCE2E8]">
+        <div class="w-8 h-8 rounded-md bg-[#183153] text-white font-bold text-xs flex items-center justify-center shadow-xs">
+          {{ getInitials() }}
+        </div>
+        <div class="hidden sm:block leading-tight text-left">
+          <p class="text-xs font-bold text-[#253247]">{{ currentUser?.fullName || currentUser?.name || 'Authorized User' }}</p>
+          <span class="text-[10px] font-semibold text-[#64748B]">{{ currentUser?.email || 'EPIC Verified' }}</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        (click)="logout()"
+        class="text-xs font-semibold text-[#C53030] hover:text-[#991b1b] hover:bg-[#fee2e2] px-2.5 py-1 rounded-md border border-transparent hover:border-[#fecaca] transition-colors cursor-pointer"
+        title="Sign Out">
+        Sign Out
+      </button>
+    </div>
+  </header>
+}

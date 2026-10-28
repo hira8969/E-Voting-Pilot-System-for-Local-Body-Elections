@@ -23,6 +23,24 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PostMapping("/register-voter")
+    public ResponseEntity<AuthResponse> registerVoter(@Valid @RequestBody VoterRegisterRequest request) {
+        AuthResponse response = authService.registerVoter(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/otp/send")
+    public ResponseEntity<OtpResponse> sendOtp(@Valid @RequestBody OtpSendRequest request) {
+        OtpResponse response = authService.sendOtp(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/otp/verify-login")
+    public ResponseEntity<AuthResponse> verifyOtpLogin(@Valid @RequestBody OtpVerifyLoginRequest request) {
+        AuthResponse response = authService.loginWithOtp(request);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
@@ -36,7 +54,7 @@ public class AuthController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserSummaryDto> getUserProfile(@PathVariable Long id) {
+    public ResponseEntity<UserSummaryDto> getUserProfile(@PathVariable("id") Long id) {
         UserSummaryDto user = authService.getUserProfile(id);
         return ResponseEntity.ok(user);
     }

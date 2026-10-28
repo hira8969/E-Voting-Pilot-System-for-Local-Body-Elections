@@ -1,0 +1,79 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Security & Disclosure</li>
+      </ol>
+    </nav>
+
+    <!-- Draft Legal Notice -->
+    <div class="p-4 mb-8 rounded-lg bg-[#fef3c7] border border-[#fde68a] text-xs text-[#92400e]">
+      <div class="flex items-start gap-2.5">
+        <app-icon name="alert" className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5"></app-icon>
+        <div>
+          <strong class="font-bold block text-sm mb-0.5">DRAFT SECURITY PROTOCOL & DISCLOSURE POLICY</strong>
+          <span>This technical overview summarizes the architecture and vulnerability reporting process for the E-Voting Pilot System. Independent third-party penetration testing and formal security accreditation are mandatory before live production usage.</span>
+        </div>
+      </div>
+    </div>
+
+    <article class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-10 shadow-xs space-y-8">
+      <header class="border-b border-[#DCE2E8] pb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Security Architecture & Responsible Disclosure</h1>
+        <p class="text-xs text-[#64748B] mt-1.5">Electoral Integrity Standards • Spring Boot & Angular Architecture • October 2026</p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">1. Multi-Layer Electoral Security Architecture</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          The pilot platform enforces defense-in-depth across the presentation, application, and persistence layers:
+        </p>
+        <div class="space-y-3 text-xs">
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+            <h3 class="font-bold text-[#183153] text-sm mb-1">Backend Enforced Idempotency & Eligibility</h3>
+            <p class="text-[#64748B] leading-relaxed">
+              Client UI validation is treated as advisory only. All authorization, role constraints, and voter eligibility checks are enforced by the Spring Boot microservices. Attempted duplicate submissions trigger an immutable 409 Conflict rejection.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+            <h3 class="font-bold text-[#183153] text-sm mb-1">Cryptographic Separation of Ballot Choices</h3>
+            <p class="text-[#64748B] leading-relaxed">
+              Ballot choices are never stored alongside voter identification. The voting microservice computes cryptographic hashes of vote submissions to preserve aggregate verification without compromising secret ballot privacy.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-[#F3F5F7] border border-[#DCE2E8]">
+            <h3 class="font-bold text-[#183153] text-sm mb-1">Role-Partitioned Token Architecture</h3>
+            <p class="text-[#64748B] leading-relaxed">
+              JSON Web Tokens (JWT) encode cryptographically signed role claims (VOTER, ADMIN, SUPER_ADMIN, AUDITOR, OFFICER). Cross-role access is denied at Spring Security filters and Angular functional route guards.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">2. Responsible Vulnerability Disclosure Program</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          We encourage independent academic researchers and security engineers to responsibly review this pilot codebase and report potential vulnerabilities:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li><strong>Guidelines:</strong> Do not disrupt live services, access voter privacy records, or execute destructive testing against shared environments.</li>
+          <li><strong>Reporting Channel:</strong> Submit technical vulnerability reports with reproducible proof-of-concept steps to <code class="bg-[#e2e8f0] px-1 rounded text-xs">security-pilot&#64;election-system.local</code>.</li>
+          <li><strong>Safe Harbor:</strong> Legitimate research conducted in good faith following these guidelines will not face legal action from the research project team.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3 border-t border-[#DCE2E8] pt-6">
+        <h2 class="text-base font-bold text-[#183153]">3. Independent Audit and Verification Mandate</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          In accordance with public election best practices, software upgrades alone do not make an electronic voting platform production-ready. A formal security audit must encompass full source code scrutiny, hardware terminal tamper-resistance, and end-to-end cryptographic verifiability.
+        </p>
+      </section>
+    </article>
+  </main>
+</div>

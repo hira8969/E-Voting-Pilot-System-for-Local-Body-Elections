@@ -1,0 +1,183 @@
+<div class="min-h-screen flex flex-col justify-between bg-[#F3F5F7] text-[#253247] py-8 px-4 sm:px-6 lg:px-8">
+  <!-- Top Navigation Header -->
+  <header class="max-w-7xl mx-auto w-full flex items-center justify-between">
+    <a routerLink="/" class="flex items-center gap-2.5 font-bold text-xs sm:text-sm text-[#183153] hover:text-[#237C78] transition-colors">
+      <div class="w-8 h-8 rounded-md bg-[#183153] flex items-center justify-center text-white">
+        <app-icon name="vote" className="w-4 h-4 text-white"></app-icon>
+      </div>
+      <div>
+        <span class="block leading-tight font-extrabold">State Election Commission</span>
+        <span class="block text-[10px] text-[#64748B] font-normal">Local Body Elections Pilot Portal</span>
+      </div>
+    </a>
+    <a routerLink="/login" class="text-xs font-semibold text-[#64748B] hover:text-[#183153] flex items-center gap-1 transition-colors">
+      <span>Already registered? Sign In →</span>
+    </a>
+  </header>
+
+  <!-- Register Card -->
+  <main class="flex-1 flex items-center justify-center my-6">
+    <div class="w-full max-w-md bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-8 shadow-xs">
+      
+      <!-- Brand & Title -->
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-md bg-[#183153] text-white flex items-center justify-center mx-auto mb-3 shadow-xs">
+          <app-icon name="user-check" className="w-6 h-6 text-white"></app-icon>
+        </div>
+        <span class="text-[11px] font-bold text-[#237C78] uppercase tracking-wider block">Official Electoral Enrollment</span>
+        <h1 class="text-2xl font-extrabold text-[#183153] tracking-tight mt-1">Elector Registration</h1>
+        <p class="text-xs text-[#64748B] mt-1">Enroll your citizenship profile for local body elections</p>
+      </div>
+
+      <!-- Segmented Role Tabs -->
+      <div class="flex items-center p-1 bg-[#F3F5F7] rounded-md mb-5 text-xs font-semibold border border-[#DCE2E8]">
+        <button
+          type="button"
+          (click)="selectRole('VOTER')"
+          [class]="selectedRole === 'VOTER' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
+          class="flex-1 py-1.5 rounded transition-all text-center cursor-pointer">
+          Citizen Voter
+        </button>
+        <button
+          type="button"
+          (click)="selectRole('CANDIDATE')"
+          [class]="selectedRole === 'CANDIDATE' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
+          class="flex-1 py-1.5 rounded transition-all text-center cursor-pointer">
+          Candidate
+        </button>
+        <button
+          type="button"
+          (click)="selectRole('ADMIN')"
+          [class]="selectedRole === 'ADMIN' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
+          class="flex-1 py-1.5 rounded transition-all text-center cursor-pointer">
+          Official / Staff
+        </button>
+      </div>
+
+      <!-- Error Message Banner -->
+      @if (errorMessage) {
+        <div class="mb-4 p-3 bg-[#fee2e2] border border-[#fecaca] rounded-md text-xs text-[#C53030] flex items-start gap-2">
+          <app-icon name="alert" className="w-4 h-4 text-[#C53030] shrink-0 mt-0.5"></app-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <!-- Registration Form -->
+      <form (submit)="onRegister($event)" class="space-y-3.5 text-xs">
+        
+        <!-- Full Name -->
+        <div>
+          <label for="regFullName" class="block font-semibold text-[#253247] mb-1">Full Legal Name *</label>
+          <input
+            id="regFullName"
+            type="text"
+            name="fullName"
+            [(ngModel)]="fullName"
+            placeholder="As recorded on official identity document"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+            required>
+        </div>
+
+        <!-- Email Address -->
+        <div>
+          <label for="regEmail" class="block font-semibold text-[#253247] mb-1">Email Address *</label>
+          <input
+            id="regEmail"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="citizen@domain.local"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+            required>
+        </div>
+
+        <!-- Voter ID / EPIC Number -->
+        <div>
+          <label for="regVoterId" class="block font-semibold text-[#253247] mb-1">
+            Voter ID (EPIC) Number {{ selectedRole === 'VOTER' ? '*' : '(Optional)' }}
+          </label>
+          <input
+            id="regVoterId"
+            type="text"
+            name="voterId"
+            [(ngModel)]="voterId"
+            placeholder="e.g. BR/04/234/987123"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+            [required]="selectedRole === 'VOTER'">
+        </div>
+
+        <!-- Constituency Selection -->
+        <div>
+          <label for="regConstituency" class="block font-semibold text-[#253247] mb-1">Assigned Ward / Constituency *</label>
+          <select
+            id="regConstituency"
+            name="constituency"
+            [(ngModel)]="constituency"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
+            <option value="Ward 01 - Indiranagar">Ward 01 - Indiranagar</option>
+            <option value="Ward 02 - Gandhi Nagar">Ward 02 - Gandhi Nagar</option>
+            <option value="Ward 03 - Rajendra Nagar">Ward 03 - Rajendra Nagar</option>
+            <option value="Ward 04 - Sitamarhi Central">Ward 04 - Sitamarhi Central</option>
+          </select>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="regPassword" class="block font-semibold text-[#253247] mb-1">Account Password (Min 6 chars) *</label>
+          <input
+            id="regPassword"
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Choose a strong password"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+            required>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="regConfirmPassword" class="block font-semibold text-[#253247] mb-1">Confirm Password *</label>
+          <input
+            id="regConfirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            placeholder="Re-enter password to verify"
+            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+            required>
+        </div>
+
+        <!-- Statutory Notice -->
+        <p class="text-[10.5px] text-[#64748B] pt-1 leading-relaxed">
+          By enrolling, you declare that the particulars furnished are truthful to the best of your knowledge and that you are ordinarily resident in the designated electoral ward.
+        </p>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full py-2.5 bg-[#183153] hover:bg-[#12243e] disabled:opacity-50 text-white text-xs font-bold rounded-md shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2">
+          @if (loading) {
+            <svg class="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Submitting Roll Enrollment...</span>
+          } @else {
+            <span>Enroll Elector Profile</span>
+          }
+        </button>
+      </form>
+
+      <!-- Already Registered Link -->
+      <div class="mt-6 text-center text-xs text-[#64748B]">
+        Already enrolled in electoral roll?
+        <a routerLink="/login" class="font-bold text-[#183153] hover:underline ml-1">Sign in here</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-[#64748B] py-2">
+    State Election Commission • E-Voting Pilot System for Local Body Elections
+  </footer>
+</div>

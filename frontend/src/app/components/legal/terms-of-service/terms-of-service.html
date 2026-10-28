@@ -1,0 +1,71 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Terms of Service</li>
+      </ol>
+    </nav>
+
+    <!-- Draft Legal Notice -->
+    <div class="p-4 mb-8 rounded-lg bg-[#fef3c7] border border-[#fde68a] text-xs text-[#92400e]">
+      <div class="flex items-start gap-2.5">
+        <app-icon name="alert" className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5"></app-icon>
+        <div>
+          <strong class="font-bold block text-sm mb-0.5">DRAFT TERMS OF SERVICE — TECHNICAL PILOT SPECIFICATION</strong>
+          <span>These terms govern use of the digital voting pilot platform. Any deployment in legal local body elections must be promulgated under statutory rules framed by the State Legislature and Election Commission.</span>
+        </div>
+      </div>
+    </div>
+
+    <article class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-10 shadow-xs space-y-8">
+      <header class="border-b border-[#DCE2E8] pb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Electoral Platform Terms of Service</h1>
+        <p class="text-xs text-[#64748B] mt-1.5">Version 1.0 (Pilot System Draft) • Effective: October 2026</p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">1. Scope of the Demonstration System</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          This platform represents a prototype electronic voting and election administration pilot. It enables authorized voters, candidates, party representatives, and electoral officers to evaluate digital balloting, nomination scrutiny, audit trail generation, and certified tally computation.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">2. Voter Eligibility and One-Vote Rule</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Participation in an election is restricted to electors who meet the verified electoral roll criteria for the corresponding ward or constituency:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li>Each registered voter is entitled to cast exactly one ballot per election event.</li>
+          <li>The backend service enforces duplicate voting prevention. Any secondary submission attempt is rejected automatically with a 409 Conflict status.</li>
+          <li>Attempting to cast votes on behalf of another citizen or submitting fraudulent identity tokens is strictly prohibited.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">3. Irrevocability of Confirmed Ballots</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Prior to final submission, voters are provided an explicit ballot review dialogue to inspect their candidate selection. Once confirmed and sealed into the cryptographic tally, the ballot is final and cannot be cancelled, amended, or retrieved by any person, including the voter or system administrators.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">4. Acceptable System Use and Security Obligations</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Users must not probe, scan, or test the vulnerability of the system without authorization, attempt denial-of-service attacks, or reverse-engineer the cryptographic tally components. Vulnerabilities discovered during security reviews should be submitted in compliance with our <a routerLink="/security" class="text-[#237C78] font-semibold hover:underline">Responsible Disclosure Policy</a>.
+        </p>
+      </section>
+
+      <section class="space-y-3 border-t border-[#DCE2E8] pt-6">
+        <h2 class="text-base font-bold text-[#183153]">5. Disclaimer and Statutory Certifications</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          UI and code enhancements do not independently constitute statutory certification. Full deployment for official binding elections requires comprehensive independent third-party penetration testing, algorithmic tally verification, and legal gazette notification.
+        </p>
+      </section>
+    </article>
+  </main>
+</div>

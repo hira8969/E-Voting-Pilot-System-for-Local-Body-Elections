@@ -1,0 +1,169 @@
+<div class="space-y-6 max-w-6xl mx-auto">
+
+  <!-- Header Banner -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-bold text-[#253247] tracking-tight">Presiding Officer Control Station</h1>
+        <app-status-indicator state="active" label="POLL CYCLE IN PROGRESS"></app-status-indicator>
+      </div>
+      <p class="text-xs text-[#64748B] mt-1">
+        Jurisdiction: <strong class="text-[#253247]">Sitamarhi Municipal Corporation (Ward 12)</strong> • Returning Officer: <strong class="text-[#253247]">Rajesh N. Verma (Badge #902)</strong>
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <a routerLink="/officer/monitoring" class="px-3.5 py-2 bg-[#183153] hover:bg-[#10223b] text-white rounded text-xs font-semibold shadow-xs transition-colors flex items-center gap-1.5">
+        <app-icon name="activity" [size]="14" />
+        <span>Live Telemetry</span>
+      </a>
+      <a routerLink="/officer/voters" class="px-3.5 py-2 bg-[#F3F5F7] hover:bg-[#DCE2E8] text-[#253247] border border-[#DCE2E8] rounded text-xs font-semibold transition-colors">
+        Verify Voters
+      </a>
+    </div>
+  </div>
+
+  <!-- Key Statistics Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    <app-stat-card
+      title="Total Voters"
+      value="45,820"
+      icon="users"
+      color="blue"
+      subtitle="Enrolled">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Verified"
+      value="45,100"
+      icon="check-circle"
+      color="green"
+      subtitle="98.4% Checked">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Candidates"
+      value="5"
+      icon="user-check"
+      color="purple"
+      subtitle="On Ballot">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Polling Booths"
+      value="42"
+      icon="map-pin"
+      color="slate"
+      subtitle="100% Online">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Votes Cast"
+      value="32,421"
+      icon="vote"
+      color="blue"
+      subtitle="Ledger Records">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Live Turnout"
+      value="70.75%"
+      icon="trending-up"
+      color="green"
+      trend="+4.2%"
+      trendDirection="up"
+      subtitle="vs Previous Turnout">
+    </app-stat-card>
+  </div>
+
+  <!-- Polling Booth Live Status Grid -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-sm font-bold text-[#253247]">Polling Station Telemetry Matrix</h2>
+        <p class="text-xs text-[#64748B]">Real-time heartbeat transmissions from connected EVM ballot control units</p>
+      </div>
+      <a routerLink="/officer/booths" class="text-xs font-semibold text-[#237C78] hover:text-[#183153]">
+        Manage All Booths →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+      @for (booth of booths; track booth.id) {
+        <div class="p-3.5 rounded-lg border border-[#DCE2E8] bg-[#F3F5F7]/40 hover:bg-[#F3F5F7] hover:border-[#64748B]/40 transition-colors shadow-2xs">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs font-bold text-[#183153]">{{ booth.code }}</span>
+            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              {{ booth.status }}
+            </span>
+          </div>
+
+          <h3 class="text-xs font-bold text-[#253247] truncate" [title]="booth.name">{{ booth.name }}</h3>
+          <p class="text-[11px] text-[#64748B] mt-0.5 truncate">{{ booth.locationAddress }}</p>
+
+          <div class="mt-3 pt-3 border-t border-[#DCE2E8] text-xs space-y-1">
+            <div class="flex justify-between">
+              <span class="text-[#64748B] text-[11px]">Turnout:</span>
+              <strong class="text-[#253247] font-mono text-[11px]">{{ booth.votesCast }} / {{ booth.totalRegisteredVoters }} ({{ booth.turnoutPercentage }}%)</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#64748B] text-[11px]">EVM Battery:</span>
+              <span class="text-[#253247] font-mono font-medium text-[11px]">{{ booth.batteryLevel }}% • {{ booth.networkLatencyMs }}ms</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Quick Action Columns -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs">
+      <div class="flex items-center gap-2 mb-3">
+        <app-icon name="shield" [size]="16" class="text-[#183153]" />
+        <h3 class="text-sm font-bold text-[#253247]">Security Diagnostic Checks</h3>
+      </div>
+      <div class="space-y-2">
+        <div class="p-3 rounded bg-[#F3F5F7] border border-[#DCE2E8] text-xs flex items-center justify-between">
+          <div>
+            <p class="font-semibold text-[#253247]">EVM Tamper Sensor Diagnostic</p>
+            <p class="text-[11px] text-[#64748B]">All 42 physical seals intact and electronically verified</p>
+          </div>
+          <span class="text-emerald-800 font-bold text-[10px] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">PASSED</span>
+        </div>
+        <div class="p-3 rounded bg-[#F3F5F7] border border-[#DCE2E8] text-xs flex items-center justify-between">
+          <div>
+            <p class="font-semibold text-[#253247]">Citizen Authorization 2FA Gateway</p>
+            <p class="text-[11px] text-[#64748B]">Latency 22ms, failure rate 0.00% across all stations</p>
+          </div>
+          <span class="text-emerald-800 font-bold text-[10px] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">NOMINAL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs">
+      <div class="flex items-center gap-2 mb-3">
+        <app-icon name="settings" [size]="16" class="text-[#183153]" />
+        <h3 class="text-sm font-bold text-[#253247]">Returning Officer Controls</h3>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <a routerLink="/officer/voters" class="p-3.5 rounded bg-[#F3F5F7] hover:bg-[#DCE2E8] border border-[#DCE2E8] text-xs font-semibold text-[#253247] flex flex-col justify-between transition-colors">
+          <div class="flex items-center gap-1.5">
+            <app-icon name="users" [size]="16" class="text-[#183153]" />
+            <span>Citizen Scrutiny</span>
+          </div>
+          <span class="text-[11px] text-[#64748B] font-normal mt-2">Verify queue enrollments</span>
+        </a>
+        <a routerLink="/officer/monitoring" class="p-3.5 rounded bg-[#F3F5F7] hover:bg-[#DCE2E8] border border-[#DCE2E8] text-xs font-semibold text-[#253247] flex flex-col justify-between transition-colors">
+          <div class="flex items-center gap-1.5">
+            <app-icon name="activity" [size]="16" class="text-[#237C78]" />
+            <span>Live Stream</span>
+          </div>
+          <span class="text-[11px] text-[#64748B] font-normal mt-2">Ingestion velocity charts</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,101 @@
+<div class="space-y-6 max-w-6xl mx-auto">
+  
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-bold text-[#253247] tracking-tight">Real-Time Polling Telemetry & Monitor</h1>
+        <app-status-indicator state="active" label="STREAM SYNCHRONIZED"></app-status-indicator>
+      </div>
+      <p class="text-xs text-[#64748B] mt-1">Real-time vote ingestion throughput, message pipeline latency, and ward-wide participation rate</p>
+    </div>
+    <div class="text-right">
+      <span class="text-xs font-semibold text-[#64748B] bg-[#F3F5F7] px-3 py-1.5 rounded border border-[#DCE2E8]">
+        Live Refresh Rate: 2.0s
+      </span>
+    </div>
+  </div>
+
+  <!-- Real-time Throughput Banner -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-[#183153] text-white rounded-lg p-5 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-semibold text-slate-300 block">Current Ingestion Rate</span>
+        <h3 class="text-2xl font-bold font-mono mt-1">48 Votes/min</h3>
+        <p class="text-[11px] text-slate-300 mt-1 font-mono">Stream: evm.vote.cast.events</p>
+      </div>
+      <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center text-white">
+        <app-icon name="activity" [size]="20" />
+      </div>
+    </div>
+
+    <div class="bg-[#FCFCFA] border border-[#DCE2E8] rounded-lg p-5 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-semibold text-[#64748B] block">Cumulative Ballots Sealed</span>
+        <h3 class="text-2xl font-bold text-[#253247] font-mono mt-1">32,421</h3>
+        <p class="text-[11px] text-emerald-800 font-semibold mt-1">70.75% of Enrolled Electorate</p>
+      </div>
+      <div class="w-10 h-10 rounded bg-[#237C78]/10 text-[#237C78] flex items-center justify-center border border-[#237C78]/20">
+        <app-icon name="vote" [size]="20" />
+      </div>
+    </div>
+
+    <div class="bg-[#FCFCFA] border border-[#DCE2E8] rounded-lg p-5 shadow-xs flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-semibold text-[#64748B] block">Peak Tabulation Window</span>
+        <h3 class="text-2xl font-bold text-[#253247] font-mono mt-1">10:00 AM</h3>
+        <p class="text-[11px] text-[#64748B] mt-1">4,820 ballots verified in 1 hour</p>
+      </div>
+      <div class="w-10 h-10 rounded bg-[#183153]/10 text-[#183153] flex items-center justify-center border border-[#183153]/20">
+        <app-icon name="trending-up" [size]="20" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Hourly Turnout Pace Bar Chart -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-bold text-[#253247]">Hourly Polling Velocity (07:00 AM — Present)</h3>
+      <span class="text-xs text-[#64748B]">Capacity threshold: 5,000/hr</span>
+    </div>
+    <div class="grid grid-cols-6 sm:grid-cols-11 gap-2 items-end h-44 pt-6 border-b border-[#DCE2E8]">
+      @for (slot of hourlyData; track slot.time) {
+        <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+          <span class="text-[10px] font-mono font-semibold text-[#253247]">{{ slot.votes }}</span>
+          <div class="w-full bg-[#183153]/20 hover:bg-[#183153] rounded-t transition-all duration-300 relative group" [style.height.%]="(slot.votes / 5000) * 100">
+            <div class="hidden group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 bg-[#253247] text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap z-20 font-sans">
+              {{ slot.time }}: {{ slot.votes }} votes
+            </div>
+          </div>
+          <span class="text-[10px] text-[#64748B] font-semibold truncate w-full text-center">{{ slot.time }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Real-time Incident & Event Stream -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <app-icon name="shield" [size]="16" class="text-[#183153]" />
+        <h3 class="text-sm font-bold text-[#253247]">Security Event & Polling Telemetry Stream</h3>
+      </div>
+      <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+        All Streams Operational
+      </span>
+    </div>
+
+    <div class="space-y-2 font-mono text-xs">
+      @for (event of liveEvents; track event.id) {
+        <div class="flex items-start justify-between p-3 rounded border border-[#DCE2E8] bg-[#F3F5F7]/40">
+          <div class="flex items-center gap-3">
+            <span class="text-[#64748B] text-[11px]">{{ event.time }}</span>
+            <span class="font-bold text-[#183153]">[{{ event.type }}]</span>
+            <span class="text-[#253247] font-sans text-xs">{{ event.message }}</span>
+          </div>
+          <span class="text-emerald-800 font-bold text-[11px]">VERIFIED</span>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>

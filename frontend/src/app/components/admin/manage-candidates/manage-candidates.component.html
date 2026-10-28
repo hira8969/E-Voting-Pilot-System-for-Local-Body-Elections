@@ -1,0 +1,296 @@
+<div class="space-y-6 max-w-6xl mx-auto">
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
+    <div>
+      <span class="inline-block text-[11px] font-bold text-[#237C78] bg-[#237C78]/10 border border-[#237C78]/20 px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
+        Nomination Scrutiny & Ballot Allocation
+      </span>
+      <h1 class="text-2xl font-bold text-[#253247] tracking-tight">Candidate Nomination Management</h1>
+      <p class="text-xs text-[#64748B] mt-1">
+        Review, verify, and assign official ballot positions, recognized electoral emblems, and statutory manifestos.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      (click)="openAddModal()"
+      class="inline-flex items-center gap-2 px-4 py-2 bg-[#183153] hover:bg-[#10223b] text-white text-xs font-semibold rounded shadow-xs transition-colors cursor-pointer self-start sm:self-auto">
+      <app-icon name="plus" [size]="14" />
+      <span>Nominate Candidate</span>
+    </button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="bg-[#FCFCFA] p-4 rounded-lg border border-[#DCE2E8] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+    <div class="flex items-center gap-2 w-full sm:w-auto">
+      <label for="filterElection" class="text-xs font-semibold text-[#253247] shrink-0">Filter by Election:</label>
+      <select
+        id="filterElection"
+        [value]="selectedElectionId"
+        (change)="onElectionFilterChange($any($event.target).value)"
+        class="w-full sm:w-80 rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs font-medium text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20">
+        <option *ngFor="let elec of elections" [value]="elec.id">
+          {{ elec.title }}
+        </option>
+      </select>
+    </div>
+    <span class="text-xs text-[#64748B]">
+      Verified Candidates in Division: <strong class="text-[#253247] font-semibold">{{ candidates.length }}</strong>
+    </span>
+  </div>
+
+  <!-- Feedback alerts -->
+  @if (successMessage) {
+    <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded text-xs text-emerald-800 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <app-icon name="check-circle" [size]="15" class="text-emerald-700" />
+        <span class="font-medium">{{ successMessage }}</span>
+      </div>
+      <button (click)="successMessage = ''" class="font-bold text-emerald-900 hover:text-emerald-700 cursor-pointer">×</button>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="p-3.5 bg-red-50 border border-red-200 rounded text-xs text-red-800 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <app-icon name="alert-triangle" [size]="15" class="text-red-700" />
+        <span class="font-medium">{{ errorMessage }}</span>
+      </div>
+      <button (click)="errorMessage = ''" class="font-bold text-red-900 hover:text-red-700 cursor-pointer">×</button>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="p-12 text-center bg-[#FCFCFA] rounded-lg border border-[#DCE2E8]">
+      <app-loading text="Loading official candidate rolls for selected election..."></app-loading>
+    </div>
+  }
+
+  <!-- Candidate Cards Grid -->
+  @if (!isLoading) {
+    @if (candidates.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (c of candidates; track c.id) {
+          <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs flex flex-col justify-between hover:border-[#64748B]/40 transition-colors">
+            <div>
+              <!-- Card Top Pill & Symbol -->
+              <div class="flex items-center justify-between pb-3 border-b border-[#DCE2E8]">
+                <span class="text-[11px] font-bold text-[#183153] bg-[#183153]/10 border border-[#183153]/20 px-2.5 py-0.5 rounded font-mono">
+                  Ballot Position #{{ c.candidateNumber || c.ballotPosition || 1 }}
+                </span>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded bg-[#F3F5F7] border border-[#DCE2E8] text-[#253247]">
+                    Symbol: {{ c.symbolUrl || 'Emblem' }}
+                  </span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase">
+                    {{ c.nominationStatus || 'APPROVED' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Middle Details -->
+              <div class="pt-3 space-y-2">
+                <div>
+                  <h2 class="text-base font-bold text-[#253247] leading-snug">{{ c.fullName }}</h2>
+                  <p class="text-xs font-semibold text-[#237C78]">{{ c.partyName }}</p>
+                </div>
+                <p class="text-xs text-[#64748B] line-clamp-2 leading-relaxed">{{ c.bio }}</p>
+                <div class="p-2.5 bg-[#F3F5F7] rounded border border-[#DCE2E8] text-[11px] text-[#253247] leading-relaxed">
+                  <strong class="text-[#253247] font-semibold">Statutory Manifesto:</strong> {{ c.manifesto }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 mt-4 border-t border-[#DCE2E8] flex items-center justify-end gap-2">
+              <button
+                type="button"
+                (click)="openEditModal(c)"
+                class="px-3 py-1.5 border border-[#DCE2E8] hover:bg-[#F3F5F7] text-[#253247] text-xs font-semibold rounded transition-colors cursor-pointer">
+                Edit Details
+              </button>
+              <button
+                type="button"
+                (click)="promptDeleteCandidate(c)"
+                class="px-3 py-1.5 border border-red-200 hover:bg-red-50 text-red-600 text-xs font-semibold rounded transition-colors cursor-pointer">
+                Remove Nomination
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="bg-[#FCFCFA] p-12 text-center rounded-lg border border-[#DCE2E8]">
+        <app-icon name="user-check" [size]="32" class="mx-auto text-[#64748B] mb-2" />
+        <h3 class="text-sm font-bold text-[#253247]">No Candidates Enrolled for this Election</h3>
+        <p class="text-xs text-[#64748B] mt-1 max-w-md mx-auto">
+          No candidates have completed the nomination filing process for the selected election. Click the "Nominate Candidate" button above to record a new candidate.
+        </p>
+      </div>
+    }
+  }
+
+  <!-- Add/Edit Candidate Modal -->
+  @if (showModal) {
+    <div class="fixed inset-0 z-50 bg-[#253247]/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="candidate-modal-title">
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] max-w-xl w-full p-6 shadow-lg max-h-[90vh] overflow-y-auto space-y-4">
+        <div class="border-b border-[#DCE2E8] pb-3 flex items-center justify-between">
+          <div>
+            <h3 id="candidate-modal-title" class="text-base font-bold text-[#253247]">
+              {{ isEditing ? 'Edit Candidate Nomination' : 'Record Candidate Nomination' }}
+            </h3>
+            <p class="text-xs text-[#64748B] mt-0.5">Election Commission Official Filing Form</p>
+          </div>
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="text-[#64748B] hover:text-[#253247] font-bold text-sm cursor-pointer">
+            ✕
+          </button>
+        </div>
+
+        <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="fullName" class="block text-xs font-semibold text-[#253247] mb-1">
+                Candidate Full Legal Name <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="fullName"
+                type="text"
+                formControlName="fullName"
+                placeholder="e.g. Dr. Rajesh Kumar"
+                class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20" />
+            </div>
+
+            <div>
+              <label for="candidateNumber" class="block text-xs font-semibold text-[#253247] mb-1">
+                Ballot Position Order <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="candidateNumber"
+                type="number"
+                min="1"
+                formControlName="candidateNumber"
+                class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="partyName" class="block text-xs font-semibold text-[#253247] mb-1">
+                Recognized Political Party / Independent <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="partyName"
+                type="text"
+                formControlName="partyName"
+                placeholder="e.g. Citizens Development Front or Independent"
+                class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20" />
+            </div>
+
+            <div>
+              <label for="symbolUrl" class="block text-xs font-semibold text-[#253247] mb-1">
+                Allocated Electoral Emblem / Symbol <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="symbolUrl"
+                type="text"
+                formControlName="symbolUrl"
+                placeholder="e.g. Scale, Torch, Wheel, Tree, Book"
+                class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20" />
+            </div>
+          </div>
+
+          <div>
+            <label for="constituency" class="block text-xs font-semibold text-[#253247] mb-1">
+              Constituency / Electoral Ward <span class="text-red-600">*</span>
+            </label>
+            <input
+              id="constituency"
+              type="text"
+              formControlName="constituency"
+              class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20" />
+          </div>
+
+          <div>
+            <label for="bio" class="block text-xs font-semibold text-[#253247] mb-1">
+              Candidate Background & Public Profile <span class="text-red-600">*</span>
+            </label>
+            <textarea
+              id="bio"
+              rows="2"
+              formControlName="bio"
+              placeholder="Candidate public service background, qualifications, and past municipal appointments..."
+              class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20"></textarea>
+          </div>
+
+          <div>
+            <label for="manifesto" class="block text-xs font-semibold text-[#253247] mb-1">
+              Statutory Manifesto Statement <span class="text-red-600">*</span>
+            </label>
+            <textarea
+              id="manifesto"
+              rows="3"
+              formControlName="manifesto"
+              placeholder="Official key manifesto priorities filed with the returning officer..."
+              class="block w-full rounded border border-[#DCE2E8] bg-white py-1.5 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]/20"></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3 border-t border-[#DCE2E8]">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#253247] bg-[#F3F5F7] hover:bg-[#DCE2E8] rounded transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 text-xs font-semibold text-white bg-[#183153] hover:bg-[#10223b] rounded transition-colors cursor-pointer">
+              {{ isEditing ? 'Save Nomination Updates' : 'Confirm Nomination' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal Dialog -->
+  @if (candidateToDelete) {
+    <div class="fixed inset-0 z-50 bg-[#253247]/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="delete-candidate-title">
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] max-w-md w-full p-6 shadow-lg space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 shrink-0">
+            <app-icon name="alert-triangle" [size]="20" />
+          </div>
+          <div>
+            <h3 id="delete-candidate-title" class="text-sm font-bold text-[#253247]">Remove Candidate Nomination</h3>
+            <p class="text-xs text-[#64748B] mt-0.5">Statutory Action Confirmation</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#253247] leading-relaxed">
+          Are you sure you want to withdraw or expunge the nomination of <strong class="font-bold text-red-700">"{{ candidateToDelete.fullName }}"</strong> (Ballot #{{ candidateToDelete.candidateNumber || candidateToDelete.ballotPosition }})?
+          This action will invalidate the ballot entry for this candidate.
+        </p>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            (click)="cancelDeleteCandidate()"
+            class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#253247] bg-[#F3F5F7] hover:bg-[#DCE2E8] rounded transition-colors cursor-pointer">
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="confirmDeleteCandidate()"
+            class="px-4 py-2 text-xs font-semibold text-white bg-red-700 hover:bg-red-800 rounded transition-colors cursor-pointer">
+            Confirm & Withdraw
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

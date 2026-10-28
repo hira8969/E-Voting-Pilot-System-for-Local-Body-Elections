@@ -1,0 +1,80 @@
+<div class="min-h-screen flex flex-col justify-between bg-[#F3F5F7] text-[#253247]">
+  <header class="bg-[#FCFCFA] border-b border-[#DCE2E8] py-3.5 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-2 font-bold text-xs sm:text-sm text-[#183153]">
+        <div class="w-7 h-7 rounded-md bg-[#183153] flex items-center justify-center text-white">
+          <app-icon name="vote" className="w-4 h-4 text-white"></app-icon>
+        </div>
+        <span>State Election Commission • Local Body Elections</span>
+      </a>
+      <a routerLink="/login" class="text-xs font-semibold text-[#64748B] hover:text-[#183153] transition-colors">
+        ← Back to Sign In
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 my-6">
+    <div class="w-full max-w-md bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-8 shadow-xs text-center">
+      <div class="w-12 h-12 rounded-md bg-[#eef3f8] text-[#183153] border border-[#d3dfea] flex items-center justify-center mx-auto mb-4">
+        <app-icon name="lock" className="w-6 h-6 text-[#183153]"></app-icon>
+      </div>
+
+      <span class="text-[11px] font-bold text-[#237C78] uppercase tracking-wider block mb-1">Two-Factor Authentication</span>
+      <h2 class="text-xl font-extrabold text-[#183153]">Elector Identity Passcode</h2>
+      <p class="text-xs text-[#64748B] mt-1 leading-relaxed">
+        We dispatched a 6-digit verification passcode to <span class="font-bold text-[#253247]">{{ mobile || 'your registered contact' }}</span>
+      </p>
+
+      <div class="my-3 p-2.5 bg-[#eef3f8] rounded-md border border-[#d3dfea] text-xs text-[#183153] font-medium flex items-center justify-center gap-2">
+        <app-icon name="info" className="w-4 h-4 text-[#237C78]"></app-icon>
+        <span>Demonstration Passcode: <strong class="tracking-widest font-mono text-[#183153]">123456</strong></span>
+      </div>
+
+      <!-- 6 digit OTP input boxes -->
+      <form (submit)="onVerify($event)" class="mt-6 space-y-6">
+        <div class="flex justify-center gap-2 sm:gap-3">
+          @for (digit of otpDigits; track $index) {
+            <input
+              type="text"
+              maxlength="1"
+              [id]="'otp-box-' + $index"
+              [(ngModel)]="otpDigits[$index]"
+              [name]="'otp-' + $index"
+              (keyup)="onDigitInput($event, $index)"
+              class="w-10 h-12 text-center text-lg font-bold font-mono text-[#183153] bg-white border border-[#DCE2E8] rounded-md focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153] transition-colors">
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loading || getEnteredOtp().length !== 6"
+          class="w-full py-2.5 bg-[#183153] hover:bg-[#12243e] disabled:opacity-50 text-white text-xs font-bold rounded-md shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer">
+          @if (loading) {
+            <svg class="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Verifying Elector Credentials...</span>
+          } @else {
+            <span>Verify & Authenticate Elector →</span>
+          }
+        </button>
+      </form>
+
+      <div class="mt-6 flex items-center justify-between text-xs text-[#64748B] pt-4 border-t border-[#DCE2E8]">
+        @if (countdown > 0) {
+          <span>Resend code in 00:{{ countdown < 10 ? '0' + countdown : countdown }}</span>
+        } @else {
+          <button type="button" (click)="resendOtp()" class="font-bold text-[#183153] hover:underline cursor-pointer">
+            Resend Passcode
+          </button>
+        }
+        <a routerLink="/login" class="text-[#64748B] hover:text-[#183153]">Change Account</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 text-center text-xs text-[#64748B]">
+    State Election Commission • E-Voting Pilot System
+  </footer>
+</div>

@@ -1,0 +1,83 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Privacy Policy</li>
+      </ol>
+    </nav>
+
+    <!-- Draft Legal Notice -->
+    <div class="p-4 mb-8 rounded-lg bg-[#fef3c7] border border-[#fde68a] text-xs text-[#92400e]">
+      <div class="flex items-start gap-2.5">
+        <app-icon name="alert" className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5"></app-icon>
+        <div>
+          <strong class="font-bold block text-sm mb-0.5">DRAFT POLICY DOCUMENT — SUBJECT TO STATUTORY REVIEW</strong>
+          <span>This privacy policy is a technical pilot draft prepared for this demonstration election system. Before deployment in any statutory or official public election, this policy must be audited, amended, and approved by qualified legal counsel, government data protection authorities, and the State Election Commission.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Card -->
+    <article class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-10 shadow-xs space-y-8">
+      <header class="border-b border-[#DCE2E8] pb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Electoral Data Privacy Policy</h1>
+        <p class="text-xs text-[#64748B] mt-1.5">Version 1.0 (Pilot System Specification) • Effective Date: October 2026</p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">1. Principle of Ballot Secrecy and Voter Anonymity</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          The core constitutional mandate of this election system is the absolute decoupling of voter identity from cast ballots. When a voter submits an electronic ballot:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li>The ballot choice is cryptographically encrypted and cast directly into the aggregate tally ledger.</li>
+          <li>The voter's registration record is marked solely with a status flag indicating participation to prevent duplicate voting.</li>
+          <li>No system database table, application memory cache, server log, URL parameter, or network telemetry packet links the citizen's identity (such as Voter ID or National ID) with their candidate selection.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">2. Information Collected for Voter Roll Scrutiny</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          To establish voter eligibility in municipal wards and local bodies, the system processes:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li><strong>Electoral Roll Identifiers:</strong> Official Voter ID (EPIC) number, full registered legal name, and assigned constituency/ward.</li>
+          <li><strong>Authentication Credentials:</strong> Secure hashed passwords (using salted bcrypt) and temporary one-time passcodes (OTP) for session verification.</li>
+          <li><strong>Audit Trail Data:</strong> Timestamp of system login, timestamp of ballot submission (recorded without ballot payload), and terminal session status.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">3. Role-Based Access Control and Data Retention</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Administrative personnel, returning officers, and observers possess strictly partitioned privileges:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-1.5 text-[#253247]">
+          <li>Election Officers can verify citizen voter roll entries but cannot view ballots or alter tally tallies.</li>
+          <li>Independent Auditors access immutable audit events and system health logs in read-only mode.</li>
+          <li>Session tokens expire automatically after periods of inactivity to protect shared polling terminals.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-base font-bold text-[#183153]">4. Third-Party Sharing and Analytics</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          This election platform does not sell, license, or transmit voter information to commercial marketing entities, advertising networks, or third-party tracking providers. No external tracking pixels or invasive client analytics scripts are loaded in this application.
+        </p>
+      </section>
+
+      <section class="space-y-3 border-t border-[#DCE2E8] pt-6">
+        <h2 class="text-base font-bold text-[#183153]">5. Grievances and Inquiries</h2>
+        <p class="text-sm leading-relaxed text-[#253247]">
+          Citizens with queries concerning voter registration records or privacy rights may contact the pilot grievance desk via the <a routerLink="/contact" class="text-[#237C78] font-semibold hover:underline">Contact and Support Portal</a>.
+        </p>
+      </section>
+    </article>
+  </main>
+</div>

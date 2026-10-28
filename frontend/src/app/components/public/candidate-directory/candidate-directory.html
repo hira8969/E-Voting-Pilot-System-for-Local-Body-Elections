@@ -1,0 +1,120 @@
+<div class="min-h-screen flex flex-col bg-[#F3F5F7] text-[#253247]">
+  <app-navbar mode="public"></app-navbar>
+
+  <main class="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <nav aria-label="Breadcrumb" class="text-xs text-[#64748B]">
+      <ol class="flex items-center gap-2">
+        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
+        <li>/</li>
+        <li class="text-[#183153] font-semibold">Candidate Directory</li>
+      </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 sm:p-8 shadow-xs">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#eef3f8] text-[#183153] border border-[#d3dfea] uppercase tracking-wider mb-2">
+          Electoral Scrutiny & Nominations
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#183153] tracking-tight">Approved Candidate Directory</h1>
+        <p class="text-xs text-[#64748B] mt-2 leading-relaxed">
+          Public directory of nominated candidates certified by the Returning Officer across local body wards and constituencies. All candidates are displayed in neutral presentation order.
+        </p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="mt-6 pt-6 border-t border-[#DCE2E8] flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div class="relative w-full sm:w-80">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B]">
+            <app-icon name="search" className="w-4 h-4"></app-icon>
+          </div>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+            placeholder="Search candidate or party..."
+            class="w-full pl-9 pr-3 py-2 text-xs border border-[#DCE2E8] rounded-md bg-white text-[#253247] focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153] outline-none">
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto text-xs">
+          <span class="text-[#64748B] font-semibold shrink-0">Constituency:</span>
+          <select
+            [(ngModel)]="selectedConstituency"
+            (ngModelChange)="onConstituencyChange()"
+            class="px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] font-medium outline-none">
+            @for (constituency of constituencies; track constituency) {
+              <option [value]="constituency">{{ constituency === 'ALL' ? 'All Constituencies' : constituency }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate Cards Grid -->
+    @if (isLoading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 animate-pulse space-y-3">
+            <div class="h-4 bg-[#e2e8f0] rounded w-1/3"></div>
+            <div class="h-3 bg-[#e2e8f0] rounded w-2/3"></div>
+            <div class="h-10 bg-[#e2e8f0] rounded"></div>
+          </div>
+        }
+      </div>
+    } @else if (filteredCandidates.length === 0) {
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-12 text-center text-xs text-[#64748B] space-y-3">
+        <app-icon name="search" className="w-8 h-8 mx-auto text-[#94a3b8]"></app-icon>
+        <p class="font-semibold text-sm text-[#183153]">No candidates found matching your criteria</p>
+        <p>Try clearing your search query or choosing another constituency filter.</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (candidate of filteredCandidates; track candidate.id) {
+          <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-md bg-[#F3F5F7] border border-[#DCE2E8] flex items-center justify-center font-bold text-sm text-[#183153] overflow-hidden shrink-0">
+                    @if (candidate.avatarUrl || candidate.photoUrl) {
+                      <img [src]="candidate.avatarUrl || candidate.photoUrl" [alt]="candidate.name || candidate.fullName || 'Candidate'" class="w-full h-full object-cover">
+                    } @else {
+                      <span>{{ (candidate.name || candidate.fullName || 'CA').slice(0, 2).toUpperCase() }}</span>
+                    }
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-[#183153]">{{ candidate.name || candidate.fullName }}</h3>
+                    <p class="text-xs text-[#237C78] font-semibold">{{ candidate.partyName || candidate.partyCode || 'Independent' }}</p>
+                  </div>
+                </div>
+
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+                  NOMINATION APPROVED
+                </span>
+              </div>
+
+              <div class="text-xs text-[#64748B] space-y-1 bg-[#F3F5F7] p-3 rounded-md border border-[#DCE2E8]">
+                <div class="flex justify-between">
+                  <span class="font-medium">Constituency:</span>
+                  <span class="font-bold text-[#253247]">{{ candidate.constituency || 'General Ward' }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium">Party Affiliation:</span>
+                  <span class="font-bold text-[#253247]">{{ candidate.partyCode || 'IND' }}</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-[#253247] leading-relaxed line-clamp-3">
+                {{ candidate.vision || candidate.manifesto || 'Committed to responsible representation, civic infrastructure enhancements, and transparent local governance.' }}
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-[#DCE2E8] flex items-center justify-between text-[11px] text-[#64748B]">
+              <span>Candidate ID: <code class="font-mono text-[#253247]">{{ candidate.id }}</code></span>
+              <a routerLink="/login" class="text-[#183153] font-bold hover:underline">Vote in Open Election →</a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

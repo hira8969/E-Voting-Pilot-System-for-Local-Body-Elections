@@ -1,0 +1,104 @@
+<div class="max-w-2xl mx-auto space-y-6">
+  
+  <div class="flex items-center justify-between no-print">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-[#183153] tracking-tight">Electoral Participation Receipt</h1>
+      <p class="text-xs text-[#64748B] mt-0.5">Verifiable Evidence of Ballot Registration</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="px-3.5 py-1.5 bg-[#FCFCFA] hover:bg-[#F3F5F7] border border-[#DCE2E8] rounded-md text-xs font-bold text-[#183153] shadow-xs flex items-center gap-1.5 cursor-pointer"
+        (click)="printReceipt()">
+        <app-icon name="printer" className="w-4 h-4"></app-icon>
+        <span>Print Receipt</span>
+      </button>
+      <a routerLink="/voter/dashboard" class="px-3.5 py-1.5 bg-[#183153] hover:bg-[#12243e] text-white rounded-md text-xs font-bold shadow-xs">
+        Dashboard →
+      </a>
+    </div>
+  </div>
+
+  <!-- PRINTABLE RECEIPT CARD -->
+  <div id="printable-receipt" class="bg-[#FCFCFA] border-2 border-[#DCE2E8] rounded-lg p-6 sm:p-8 shadow-xs relative">
+    
+    <!-- Receipt Header -->
+    <div class="text-center pb-5 border-b-2 border-[#DCE2E8]">
+      <div class="w-10 h-10 rounded-md bg-[#183153] text-white flex items-center justify-center mx-auto mb-2 shadow-xs">
+        <app-icon name="vote" className="w-5 h-5 text-white"></app-icon>
+      </div>
+      <h2 class="text-sm font-black uppercase tracking-wider text-[#183153]">STATE LOCAL BODY ELECTION COMMISSION</h2>
+      <p class="text-[11px] font-bold text-[#237C78]">ELECTRONIC VOTING PILOT SYSTEM • DEMONSTRATION RECORD</p>
+      <p class="text-xs text-[#253247] font-semibold mt-1">{{ receipt.electionTitle }}</p>
+    </div>
+
+    <!-- Reference Numbers -->
+    <div class="py-3.5 border-b border-dashed border-[#DCE2E8] flex items-center justify-between text-xs">
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Transaction Token</span>
+        <span class="font-mono font-bold text-[#183153] text-sm">{{ receipt.receiptNumber }}</span>
+      </div>
+      <div class="text-right">
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Status</span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+          BALLOT CONFIRMED & SEALED
+        </span>
+      </div>
+    </div>
+
+    <!-- Receipt Data Grid -->
+    <div class="py-4 grid grid-cols-2 gap-4 text-xs">
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Ward & Jurisdiction</span>
+        <span class="font-semibold text-[#253247]">{{ receipt.wardNumber }} ({{ receipt.constituency }})</span>
+      </div>
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Polling Station</span>
+        <span class="font-semibold text-[#253247]">{{ receipt.boothCode }} - Civic High School</span>
+      </div>
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Ballot Timestamp</span>
+        <span class="font-semibold text-[#253247]">{{ receipt.timestamp }}</span>
+      </div>
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">EVM Terminal Unit</span>
+        <span class="font-semibold text-[#253247]">{{ receipt.evmUnitNumber }}</span>
+      </div>
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Voter Verification Token</span>
+        <span class="font-mono font-semibold text-[#253247]">{{ receipt.voterMaskedId }}</span>
+      </div>
+      <div>
+        <span class="text-[#64748B] text-[10px] uppercase font-bold block">Cryptographic Hash Stamp</span>
+        <span class="font-mono text-[10px] text-[#64748B] truncate block">{{ receipt.hashVerificationStamp }}</span>
+      </div>
+    </div>
+
+    <!-- Cryptographic Verification Block & Mock QR -->
+    <div class="mt-2 pt-4 border-t-2 border-[#DCE2E8] flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-14 h-14 bg-[#183153] p-1.5 rounded-md shrink-0 flex items-center justify-center">
+          <div class="grid grid-cols-3 gap-0.5 w-full h-full bg-white p-1">
+            <div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div>
+            <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+            <div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div>
+          </div>
+        </div>
+        <div class="text-[10px] text-[#64748B] leading-tight">
+          <strong class="text-[#183153] block mb-0.5 font-bold">Digitally Signed via ECC-256</strong>
+          <span>Scan token at designated Returning Officer desk to verify participation on the electoral roll.</span>
+        </div>
+      </div>
+
+      <div class="text-right text-[10px] text-[#64748B] font-mono">
+        PILOT-TX: {{ (receipt.transactionId || '0x8f2a9910d5e8812c').substring(0, 16) }}...
+      </div>
+    </div>
+
+    <!-- Statutory Ballot Secrecy Clause -->
+    <div class="mt-5 p-3 bg-[#F3F5F7] rounded-md border border-[#DCE2E8] text-[11px] text-[#64748B] leading-relaxed text-center">
+      <strong>Statutory Ballot Secrecy Protection:</strong> In accordance with electoral secrecy mandates, individual candidate selections are cryptographically decoupled from voter identification records and are never printed on participation receipts.
+    </div>
+
+  </div>
+</div>

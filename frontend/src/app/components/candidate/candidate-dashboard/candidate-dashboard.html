@@ -1,0 +1,136 @@
+<div class="space-y-6 max-w-5xl mx-auto">
+  
+  <!-- Candidate Identity & Nomination Status Header -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-start gap-4">
+      <div class="w-14 h-14 rounded-md bg-[#183153] text-white font-bold text-base flex items-center justify-center shrink-0">
+        {{ (currentUser?.fullName || currentUser?.name || 'Candidate').slice(0, 2).toUpperCase() }}
+      </div>
+      <div class="space-y-1">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <h1 class="text-xl sm:text-2xl font-extrabold text-[#183153] tracking-tight">
+            {{ currentUser?.fullName || currentUser?.name || 'Ananya Deshmukh' }}
+          </h1>
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+            <app-icon name="check-circle" className="w-3.5 h-3.5"></app-icon>
+            <span>NOMINATION ACCEPTED</span>
+          </span>
+        </div>
+        <p class="text-xs text-[#64748B] flex items-center gap-2 flex-wrap">
+          <span>Party: <strong class="text-[#237C78]">{{ candidacy.partyName }} ({{ candidacy.partyCode }})</strong></span>
+          <span>•</span>
+          <span>Constituency: <strong class="text-[#253247]">{{ candidacy.constituency }}</strong></span>
+          <span>•</span>
+          <span>Scrutiny Ref: <code class="font-mono text-[#183153]">{{ candidacy.scrutinyCode }}</code></span>
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <a
+        routerLink="/candidate-info"
+        class="px-4 py-2 bg-[#FCFCFA] hover:bg-[#F3F5F7] border border-[#DCE2E8] text-[#183153] text-xs font-bold rounded-md shadow-xs transition-colors flex items-center gap-2">
+        <app-icon name="user" className="w-4 h-4 text-[#237C78]"></app-icon>
+        <span>View Public Directory Listing</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Document Scrutiny & Statutory Verification Grid -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs space-y-4">
+    <div class="flex items-center justify-between border-b border-[#DCE2E8] pb-3">
+      <div>
+        <h2 class="text-sm font-bold text-[#183153]">Returning Officer Document Scrutiny Registry</h2>
+        <p class="text-xs text-[#64748B]">Statutory documentation submitted for local body election nomination</p>
+      </div>
+      <span class="text-xs font-semibold text-[#1E7E34] bg-[#e8f5e9] px-2.5 py-0.5 rounded border border-[#c8e6c9]">
+        4/4 Documents Certified
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+      @for (doc of documents; track doc.name) {
+        <div class="p-3.5 rounded-md border border-[#DCE2E8] bg-[#F3F5F7] flex items-center justify-between">
+          <div class="space-y-0.5">
+            <span class="font-bold text-[#183153] block">{{ doc.name }}</span>
+            <span class="text-[#64748B] text-[11px]">Submitted: {{ doc.date }}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
+            {{ doc.status }}
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Manifesto & Campaign Bio Card -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-6 shadow-xs space-y-4">
+    <div class="flex items-center justify-between border-b border-[#DCE2E8] pb-3">
+      <div>
+        <h2 class="text-sm font-bold text-[#183153]">Campaign Manifesto & Elector Bio</h2>
+        <p class="text-xs text-[#64748B]">Displayed to electors in the Candidate Directory and EVM informational view</p>
+      </div>
+      <button
+        type="button"
+        (click)="toggleEditManifesto()"
+        class="px-3.5 py-1.5 border border-[#DCE2E8] hover:bg-[#F3F5F7] text-[#183153] text-xs font-semibold rounded-md transition-colors cursor-pointer flex items-center gap-1.5">
+        <app-icon name="file-text" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+        <span>{{ isEditingManifesto ? 'Cancel' : 'Edit Manifesto' }}</span>
+      </button>
+    </div>
+
+    @if (isEditingManifesto) {
+      <div class="space-y-4 text-xs">
+        <div>
+          <label for="manifestoTitle" class="block font-semibold text-[#253247] mb-1">Manifesto Theme Title</label>
+          <input
+            id="manifestoTitle"
+            type="text"
+            [(ngModel)]="candidacy.manifestoTitle"
+            class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] font-semibold outline-none focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153]">
+        </div>
+
+        <div>
+          <label for="manifestoBio" class="block font-semibold text-[#253247] mb-1">Candidate Manifesto Statement</label>
+          <textarea
+            id="manifestoBio"
+            rows="4"
+            [(ngModel)]="candidacy.bio"
+            class="w-full px-3 py-2 border border-[#DCE2E8] rounded-md bg-white text-[#253247] outline-none focus:ring-2 focus:ring-[#183153]/20 focus:border-[#183153]"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <button
+            type="button"
+            (click)="toggleEditManifesto()"
+            class="px-4 py-2 border border-[#DCE2E8] text-[#64748B] rounded-md hover:bg-[#F3F5F7]">
+            Discard
+          </button>
+          <button
+            type="button"
+            (click)="saveManifesto()"
+            class="px-4 py-2 bg-[#183153] hover:bg-[#12243e] text-white font-bold rounded-md shadow-xs">
+            Save & Publish Changes
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="p-4 rounded-md bg-[#F3F5F7] border border-[#DCE2E8] space-y-2 text-xs">
+        <h3 class="font-bold text-[#183153] text-sm">{{ candidacy.manifestoTitle }}</h3>
+        <p class="text-[#253247] leading-relaxed">{{ candidacy.bio }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- Administrative Notifications -->
+  <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs space-y-3">
+    <h3 class="text-sm font-bold text-[#183153] flex items-center gap-2">
+      <app-icon name="bell" className="w-4 h-4 text-[#237C78]"></app-icon>
+      <span>Returning Officer Notices</span>
+    </h3>
+    <div class="p-3.5 bg-[#eef3f8] rounded-md border border-[#d3dfea] text-xs text-[#183153] leading-relaxed">
+      <strong>Notice regarding EVM Mock Poll:</strong> Candidate agents are requested to report to Booth #42 on Aug 1 at 06:00 IST for mandatory EVM pre-poll terminal hash verification in presence of the Returning Officer.
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,66 @@
+<div class="space-y-6 max-w-6xl mx-auto">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
+    <div>
+      <span class="inline-block text-[11px] font-bold text-[#237C78] bg-[#237C78]/10 border border-[#237C78]/20 px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
+        Official Electoral Registry
+      </span>
+      <h1 class="text-2xl font-bold text-[#253247] tracking-tight">Elections Directory</h1>
+      <p class="text-xs text-[#64748B] mt-1">Browse all scheduled, active, and completed local body elections for your constituency.</p>
+    </div>
+    <div class="w-full sm:w-72">
+      <app-search-box placeholder="Search by name, ward, constituency..." (searchChanged)="onSearch($event)"></app-search-box>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    @for (election of filteredElections; track election.id) {
+      <div class="bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-5 shadow-xs hover:border-[#64748B]/50 transition-all flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                  [ngClass]="election.status === 'ACTIVE' ? 'bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]' : (election.status === 'UPCOMING' ? 'bg-[#eff6ff] text-[#1D4ED8] border border-[#bfdbfe]' : 'bg-[#f1f5f9] text-[#475569] border border-[#cbd5e1]')">
+              {{ election.status === 'ACTIVE' ? '🟢 LIVE BALLOT' : (election.status === 'UPCOMING' ? '📅 UPCOMING' : 'COMPLETED') }}
+            </span>
+            <span class="text-[11px] font-semibold text-[#64748B] uppercase">{{ election.electionType || election.type || 'Municipal' }}</span>
+          </div>
+
+          <h3 class="text-base font-bold text-[#183153] leading-snug">{{ election.title }}</h3>
+          <p class="text-xs text-[#237C78] font-semibold mt-1">{{ election.constituency || election.ward || 'Ward 12' }}</p>
+
+          <p class="text-xs text-[#64748B] mt-2.5 line-clamp-2 leading-relaxed">
+            {{ election.description }}
+          </p>
+
+          <div class="mt-4 pt-3 border-t border-[#DCE2E8] grid grid-cols-2 gap-2 text-xs text-[#64748B]">
+            <div>
+              <span class="text-[#64748B] text-[10px] uppercase font-bold block">Polling Window</span>
+              <span class="font-semibold text-[#253247]">{{ (election.startDate | date:'dd MMM yyyy') || election.startDate }}</span>
+            </div>
+            <div>
+              <span class="text-[#64748B] text-[10px] uppercase font-bold block">Voting Hours</span>
+              <span class="font-semibold text-[#253247]">{{ election.startTime || '07:00 AM' }} - {{ election.endTime || '06:00 PM' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t border-[#DCE2E8] flex items-center justify-between gap-3">
+          <a [routerLink]="['/voter/elections', election.id]" class="text-xs font-bold text-[#183153] hover:text-[#237C78]">
+            View Details & Candidates →
+          </a>
+          @if (election.status === 'ACTIVE') {
+            <a [routerLink]="['/voter/vote', election.id]" class="px-3.5 py-1.5 bg-[#183153] hover:bg-[#12243e] text-white text-xs font-bold rounded shadow-xs transition-colors">
+              Cast Vote
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    @if (filteredElections.length === 0) {
+      <div class="col-span-full bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-10 text-center space-y-2">
+        <p class="text-base font-bold text-[#183153]">No elections matching your query</p>
+        <p class="text-xs text-[#64748B]">Try searching with a different ward number or election title.</p>
+      </div>
+    }
+  </div>
+</div>

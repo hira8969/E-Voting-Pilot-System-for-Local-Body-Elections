@@ -32,4 +32,8 @@ public class ElectionDto {
 
     @NotBlank(message = "Election type is required")
     private String electionType;
+
+    private String constituency;
+
+    private String ward;
 }

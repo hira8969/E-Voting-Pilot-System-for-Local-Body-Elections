@@ -33,40 +33,40 @@ public class VoterController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Voter> getVoterById(@PathVariable Long id) {
+    public ResponseEntity<Voter> getVoterById(@PathVariable("id") Long id) {
         return voterService.getVoterById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Voter> getVoterByUserId(@PathVariable Long userId) {
+    public ResponseEntity<Voter> getVoterByUserId(@PathVariable("userId") Long userId) {
         return voterService.getVoterByUserId(userId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/epic/{epicNumber}")
-    public ResponseEntity<Voter> getVoterByEpic(@PathVariable String epicNumber) {
+    public ResponseEntity<Voter> getVoterByEpic(@PathVariable("epicNumber") String epicNumber) {
         return voterService.getVoterByEpic(epicNumber)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/eligibility")
-    public ResponseEntity<VoterEligibilityDto> checkEligibility(@PathVariable Long id) {
+    public ResponseEntity<VoterEligibilityDto> checkEligibility(@PathVariable("id") Long id) {
         VoterEligibilityDto eligibility = voterService.checkEligibility(id);
         return ResponseEntity.ok(eligibility);
     }
 
     @PutMapping("/{id}/verify")
-    public ResponseEntity<Voter> verifyVoter(@PathVariable Long id) {
+    public ResponseEntity<Voter> verifyVoter(@PathVariable("id") Long id) {
         Voter verified = voterService.verifyVoter(id);
         return ResponseEntity.ok(verified);
     }
 
     @PutMapping("/{id}/vote-status")
-    public ResponseEntity<Voter> updateVoteStatus(@PathVariable Long id, @RequestParam boolean hasVoted) {
+    public ResponseEntity<Voter> updateVoteStatus(@PathVariable("id") Long id, @RequestParam("hasVoted") boolean hasVoted) {
         Voter updated = voterService.updateVotingStatus(id, hasVoted);
         return ResponseEntity.ok(updated);
     }

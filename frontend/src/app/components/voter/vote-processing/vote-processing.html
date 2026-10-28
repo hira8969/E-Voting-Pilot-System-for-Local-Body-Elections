@@ -1,0 +1,70 @@
+<div class="min-h-[70vh] flex items-center justify-center p-4">
+  <div class="w-full max-w-lg bg-[#FCFCFA] rounded-lg border border-[#DCE2E8] p-8 shadow-xs text-center space-y-6">
+    
+    <!-- Animated Processing Icon -->
+    <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+      <div class="absolute inset-0 rounded-full border-3 border-[#DCE2E8] border-t-[#183153] animate-spin"></div>
+      <div class="w-14 h-14 rounded-full bg-[#183153]/5 text-[#183153] flex items-center justify-center">
+        <app-icon name="shield" [size]="24" />
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-bold text-[#253247]">Processing Ballot Submission...</h2>
+      <p class="text-xs text-[#64748B] mt-1">Please do not refresh or close this window while the ballot is sealed.</p>
+    </div>
+
+    <!-- Stepper Pipeline -->
+    <div class="bg-[#F3F5F7] rounded-lg p-4 border border-[#DCE2E8] text-left space-y-3">
+      <!-- Stage 1 -->
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+             [ngClass]="currentStage >= 1 ? 'bg-[#237C78] text-white' : 'bg-[#DCE2E8] text-[#64748B]'">
+          @if (currentStage > 1) { ✓ } @else { 1 }
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-semibold text-[#253247]">Authenticating Voter Authorization Token</p>
+          <p class="text-[10px] text-[#64748B]">Verifying eligibility and token idempotency</p>
+        </div>
+        @if (currentStage === 1) {
+          <span class="text-xs text-[#183153] font-semibold">Active...</span>
+        }
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+             [ngClass]="currentStage >= 2 ? 'bg-[#237C78] text-white' : 'bg-[#DCE2E8] text-[#64748B]'">
+          @if (currentStage > 2) { ✓ } @else { 2 }
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-semibold text-[#253247]">Cryptographic Ballot Sealing</p>
+          <p class="text-[10px] text-[#64748B]">Anonymizing voter identity and securing cast ballot</p>
+        </div>
+        @if (currentStage === 2) {
+          <span class="text-xs text-[#183153] font-semibold">Sealing...</span>
+        }
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+             [ngClass]="currentStage >= 3 ? 'bg-[#237C78] text-white' : 'bg-[#DCE2E8] text-[#64748B]'">
+          @if (currentStage >= 3) { ✓ } @else { 3 }
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-semibold text-[#253247]">Writing Record to Audit Ledger</p>
+          <p class="text-[10px] text-[#64748B]">Generating verifiable digital confirmation token</p>
+        </div>
+        @if (currentStage === 3) {
+          <span class="text-xs text-[#183153] font-semibold">Recording...</span>
+        }
+      </div>
+    </div>
+
+    <p class="text-[11px] text-[#64748B] italic">
+      Ballot secrecy is maintained. Voter identity and ballot choice are recorded independently.
+    </p>
+
+  </div>
+</div>

@@ -34,6 +34,8 @@ public class ElectionService {
                 .endDate(dto.getEndDate())
                 .status(dto.getStatus() != null ? dto.getStatus() : ElectionStatus.DRAFT)
                 .electionType(dto.getElectionType().trim())
+                .constituency(dto.getConstituency())
+                .ward(dto.getWard())
                 .build();
 
         return electionRepository.save(election);
@@ -74,8 +76,8 @@ public class ElectionService {
         Election election = electionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + id));
 
-        if (election.getStatus() == ElectionStatus.ACTIVE || election.getStatus() == ElectionStatus.COMPLETED) {
-            throw new InvalidElectionStateException("Cannot modify details of an election that is ACTIVE or COMPLETED.");
+        if (election.getStatus() == ElectionStatus.ACTIVE || election.getStatus() == ElectionStatus.COMPLETED || election.getStatus() == ElectionStatus.PUBLISHED) {
+            throw new InvalidElectionStateException("Cannot modify details of an election that is ACTIVE, COMPLETED, or PUBLISHED.");
         }
 
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
@@ -87,6 +89,8 @@ public class ElectionService {
         election.setStartDate(dto.getStartDate());
         election.setEndDate(dto.getEndDate());
         election.setElectionType(dto.getElectionType().trim());
+        if (dto.getConstituency() != null) election.setConstituency(dto.getConstituency());
+        if (dto.getWard() != null) election.setWard(dto.getWard());
 
         return electionRepository.save(election);
     }

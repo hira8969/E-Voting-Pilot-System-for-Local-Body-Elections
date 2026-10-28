@@ -18,6 +18,12 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+services:
+  voter-service:
+    url: ${VOTER_SERVICE_URL:}
+  audit-service:
+    url: ${AUDIT_SERVICE_URL:}
+
 eureka:
   client:
     service-url:

@@ -1,0 +1,4 @@
+/* Scoped candidate component styles - Tailwind handles layouts */
+:host {
+  display: block;
+}

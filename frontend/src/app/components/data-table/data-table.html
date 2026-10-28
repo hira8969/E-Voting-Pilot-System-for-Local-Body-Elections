@@ -1,0 +1,142 @@
+<div class="w-full space-y-3">
+  <!-- Top Table Toolbar: Search & Records Summary -->
+  @if (enableSearch) {
+    <div class="flex items-center justify-between gap-4">
+      <div class="relative w-full sm:w-72">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#64748B]">
+          <app-icon name="search" className="w-3.5 h-3.5"></app-icon>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
+          placeholder="Filter records..."
+          class="w-full pl-8 pr-3 py-1.5 text-xs border border-[#DCE2E8] rounded-md bg-white text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
+      </div>
+
+      <div class="text-[11px] text-[#64748B] shrink-0 font-medium">
+        Total Records: <strong class="text-[#183153]">{{ filteredData.length }}</strong>
+      </div>
+    </div>
+  }
+
+  <!-- Main Table Container -->
+  <div class="w-full overflow-hidden rounded-md border border-[#DCE2E8] bg-[#FCFCFA] shadow-xs">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#253247]">
+        <thead class="bg-[#F3F5F7] text-[11px] font-bold uppercase tracking-wider text-[#64748B] border-b border-[#DCE2E8]">
+          <tr>
+            @for (col of columns; track col.field) {
+              <th
+                scope="col"
+                (click)="sortBy(col)"
+                [class.cursor-pointer]="col.sortable !== false"
+                class="px-4 py-3 whitespace-nowrap select-none hover:text-[#183153] transition-colors">
+                <div class="flex items-center gap-1.5">
+                  <span>{{ col.header }}</span>
+                  @if (col.sortable !== false) {
+                    <span class="text-[9px] text-[#94a3b8]">
+                      @if (sortField === col.field) {
+                        {{ sortAsc ? '▲' : '▼' }}
+                      } @else {
+                        ↕
+                      }
+                    </span>
+                  }
+                </div>
+              </th>
+            }
+            @if (hasActions) {
+              <th scope="col" class="px-4 py-3 text-right whitespace-nowrap">
+                Actions
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2E8]">
+          @if (loading) {
+            <!-- Skeleton Rows for Real Asynchronous Loading -->
+            @for (i of [1, 2, 3, 4]; track i) {
+              <tr class="animate-pulse">
+                @for (col of columns; track col.field) {
+                  <td class="px-4 py-3.5">
+                    <div class="h-3.5 bg-[#e2e8f0] rounded w-3/4"></div>
+                  </td>
+                }
+                @if (hasActions) {
+                  <td class="px-4 py-3.5 text-right">
+                    <div class="h-3.5 bg-[#e2e8f0] rounded w-12 ml-auto"></div>
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (filteredData.length === 0) {
+            <tr>
+              <td [attr.colspan]="columns.length + (hasActions ? 1 : 0)" class="px-6 py-10 text-center text-[#64748B] space-y-2">
+                <app-icon name="search" className="w-6 h-6 mx-auto text-[#94a3b8]"></app-icon>
+                <p class="font-medium text-xs">{{ emptyMessage }}</p>
+                @if (searchQuery) {
+                  <button
+                    type="button"
+                    (click)="searchQuery = ''; onSearchChange()"
+                    class="text-xs text-[#183153] font-bold hover:underline cursor-pointer">
+                    Clear Filter
+                  </button>
+                }
+              </td>
+            </tr>
+          } @else {
+            @for (row of paginatedData; track $index) {
+              <tr class="hover:bg-[#F3F5F7] transition-colors">
+                @for (col of columns; track col.field) {
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    @if (col.type === 'badge') {
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold"
+                            [ngClass]="getBadgeClass(row[col.field])">
+                        {{ row[col.field] }}
+                      </span>
+                    } @else if (col.type === 'date') {
+                      <span class="font-mono text-[#64748B]">{{ row[col.field] | date:'mediumDate' }}</span>
+                    } @else {
+                      <span class="font-medium">{{ row[col.field] }}</span>
+                    }
+                  </td>
+                }
+                @if (hasActions) {
+                  <td class="px-4 py-3 text-right whitespace-nowrap">
+                    <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }"></ng-container>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    @if (enablePagination && filteredData.length > pageSize) {
+      <div class="px-4 py-2.5 bg-[#F3F5F7] border-t border-[#DCE2E8] flex items-center justify-between text-xs text-[#64748B]">
+        <div>
+          Showing page <strong class="text-[#183153]">{{ currentPage }}</strong> of <strong class="text-[#183153]">{{ totalPages }}</strong>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button
+            type="button"
+            (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            class="px-2.5 py-1 border border-[#DCE2E8] rounded bg-white text-[#253247] disabled:opacity-40 hover:bg-[#F3F5F7] cursor-pointer">
+            Previous
+          </button>
+          <button
+            type="button"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-2.5 py-1 border border-[#DCE2E8] rounded bg-white text-[#253247] disabled:opacity-40 hover:bg-[#F3F5F7] cursor-pointer">
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

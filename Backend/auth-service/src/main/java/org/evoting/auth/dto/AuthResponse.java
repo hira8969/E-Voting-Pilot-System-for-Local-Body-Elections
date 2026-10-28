@@ -20,5 +20,8 @@ public class AuthResponse {
     private Long userId;
     private String username;
     private String email;
+    private String fullName;
+    private String epicNumber;
+    private String constituency;
     private List<String> roles;
 }
