@@ -15,8 +15,9 @@ import { AppIconComponent } from '../icon/icon.component';
   styleUrl: './register.css'
 })
 export class RegisterComponent {
-  selectedRole: 'VOTER' | 'CANDIDATE' | 'ADMIN' = 'VOTER';
+  selectedRole: 'VOTER' | 'PARTY' = 'VOTER';
 
+  // Citizen Voter Fields
   fullName: string = '';
   email: string = '';
   password: string = '';
@@ -24,6 +25,13 @@ export class RegisterComponent {
   voterId: string = '';
   phone: string = '';
   constituency: string = 'Ward 01 - Indiranagar';
+
+  // Political Party Registration Fields
+  partyName: string = '';
+  partyCode: string = '';
+  repName: string = '';
+  partySymbol: string = '/other.svg';
+  partySymbols: string[] = ['/other.svg', '🌾', '🌳', '⚖️', '🚜', '🌟', '🐘', '🕊️', '☀️', '🚲', '✋'];
 
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
@@ -36,8 +44,9 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
-  selectRole(role: 'VOTER' | 'CANDIDATE' | 'ADMIN'): void {
+  selectRole(role: 'VOTER' | 'PARTY'): void {
     this.selectedRole = role;
+    this.errorMessage = '';
   }
 
   togglePassword(): void {
@@ -52,16 +61,6 @@ export class RegisterComponent {
     event.preventDefault();
     this.errorMessage = '';
 
-    if (!this.fullName.trim()) {
-      this.errorMessage = 'Please enter your full legal name.';
-      return;
-    }
-
-    if (!this.email.trim()) {
-      this.errorMessage = 'Please enter a valid email address.';
-      return;
-    }
-
     if (this.password.length < 6) {
       this.errorMessage = 'Password must be at least 6 characters long.';
       return;
@@ -72,15 +71,73 @@ export class RegisterComponent {
       return;
     }
 
-    if (this.selectedRole === 'VOTER' && !this.voterId.trim()) {
+    if (this.selectedRole === 'PARTY') {
+      if (!this.partyName.trim()) {
+        this.errorMessage = 'Please enter official Political Party Name.';
+        return;
+      }
+      if (!this.partyCode.trim()) {
+        this.errorMessage = 'Please enter Party Code (e.g. JVP, LKM).';
+        return;
+      }
+      if (!this.repName.trim()) {
+        this.errorMessage = 'Please enter Authorized Representative Name.';
+        return;
+      }
+      if (!this.email.trim()) {
+        this.errorMessage = 'Please enter Party Official Email.';
+        return;
+      }
+
+      this.loading = true;
+      const code = this.partyCode.trim().toUpperCase();
+      const cleanPhone = this.phone.trim().replace(/\D/g, '') || '9876543210';
+
+      this.authService.registerParty({
+        partyName: this.partyName.trim(),
+        partyCode: code,
+        repName: this.repName.trim(),
+        email: this.email.trim(),
+        phone: cleanPhone,
+        symbol: this.partySymbol,
+        password: this.password
+      }).subscribe({
+        next: () => {
+          this.loading = false;
+          this.toastService.success(
+            'Party Registration Successful',
+            `Political Party '${this.partyName}' registered! Login using Username: '${code.toLowerCase()}'.`
+          );
+          this.router.navigate(['/login'], { queryParams: { identifier: code.toLowerCase(), registered: 'party' } });
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err?.error?.message || err?.error || 'Party registration failed. Party code or email may already be in use.';
+          this.toastService.error('Registration Failed', this.errorMessage);
+        }
+      });
+      return;
+    }
+
+    // Citizen Voter Flow
+    if (!this.fullName.trim()) {
+      this.errorMessage = 'Please enter your full legal name.';
+      return;
+    }
+
+    if (!this.email.trim()) {
+      this.errorMessage = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (!this.voterId.trim()) {
       this.errorMessage = 'Voter ID (EPIC) is required for citizen voter registration.';
       return;
     }
 
     this.loading = true;
-
     const cleanPhone = this.phone.trim().replace(/\D/g, '') || '9876543210';
-    const cleanEpic = this.voterId.trim().toUpperCase() || ('VTR' + Math.floor(100000 + Math.random() * 900000));
+    const cleanEpic = this.voterId.trim().toUpperCase();
 
     this.authService.register({
       fullName: this.fullName.trim(),

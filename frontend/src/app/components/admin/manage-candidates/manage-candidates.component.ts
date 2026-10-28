@@ -35,6 +35,12 @@ export class ManageCandidatesComponent implements OnInit {
   errorMessage = '';
   candidateToDelete: Candidate | null = null;
 
+  isImageUrl(url?: string | null): boolean {
+    if (!url) return false;
+    const str = String(url).trim().toLowerCase();
+    return str.startsWith('http') || str.startsWith('/') || str.endsWith('.png') || str.endsWith('.jpg') || str.endsWith('.jpeg') || str.endsWith('.svg');
+  }
+
   constructor(
     private candidateService: CandidateService,
     private electionService: ElectionService,
@@ -185,6 +191,52 @@ export class ManageCandidatesComponent implements OnInit {
       error: () => {
         this.errorMessage = `Failed to remove nomination for ${name}.`;
         this.candidateToDelete = null;
+      }
+    });
+  }
+
+  approveNomination(candidate: Candidate): void {
+    const updatedDto: CandidateDto = {
+      electionId: Number(candidate.electionId) || 1,
+      fullName: candidate.fullName || candidate.name || 'Candidate',
+      partyName: candidate.partyName || 'Independent',
+      symbolUrl: candidate.symbolUrl || candidate.symbol || '🗳️',
+      constituency: candidate.constituency || '05 - Sitamarhi Parliamentary Constituency (MP)',
+      bio: candidate.bio || '',
+      manifesto: candidate.manifesto || '',
+      nominationStatus: 'APPROVED'
+    };
+    this.candidateService.updateCandidate(candidate.id, updatedDto).subscribe({
+      next: () => {
+        candidate.nominationStatus = 'APPROVED';
+        this.successMessage = `Statutory Scrutiny Complete: Nomination for '${candidate.fullName}' (${candidate.partyName}) officially APPROVED & placed on EVM ballot.`;
+        this.loadCandidatesForSelected();
+      },
+      error: () => {
+        this.errorMessage = `Failed to approve nomination for ${candidate.fullName}.`;
+      }
+    });
+  }
+
+  rejectNomination(candidate: Candidate): void {
+    const updatedDto: CandidateDto = {
+      electionId: Number(candidate.electionId) || 1,
+      fullName: candidate.fullName || candidate.name || 'Candidate',
+      partyName: candidate.partyName || 'Independent',
+      symbolUrl: candidate.symbolUrl || candidate.symbol || '🗳️',
+      constituency: candidate.constituency || '05 - Sitamarhi Parliamentary Constituency (MP)',
+      bio: candidate.bio || '',
+      manifesto: candidate.manifesto || '',
+      nominationStatus: 'REJECTED'
+    };
+    this.candidateService.updateCandidate(candidate.id, updatedDto).subscribe({
+      next: () => {
+        candidate.nominationStatus = 'REJECTED';
+        this.successMessage = `Nomination for '${candidate.fullName}' REJECTED under election scrutiny rules.`;
+        this.loadCandidatesForSelected();
+      },
+      error: () => {
+        this.errorMessage = `Failed to reject nomination for ${candidate.fullName}.`;
       }
     });
   }

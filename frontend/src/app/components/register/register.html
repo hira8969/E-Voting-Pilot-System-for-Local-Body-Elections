@@ -40,17 +40,10 @@
         </button>
         <button
           type="button"
-          (click)="selectRole('CANDIDATE')"
-          [class]="selectedRole === 'CANDIDATE' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
+          (click)="selectRole('PARTY')"
+          [class]="selectedRole === 'PARTY' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
           class="flex-1 py-1.5 rounded transition-all text-center cursor-pointer">
-          Candidate
-        </button>
-        <button
-          type="button"
-          (click)="selectRole('ADMIN')"
-          [class]="selectedRole === 'ADMIN' ? 'bg-[#183153] text-white shadow-2xs' : 'text-[#64748B] hover:text-[#183153]'"
-          class="flex-1 py-1.5 rounded transition-all text-center cursor-pointer">
-          Official / Staff
+          Political Party (दल)
         </button>
       </div>
 
@@ -65,61 +58,171 @@
       <!-- Registration Form -->
       <form (submit)="onRegister($event)" class="space-y-3.5 text-xs">
         
-        <!-- Full Name -->
-        <div>
-          <label for="regFullName" class="block font-semibold text-[#253247] mb-1">Full Legal Name *</label>
-          <input
-            id="regFullName"
-            type="text"
-            name="fullName"
-            [(ngModel)]="fullName"
-            placeholder="As recorded on official identity document"
-            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
-            required>
-        </div>
+        @if (selectedRole === 'VOTER') {
+          <!-- Citizen Voter Form Fields -->
+          <!-- Full Name -->
+          <div>
+            <label for="regFullName" class="block font-semibold text-[#253247] mb-1">Full Legal Name *</label>
+            <input
+              id="regFullName"
+              type="text"
+              name="fullName"
+              [(ngModel)]="fullName"
+              placeholder="As recorded on official identity document"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
 
-        <!-- Email Address -->
-        <div>
-          <label for="regEmail" class="block font-semibold text-[#253247] mb-1">Email Address *</label>
-          <input
-            id="regEmail"
-            type="email"
-            name="email"
-            [(ngModel)]="email"
-            placeholder="citizen@domain.local"
-            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
-            required>
-        </div>
+          <!-- Email Address -->
+          <div>
+            <label for="regEmail" class="block font-semibold text-[#253247] mb-1">Email Address *</label>
+            <input
+              id="regEmail"
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              placeholder="citizen@domain.local"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
 
-        <!-- Voter ID / EPIC Number -->
-        <div>
-          <label for="regVoterId" class="block font-semibold text-[#253247] mb-1">
-            Voter ID (EPIC) Number {{ selectedRole === 'VOTER' ? '*' : '(Optional)' }}
-          </label>
-          <input
-            id="regVoterId"
-            type="text"
-            name="voterId"
-            [(ngModel)]="voterId"
-            placeholder="e.g. BR/04/234/987123"
-            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
-            [required]="selectedRole === 'VOTER'">
-        </div>
+          <!-- Voter ID / EPIC Number -->
+          <div>
+            <label for="regVoterId" class="block font-semibold text-[#253247] mb-1">
+              Voter ID (EPIC) Number *
+            </label>
+            <input
+              id="regVoterId"
+              type="text"
+              name="voterId"
+              [(ngModel)]="voterId"
+              placeholder="e.g. BR/04/234/987123"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs font-mono font-bold uppercase text-[#183153] placeholder:font-sans placeholder:font-normal placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
 
-        <!-- Constituency Selection -->
-        <div>
-          <label for="regConstituency" class="block font-semibold text-[#253247] mb-1">Assigned Ward / Constituency *</label>
-          <select
-            id="regConstituency"
-            name="constituency"
-            [(ngModel)]="constituency"
-            class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
-            <option value="Ward 01 - Indiranagar">Ward 01 - Indiranagar</option>
-            <option value="Ward 02 - Gandhi Nagar">Ward 02 - Gandhi Nagar</option>
-            <option value="Ward 03 - Rajendra Nagar">Ward 03 - Rajendra Nagar</option>
-            <option value="Ward 04 - Sitamarhi Central">Ward 04 - Sitamarhi Central</option>
-          </select>
-        </div>
+          <!-- Mobile Number -->
+          <div>
+            <label for="regPhone" class="block font-semibold text-[#253247] mb-1">10-Digit Mobile Number *</label>
+            <input
+              id="regPhone"
+              type="tel"
+              name="phone"
+              [(ngModel)]="phone"
+              placeholder="e.g. 9876543210"
+              maxlength="10"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
+
+          <!-- Constituency Selection (Strictly 4 Wards) -->
+          <div>
+            <label for="regConstituency" class="block font-semibold text-[#253247] mb-1">Assigned Ward / Constituency *</label>
+            <select
+              id="regConstituency"
+              name="constituency"
+              [(ngModel)]="constituency"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
+              <option value="Ward 01 - Indiranagar">Ward 01 - Indiranagar</option>
+              <option value="Ward 02 - Gandhi Nagar">Ward 02 - Gandhi Nagar</option>
+              <option value="Ward 03 - Rajendra Nagar">Ward 03 - Rajendra Nagar</option>
+              <option value="Ward 04 - Sitamarhi Central">Ward 04 - Sitamarhi Central</option>
+            </select>
+          </div>
+        } @else {
+          <!-- Political Party Registration Form Fields -->
+          <!-- Party Name -->
+          <div>
+            <label for="partyName" class="block font-semibold text-[#253247] mb-1">Political Party Official Legal Name *</label>
+            <input
+              id="partyName"
+              type="text"
+              name="partyName"
+              [(ngModel)]="partyName"
+              placeholder="e.g. Janata Vikas Party / Lok Kalyan Dal"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Party Code / Acronym -->
+            <div>
+              <label for="partyCode" class="block font-semibold text-[#253247] mb-1">Party Acronym / Code *</label>
+              <input
+                id="partyCode"
+                type="text"
+                name="partyCode"
+                [(ngModel)]="partyCode"
+                placeholder="e.g. JVP"
+                maxlength="10"
+                class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs font-mono font-bold uppercase text-[#183153] placeholder:font-sans placeholder:font-normal placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+                required>
+              <span class="text-[10px] text-[#64748B]">Used as your Login Username</span>
+            </div>
+
+            <!-- Party Election Symbol -->
+            <div>
+              <label for="partySymbol" class="block font-semibold text-[#253247] mb-1">Election Symbol *</label>
+              <select
+                id="partySymbol"
+                name="partySymbol"
+                [(ngModel)]="partySymbol"
+                class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]">
+                <option value="/other.svg">🪁 Kite (पतंग - Free / Independent Symbol)</option>
+                <option value="🌾">🌾 Corn Stalk</option>
+                <option value="🌳">🌳 Banyan Tree</option>
+                <option value="⚖️">⚖️ Scales of Justice</option>
+                <option value="🚜">🚜 Farm Tractor</option>
+                <option value="🌟">🌟 Radiant Star</option>
+                <option value="🐘">🐘 Elephant</option>
+                <option value="🕊️">🕊️ Peace Dove</option>
+                <option value="☀️">☀️ Rising Sun</option>
+                <option value="🚲">🚲 Bicycle</option>
+                <option value="✋">✋ Open Hand</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Authorized Representative Name -->
+          <div>
+            <label for="repName" class="block font-semibold text-[#253247] mb-1">Authorized Representative Name *</label>
+            <input
+              id="repName"
+              type="text"
+              name="repName"
+              [(ngModel)]="repName"
+              placeholder="e.g. Suresh Kumar (Party General Secretary)"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
+
+          <!-- Official Email -->
+          <div>
+            <label for="partyEmail" class="block font-semibold text-[#253247] mb-1">Party Official Email Address *</label>
+            <input
+              id="partyEmail"
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              placeholder="e.g. central@jvp-party.in"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
+
+          <!-- Official Phone -->
+          <div>
+            <label for="partyPhone" class="block font-semibold text-[#253247] mb-1">Party Contact Phone (10 digits) *</label>
+            <input
+              id="partyPhone"
+              type="tel"
+              name="phone"
+              [(ngModel)]="phone"
+              placeholder="e.g. 9811223344"
+              maxlength="10"
+              class="block w-full rounded-md border border-[#DCE2E8] bg-white py-2 px-3 text-xs text-[#253247] placeholder:text-[#94a3b8] focus:border-[#183153] focus:outline-none focus:ring-1 focus:ring-[#183153]"
+              required>
+          </div>
+        }
 
         <!-- Password -->
         <div>
@@ -147,11 +250,6 @@
             required>
         </div>
 
-        <!-- Statutory Notice -->
-        <p class="text-[10.5px] text-[#64748B] pt-1 leading-relaxed">
-          By enrolling, you declare that the particulars furnished are truthful to the best of your knowledge and that you are ordinarily resident in the designated electoral ward.
-        </p>
-
         <!-- Submit Button -->
         <button
           type="submit"
@@ -162,9 +260,9 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>Submitting Roll Enrollment...</span>
+            <span>Processing Registration...</span>
           } @else {
-            <span>Enroll Elector Profile</span>
+            <span>{{ selectedRole === 'PARTY' ? 'Register Political Party & Issue Credentials' : 'Enroll Elector Profile' }}</span>
           }
         </button>
       </form>

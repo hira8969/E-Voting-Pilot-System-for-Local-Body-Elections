@@ -13,7 +13,7 @@ import { ToastService } from '../../../services/toast.service';
 export class ManifestoUploadComponent {
   uploadProgress: number = 0;
   keyPoints: string[] = [
-    'Universal clean piped drinking water supply with smart meters across Ward 12',
+    'Universal clean piped drinking water supply with smart meters across Municipal Wards 01 to 04',
     'Modern digital libraries and youth skill development hubs in each municipal ward',
     '100% LED street illumination with solar backup and emergency SOS buttons',
     'Rapid municipal grievance redressal cell guaranteeing 48-hour issue resolution'

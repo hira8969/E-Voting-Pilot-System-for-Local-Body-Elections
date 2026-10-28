@@ -2,6 +2,7 @@ export type UserRole = 'VOTER' | 'CANDIDATE' | 'PARTY' | 'PARTY_REP' | 'ADMIN' |
 
 export interface User {
   id: number | string;
+  username?: string;
   fullName?: string;
   name?: string;
   email: string;

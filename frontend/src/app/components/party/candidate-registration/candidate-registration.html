@@ -1,162 +1,422 @@
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- Header -->
   <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-900">Party Candidate Nomination</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Submit official candidate nomination form for scrutiny by Returning Officer</p>
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-lg border-2 border-slate-300 bg-white p-1 shadow-xs flex items-center justify-center shrink-0">
+        <img [src]="currentParty.symbolUrl" [alt]="currentParty.name" class="w-full h-full object-contain">
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight">Party Candidate Nomination</h1>
+          <span
+            class="px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-full border"
+            [class.bg-blue-50]="currentParty.partyType === 'NATIONAL'"
+            [class.text-blue-700]="currentParty.partyType === 'NATIONAL'"
+            [class.border-blue-200]="currentParty.partyType === 'NATIONAL'"
+            [class.bg-amber-50]="currentParty.partyType === 'STATE'"
+            [class.text-amber-800]="currentParty.partyType === 'STATE'"
+            [class.border-amber-200]="currentParty.partyType === 'STATE'">
+            {{ currentParty.partyType === 'NATIONAL' ? 'ECI National Party' : (currentParty.homeState + ' State Party') }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5">
+          {{ currentParty.name }} ({{ currentParty.code }}) — Official Nomination & Candidate Credential Issuance Portal
+        </p>
+      </div>
     </div>
     <a routerLink="/party/dashboard" class="text-xs font-bold text-blue-900 hover:underline">
       ← Back to Dashboard
     </a>
   </div>
 
+  <!-- SUCCESS CREDENTIALS ISSUED MODAL / CARD -->
+  @if (createdSuccess && issuedCandidateSummary) {
+    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-500 rounded-2xl p-6 shadow-md space-y-5 animate-in fade-in">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-2xl shrink-0 shadow-sm">
+          ✓
+        </div>
+        <div class="flex-1">
+          <h2 class="text-lg font-black text-emerald-900">
+            Nomination Filed & Candidate Login Credentials Issued!
+          </h2>
+          <p class="text-xs text-emerald-700 mt-0.5">
+            Nomination papers for <strong>{{ issuedCandidateSummary.candidateName }}</strong> have been submitted to the Returning Officer. Deliver these login credentials to the candidate so they can access their Candidate Portal.
+          </p>
+        </div>
+      </div>
+
+      <!-- Credential Copy Box -->
+      <div class="bg-white rounded-xl border border-emerald-300 p-4 shadow-inner space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Candidate Official Access Credentials</span>
+          <button
+            type="button"
+            (click)="copyCredentials()"
+            class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded shadow-xs transition-colors cursor-pointer flex items-center gap-1.5">
+            <span>📋 Copy Credentials</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block">Candidate User ID (Login)</span>
+            <span class="text-sm font-mono font-black text-blue-950 mt-0.5 block select-all">
+              {{ issuedCandidateSummary.username }}
+            </span>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block">Candidate Password</span>
+            <span class="text-sm font-mono font-black text-emerald-700 mt-0.5 block select-all">
+              {{ issuedCandidateSummary.password }}
+            </span>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block">Contesting Seat</span>
+            <span class="text-xs font-bold text-slate-800 mt-0.5 block">
+              {{ issuedCandidateSummary.constituency }}
+            </span>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block">Party & Allocated Symbol</span>
+            <span class="text-xs font-bold text-slate-800 mt-0.5 block">
+              {{ issuedCandidateSummary.party }} ({{ currentParty.symbolName }})
+            </span>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200 text-[11px] text-blue-900 flex items-center gap-2">
+          <span>ℹ️</span>
+          <span>Candidate can login at <strong>/login</strong> using User ID <code>{{ issuedCandidateSummary.username }}</code> to manage campaign and check nomination verification status.</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          (click)="createdSuccess = false; suggestCredentials();"
+          class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-bold rounded-lg cursor-pointer">
+          + Nominate Another Candidate
+        </button>
+        <a
+          routerLink="/party/dashboard"
+          class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg cursor-pointer">
+          Go to Party Dashboard →
+        </a>
+      </div>
+    </div>
+  }
+
+  <!-- MAIN NOMINATION FORM -->
   <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-xs">
     <form (submit)="onSubmit($event)" class="space-y-6">
       
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Candidate Full Name <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            [(ngModel)]="formData.name"
-            placeholder="e.g. Anand Mahindra Verma"
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
-            required>
+      <!-- Section 1: Election & Seat Selection with State-wise Rules -->
+      <div class="border-b border-slate-200 pb-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+            <span>🗳️</span>
+            <span>1. Select Election & Parliamentary / Assembly Seat</span>
+          </h2>
+          <span class="text-xs text-slate-500">
+            {{ availableElections.length }} Eligible Election(s) for {{ currentParty.code }}
+          </span>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Party Affiliation <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="partyName"
-            [(ngModel)]="formData.partyName"
-            readonly
-            class="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 px-3 text-sm text-slate-700 font-semibold cursor-not-allowed">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Election & Constituency <span class="text-red-500">*</span>
-          </label>
-          <select
-            name="constituency"
-            [(ngModel)]="formData.constituency"
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none">
-            <option value="Sitamarhi Central">Sitamarhi Central Municipal Election</option>
-            <option value="Dumra Rural">Dumra Rural Panchayat Election</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Contesting Ward <span class="text-red-500">*</span>
-          </label>
-          <select
-            name="wardNumber"
-            [(ngModel)]="formData.wardNumber"
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none">
-            <option value="Ward 12">Ward 12</option>
-            <option value="Ward 08">Ward 08</option>
-            <option value="Ward 01">Ward 01</option>
-            <option value="Ward 02">Ward 02</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Age (Years) <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="age"
-            [(ngModel)]="formData.age"
-            min="21"
-            max="100"
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
-            required>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Educational Qualification <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="education"
-            [(ngModel)]="formData.education"
-            placeholder="e.g. Post Graduate / LL.B."
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
-            required>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Profession / Occupation <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="profession"
-            [(ngModel)]="formData.profession"
-            placeholder="e.g. Advocate / Urban Planner"
-            class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
-            required>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-            Allocated Party Symbol
-          </label>
-          <div class="flex items-center gap-2 p-2 border border-slate-200 rounded-lg bg-slate-50 text-sm font-bold text-slate-800">
-            <span class="text-xl">🌳</span>
-            <span>Banyan Tree (AVP Reserved Symbol)</span>
+        <!-- State-Wise Statutory Notice for State Parties -->
+        @if (currentParty.partyType === 'STATE') {
+          <div class="p-3 bg-amber-50/80 border border-amber-300 rounded-lg text-xs text-amber-900 flex items-start gap-2">
+            <span class="text-base">⚖️</span>
+            <div>
+              <strong>ECI State Party Jurisdiction (Symbols Order 1968):</strong>
+              <span> As a recognized State Party of <strong>{{ currentParty.homeState }}</strong>, {{ currentParty.name }} is eligible to contest in parliamentary seats (MP) and {{ currentParty.homeState }} Legislative Assembly (MLA) elections. Non-state assembly elections are restricted.</span>
+            </div>
           </div>
+        }
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          @for (e of availableElections; track e.id) {
+            <label
+              class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer transition-all hover:bg-slate-50"
+              [class.border-blue-900]="selectedElectionId === e.id"
+              [class.bg-blue-50/30]="selectedElectionId === e.id"
+              [class.border-slate-200]="selectedElectionId !== e.id">
+              <input
+                type="radio"
+                name="selectedElection"
+                [value]="e.id"
+                [checked]="selectedElectionId === e.id"
+                (change)="onElectionSelect(e.id)"
+                class="sr-only">
+              <div class="flex items-center justify-between">
+                <span
+                  class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide border"
+                  [class.bg-purple-100]="e.electionType === 'MP'"
+                  [class.text-purple-800]="e.electionType === 'MP'"
+                  [class.border-purple-300]="e.electionType === 'MP'"
+                  [class.bg-emerald-100]="e.electionType === 'MLA'"
+                  [class.text-emerald-800]="e.electionType === 'MLA'"
+                  [class.border-emerald-300]="e.electionType === 'MLA'">
+                  {{ e.electionType === 'MP' ? '🏛️ Lok Sabha (MP)' : '🏛️ Vidhan Sabha (MLA)' }}
+                </span>
+                <span class="text-xs font-bold text-slate-400">#{{ e.id }}</span>
+              </div>
+              <strong class="text-xs text-slate-900 font-bold mt-2 block">{{ e.title }}</strong>
+              <span class="text-[11px] text-blue-900 font-semibold mt-1">{{ e.constituency }}</span>
+              <p class="text-[10px] text-slate-500 mt-1">{{ e.description }}</p>
+            </label>
+          }
         </div>
       </div>
 
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-          Ward Development Manifesto Points <span class="text-red-500">*</span>
-        </label>
-        <textarea
-          name="manifestoSummary"
-          [(ngModel)]="formData.manifestoSummary"
-          rows="3"
-          placeholder="Key development commitments for the ward citizens..."
-          class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm focus:border-blue-900 focus:outline-none"
-          required></textarea>
-      </div>
+      <!-- Section 2: Candidate Legal Identity & Party Symbol -->
+      <div class="border-b border-slate-200 pb-5 space-y-4">
+        <h2 class="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+          <span>👤</span>
+          <span>2. Candidate Legal Profile & Reserved Symbol</span>
+        </h2>
 
-      <!-- Affidavit Document Upload Simulation -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-          Form 26 Affidavit & Asset Declaration (PDF) <span class="text-red-500">*</span>
-        </label>
-        <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-900 transition-colors bg-slate-50/50">
-          <span class="text-3xl block mb-2">📑</span>
-          <p class="text-xs font-semibold text-slate-700">Drag & drop candidate affidavit or click to browse</p>
-          <p class="text-[11px] text-slate-400 mt-1">Supported formats: PDF up to 10MB (Signed & Notarized)</p>
-          <div class="mt-3">
-            <span class="inline-block px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">
-              ✓ Attached: Form26_Affidavit_Verified.pdf (1.8 MB)
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Candidate Full Legal Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="formData.name"
+              placeholder="e.g. Anand Kumar Verma"
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Party Affiliation (Official)
+            </label>
+            <input
+              type="text"
+              name="partyName"
+              [value]="currentParty.name + ' (' + currentParty.code + ')'"
+              readonly
+              class="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm text-slate-800 font-bold cursor-not-allowed">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Candidate Age (Years) <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="age"
+              [(ngModel)]="formData.age"
+              min="25"
+              max="100"
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Educational Qualification <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="education"
+              [(ngModel)]="formData.education"
+              placeholder="e.g. Graduate / Post Graduate / LL.B."
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Profession / Occupation <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="profession"
+              [(ngModel)]="formData.profession"
+              placeholder="e.g. Advocate / Social Worker / Businessperson"
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+
+          <!-- Candidate Passport Photo Selection -->
+          <div class="sm:col-span-2 bg-slate-50 rounded-xl border border-slate-200 p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  Candidate Passport Photo (उम्मीदवार की फोटो) <span class="text-red-500">*</span>
+                </label>
+                <p class="text-[11px] text-slate-500 mt-0.5">Select a passport portrait for EVM Ballot Unit & VVPAT slip display</p>
+              </div>
+              <div class="w-14 h-16 rounded border-2 border-slate-300 bg-white p-0.5 overflow-hidden shadow-xs flex items-center justify-center shrink-0">
+                <img [src]="formData.photoUrl || '/candidates/default.svg'" alt="Candidate Photo Preview" class="w-full h-full object-cover">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2">
+              @for (avatar of candidateAvatars; track avatar.url) {
+                <button
+                  type="button"
+                  (click)="formData.photoUrl = avatar.url"
+                  class="p-1.5 rounded-lg border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5"
+                  [class.border-blue-700]="formData.photoUrl === avatar.url"
+                  [class.bg-blue-50]="formData.photoUrl === avatar.url"
+                  [class.ring-2]="formData.photoUrl === avatar.url"
+                  [class.ring-blue-600]="formData.photoUrl === avatar.url"
+                  [class.border-slate-200]="formData.photoUrl !== avatar.url"
+                  [class.bg-white]="formData.photoUrl !== avatar.url">
+                  <div class="w-10 h-12 rounded border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center">
+                    <img [src]="avatar.url" [alt]="avatar.label" class="w-full h-full object-cover">
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-700 leading-tight truncate max-w-full">{{ avatar.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Allocated Party Symbol Card -->
+          <div class="sm:col-span-2 bg-slate-50 rounded-xl border border-slate-200 p-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-lg bg-white border border-slate-300 p-1 flex items-center justify-center shrink-0 shadow-xs">
+                <img [src]="currentParty.symbolUrl" [alt]="currentParty.name" class="w-full h-full object-contain">
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block">ECI Allocated Party Symbol</span>
+                <span class="text-sm font-bold text-slate-900">{{ currentParty.symbolName }}</span>
+                <span class="text-xs text-slate-500 block">This logo will print on the EVM Ballot Unit & VVPAT slip</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 text-xs font-extrabold rounded border border-emerald-200">
+              RESERVED SYMBOL
             </span>
           </div>
         </div>
       </div>
 
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="w-full py-3 bg-blue-900 hover:bg-blue-950 disabled:opacity-50 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
-        @if (loading) {
-          <span>Submitting Nomination...</span>
-        } @else {
-          <span>Submit Official Nomination Form →</span>
-        }
-      </button>
+      <!-- Section 3: Candidate Login Credentials (ISSUED BY PARTY FOUNDER) -->
+      <div class="border-b border-slate-200 pb-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+            <span>🔑</span>
+            <span>3. Issue Candidate Login Credentials (Party Authorized)</span>
+          </h2>
+          <button
+            type="button"
+            (click)="suggestCredentials()"
+            class="text-xs font-bold text-blue-900 hover:underline cursor-pointer">
+            ↺ Regenerate Suggestions
+          </button>
+        </div>
+
+        <div class="p-3 bg-blue-50/50 border border-blue-200 rounded-xl text-xs text-blue-900">
+          <strong>Direct Candidate Access:</strong> The party founder sets the login ID and password here. The candidate will use these exact credentials to log in at <code>/login</code> and view their candidate dashboard, voter outreach, and certified scrutiny status.
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Candidate Login User ID (Username) <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="candidateUsername"
+              [(ngModel)]="candidateCredentials.username"
+              placeholder="e.g. cand_bjp_sitamarhi"
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm font-mono focus:border-blue-900 focus:outline-none"
+              required>
+            <span class="text-[10px] text-slate-400 mt-0.5 block">Unique identifier for candidate login</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Candidate Login Password <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                [type]="candidateCredentials.showPassword ? 'text' : 'password'"
+                name="candidatePassword"
+                [(ngModel)]="candidateCredentials.password"
+                placeholder="Candidate@123"
+                class="w-full rounded-lg border border-slate-300 py-2.5 px-3 pr-10 text-sm font-mono focus:border-blue-900 focus:outline-none"
+                required>
+              <button
+                type="button"
+                (click)="toggleShowPassword()"
+                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-800 cursor-pointer">
+                {{ candidateCredentials.showPassword ? 'Hide' : 'Show' }}
+              </button>
+            </div>
+            <span class="text-[10px] text-slate-400 mt-0.5 block">Minimum 6 characters</span>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Candidate Official Email <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              name="candidateEmail"
+              [(ngModel)]="candidateCredentials.email"
+              placeholder="candidate@party.org"
+              class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+              required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Constituency Manifesto Commitments -->
+      <div class="border-b border-slate-200 pb-5 space-y-3">
+        <h2 class="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+          <span>📜</span>
+          <span>4. Constituency Development Manifesto Commitments</span>
+        </h2>
+        <textarea
+          name="manifestoSummary"
+          [(ngModel)]="formData.manifestoSummary"
+          rows="3"
+          placeholder="Key development commitments for the constituency citizens..."
+          class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:border-blue-900 focus:outline-none"
+          required></textarea>
+      </div>
+
+      <!-- Section 5: Statutory Affidavit Upload Simulation -->
+      <div class="space-y-3">
+        <h2 class="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+          <span>📑</span>
+          <span>5. Statutory Form 26 Affidavit & Asset Declaration</span>
+        </h2>
+        <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center hover:border-blue-900 transition-colors bg-slate-50/50">
+          <span class="text-2xl block mb-1">📑</span>
+          <p class="text-xs font-semibold text-slate-700">Form 26 Affidavit & Criminal Antecedents Declaration Attached</p>
+          <div class="mt-2">
+            <span class="inline-block px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-md border border-green-200">
+              ✓ Attached: Form26_Affidavit_{{ currentParty.code }}_Certified.pdf (2.4 MB)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Action -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full py-3.5 bg-blue-900 hover:bg-blue-950 disabled:opacity-50 text-white text-sm font-black rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+          @if (loading) {
+            <span>Submitting Nomination & Creating Candidate Account...</span>
+          } @else {
+            <span>Submit Nomination & Issue Candidate Login Credentials →</span>
+          }
+        </button>
+      </div>
+
     </form>
   </div>
 </div>

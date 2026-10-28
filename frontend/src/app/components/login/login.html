@@ -147,6 +147,41 @@
             </button>
           </div>
 
+          <!-- Quick Auto-Fill Demonstration Buttons -->
+          <div class="pt-1">
+            <span class="block text-[11px] font-semibold text-[#64748B] mb-1.5">Quick Auto-Fill Demo Credentials:</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11px]">
+              <button
+                type="button"
+                (click)="quickFill('CANDIDATE')"
+                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                <app-icon name="candidate" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+                <span>Candidate</span>
+              </button>
+              <button
+                type="button"
+                (click)="quickFill('PARTY')"
+                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                <app-icon name="party" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+                <span>Party Rep</span>
+              </button>
+              <button
+                type="button"
+                (click)="quickFill('ADMIN')"
+                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                <app-icon name="scale" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+                <span>Admin</span>
+              </button>
+              <button
+                type="button"
+                (click)="quickFill('SUPER_ADMIN')"
+                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
+                <app-icon name="shield-check" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+                <span>Super Admin</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Submit Button -->
           <button
             type="submit"
@@ -287,15 +322,33 @@
         </div>
       }
 
-      <!-- Security Verification Notice -->
+      <!-- Security Verification & Role Reference Notice -->
       <div class="mt-6 pt-5 border-t border-[#DCE2E8]">
         <div class="p-3 bg-[#F3F5F7] rounded-md border border-[#DCE2E8] text-[11px] text-[#64748B]">
-          <div class="flex items-center gap-2 text-[#183153] font-bold mb-1">
+          <div class="flex items-center gap-2 text-[#183153] font-bold mb-1.5">
             <app-icon name="shield-check" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span>Authorized Electoral Authentication</span>
+            <span>Authorized Electoral Role Credentials</span>
           </div>
-          <p class="leading-relaxed">
-            Citizens can access using registered credentials or instantaneous Voter ID (EPIC) OTP authentication. Access is strictly authenticated via Spring Boot JWT security.
+          <div class="grid grid-cols-2 gap-2 text-[11px] text-[#253247] pt-1">
+            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
+              <span class="block font-bold text-[#183153]">Candidate Portal:</span>
+              <span class="font-mono text-[#64748B]">candidate</span> / <span class="font-mono text-[#64748B]">Candidate&#64;123</span>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
+              <span class="block font-bold text-[#183153]">Party Portal:</span>
+              <span class="font-mono text-[#64748B]">party</span> / <span class="font-mono text-[#64748B]">Party&#64;123</span>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
+              <span class="block font-bold text-[#183153]">Election Admin:</span>
+              <span class="font-mono text-[#64748B]">admin</span> / <span class="font-mono text-[#64748B]">Admin&#64;123</span>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
+              <span class="block font-bold text-[#183153]">Super Admin:</span>
+              <span class="font-mono text-[#64748B]">superadmin</span> / <span class="font-mono text-[#64748B]">SuperAdmin&#64;123</span>
+            </div>
+          </div>
+          <p class="leading-relaxed mt-2 text-[#64748B]">
+            Electors can login using registered password or OTP using their Voter ID (EPIC). All logins issue signed Spring Security JWT tokens.
           </p>
         </div>
       </div>

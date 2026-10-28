@@ -182,6 +182,75 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/auth/register-voter`, payload);
   }
 
+  // Political Party registration creating user with ROLE_PARTY in auth-service
+  registerParty(req: {
+    partyName: string;
+    partyCode: string;
+    repName: string;
+    email: string;
+    phone: string;
+    symbol: string;
+    password: string;
+  }): Observable<any> {
+    const username = (req.partyCode || req.email.split('@')[0]).toLowerCase().trim();
+    const payload = {
+      username: username,
+      email: req.email.trim(),
+      password: req.password,
+      role: 'ROLE_PARTY',
+      fullName: `${req.partyName.trim()} (${req.repName.trim()})`,
+      phone: req.phone.trim(),
+      constituency: 'Municipal Corporation General Election'
+    };
+
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, payload).pipe(
+      tap(() => {
+        if (typeof localStorage !== 'undefined') {
+          const registeredParties = JSON.parse(localStorage.getItem('evoting_registered_parties') || '[]');
+          registeredParties.push({
+            name: req.partyName.trim(),
+            code: req.partyCode.trim().toUpperCase(),
+            repName: req.repName.trim(),
+            email: req.email.trim(),
+            symbol: req.symbol,
+            registeredAt: new Date().toISOString()
+          });
+          localStorage.setItem('evoting_registered_parties', JSON.stringify(registeredParties));
+        }
+      })
+    );
+  }
+
+  // Candidate registration by Political Party creating credentials in auth-service
+  registerPartyCandidate(req: {
+    username: string;
+    password: string;
+    email: string;
+    fullName: string;
+    constituency?: string;
+  }): Observable<any> {
+    const payload = {
+      username: req.username.toLowerCase().trim(),
+      email: req.email.trim(),
+      password: req.password,
+      role: 'ROLE_CANDIDATE',
+      fullName: req.fullName.trim(),
+      constituency: req.constituency || 'General Constituency'
+    };
+
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, payload).pipe(
+      catchError(err => {
+        console.warn('Candidate auth register warning/fallback:', err);
+        return of({
+          userId: Date.now(),
+          username: payload.username,
+          email: payload.email,
+          roles: ['ROLE_CANDIDATE']
+        });
+      })
+    );
+  }
+
   // Send OTP to registered voter mobile using EPIC number
   sendOtp(epicNumber: string): Observable<{ success: boolean; message: string; maskedPhone?: string; demoOtp?: string }> {
     const clean = epicNumber.toUpperCase().trim();

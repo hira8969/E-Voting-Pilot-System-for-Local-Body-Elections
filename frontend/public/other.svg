@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Independent / Other Free Symbol (Kite - पतंग) -->
+  <defs>
+    <linearGradient id="kiteGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="kiteGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="kiteGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="kiteGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#DB2777"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Border Frame -->
+  <rect x="2" y="2" width="96" height="96" rx="8" fill="#F8FAFC" stroke="#0F172A" stroke-width="2.5"/>
+
+  <!-- Kite Diamond Sections -->
+  <!-- Top Left -->
+  <polygon points="50,14 18,50 50,50" fill="url(#kiteGrad1)"/>
+  <!-- Top Right -->
+  <polygon points="50,14 82,50 50,50" fill="url(#kiteGrad2)"/>
+  <!-- Bottom Left -->
+  <polygon points="18,50 50,82 50,50" fill="url(#kiteGrad3)"/>
+  <!-- Bottom Right -->
+  <polygon points="82,50 50,82 50,50" fill="url(#kiteGrad4)"/>
+
+  <!-- Kite Spine & Cross Bow -->
+  <line x1="50" y1="14" x2="50" y2="82" stroke="#0F172A" stroke-width="2.5"/>
+  <path d="M 18 50 Q 50 36 82 50" stroke="#0F172A" stroke-width="2.5" fill="none"/>
+
+  <!-- Kite Tail Triangle -->
+  <polygon points="50,82 40,94 60,94" fill="#EF4444" stroke="#0F172A" stroke-width="1.5"/>
+
+  <!-- Official Free Symbol Watermark -->
+  <text x="50" y="97" font-family="Arial, sans-serif" font-size="5" font-weight="black" fill="#0F172A" text-anchor="middle" letter-spacing="0.5">FREE SYMBOL</text>
+</svg>

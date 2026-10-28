@@ -223,10 +223,11 @@
       <!-- OFFICIAL BALLOT PAPER INSERT (CREAM PAPER TRACK) -->
       <div class="bg-[#FFFDF7] rounded-xl border-2 border-slate-400 shadow-md overflow-hidden">
         
-        <!-- Ballot Paper Header -->
-        <div class="bg-[#F8F9FA] px-4 py-2.5 border-b-2 border-slate-400 grid grid-cols-12 text-[10px] sm:text-xs font-black text-slate-700 uppercase tracking-wider text-center">
+        <!-- Ballot Paper Header (6 Columns matching Authentic Indian EVM) -->
+        <div class="bg-[#F8F9FA] px-3 sm:px-4 py-2.5 border-b-2 border-slate-400 grid grid-cols-12 text-[10px] sm:text-xs font-black text-slate-700 uppercase tracking-wider text-center items-center">
           <div class="col-span-1 text-left">क्र. सं.<br><span class="text-[9px] text-slate-500 font-normal">SL NO</span></div>
-          <div class="col-span-6 text-left pl-2">उम्मीदवार एवं दल का नाम<br><span class="text-[9px] text-slate-500 font-normal">CANDIDATE & PARTY NAME</span></div>
+          <div class="col-span-4 text-left pl-2">उम्मीदवार एवं दल का नाम<br><span class="text-[9px] text-slate-500 font-normal">CANDIDATE & PARTY</span></div>
+          <div class="col-span-2">फोटो<br><span class="text-[9px] text-slate-500 font-normal">PHOTO</span></div>
           <div class="col-span-2">चुनाव चिन्ह<br><span class="text-[9px] text-slate-500 font-normal">SYMBOL</span></div>
           <div class="col-span-1">दीप<br><span class="text-[9px] text-slate-500 font-normal">LAMP</span></div>
           <div class="col-span-2 text-right pr-2">नीला बटन<br><span class="text-[9px] text-slate-500 font-normal">VOTE BUTTON</span></div>
@@ -237,7 +238,7 @@
           @for (candidate of candidates; track candidate.id; let idx = $index) {
             <div
               (click)="onPressBlueButton(candidate)"
-              class="grid grid-cols-12 items-center p-2.5 sm:p-3 transition-colors candidate-ballot-row cursor-pointer"
+              class="grid grid-cols-12 items-center p-2 sm:p-2.5 transition-colors candidate-ballot-row cursor-pointer"
               [class.bg-blue-50]="activeCandidate?.id === candidate.id"
               [class.hover:bg-slate-50]="!alreadyVoted && evmState === 'IDLE'">
               
@@ -248,53 +249,52 @@
                 </div>
               </div>
 
-              <!-- 2. Candidate Name (Bilingual) & Party -->
-              <div class="col-span-6 pl-2 pr-1">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <h2 class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight uppercase">
-                    {{ candidate.fullName || candidate.name }}
-                  </h2>
-                </div>
+              <!-- 2. Candidate Name (Bilingual) & Party (No info drawer) -->
+              <div class="col-span-4 pl-2 pr-1">
+                <h2 class="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight uppercase">
+                  {{ candidate.fullName || candidate.name }}
+                </h2>
                 <div class="text-[11px] sm:text-xs font-bold text-slate-600 font-devanagari mt-0.5">
                   {{ getHindiName(candidate) }}
                 </div>
-                <div class="flex items-center gap-2 mt-1 text-[10px] text-slate-500">
-                  <span class="font-semibold text-emerald-800">{{ candidate.partyName }}</span>
+                <div class="flex items-center gap-1.5 mt-1 text-[10px] flex-wrap">
+                  <span class="font-bold text-emerald-800">{{ candidate.partyName }}</span>
                   @if (candidate.partyCode && candidate.partyCode !== 'NOTA') {
                     <span class="bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-mono font-bold">{{ candidate.partyCode }}</span>
                   }
-                  <button
-                    type="button"
-                    (click)="toggleCandidateDetails(candidate.id, $event)"
-                    class="text-blue-700 hover:underline font-semibold cursor-pointer">
-                    {{ expandedCandidateId === candidate.id ? 'Hide Manifesto ▲' : 'Info / घोषणापत्र ▼' }}
-                  </button>
                 </div>
-
-                <!-- Accordion Manifesto Drawer (Non-destructive info preview) -->
-                @if (expandedCandidateId === candidate.id) {
-                  <div class="mt-2 p-2.5 bg-slate-100 rounded border border-slate-300 text-xs text-slate-700 space-y-1 animate-in fade-in">
-                    <p><strong>Bio:</strong> {{ candidate.bio || 'Public representative contesting in local municipal ward.' }}</p>
-                    <p><strong>Key Manifesto:</strong> {{ candidate.manifesto || candidate.manifestoSummary || 'Clean civic administration and rapid local development.' }}</p>
-                  </div>
-                }
               </div>
 
-              <!-- 3. Candidate Election Symbol Box -->
+              <!-- 3. Candidate Passport Photo Box -->
+              <div class="col-span-2 flex flex-col items-center justify-center">
+                <div class="w-12 h-14 sm:w-14 sm:h-16 rounded border-2 border-slate-700 bg-white flex items-center justify-center shadow-xs overflow-hidden p-0.5">
+                  @if (getCandidatePhoto(candidate)) {
+                    <img [src]="getCandidatePhoto(candidate)" [alt]="candidate.name" class="w-full h-full object-cover">
+                  } @else {
+                    <div class="w-full h-full bg-slate-100 flex flex-col items-center justify-center text-slate-400">
+                      <span class="text-xl">🗳️</span>
+                      <span class="text-[7px] font-bold uppercase mt-0.5 font-mono text-slate-500">NOTA</span>
+                    </div>
+                  }
+                </div>
+                <span class="text-[8px] font-semibold text-slate-400 mt-0.5 uppercase">फोटो</span>
+              </div>
+
+              <!-- 4. Candidate Election Symbol Box -->
               <div class="col-span-2 flex flex-col items-center justify-center">
                 <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-md border-2 border-slate-700 bg-white flex items-center justify-center shadow-inner overflow-hidden p-1">
-                  @if (candidate.symbolUrl && candidate.symbolUrl.startsWith('http')) {
-                    <img [src]="candidate.symbolUrl" [alt]="candidate.name" class="w-full h-full object-contain">
+                  @if (isImageUrl(getSymbolUrl(candidate))) {
+                    <img [src]="getSymbolUrl(candidate)" [alt]="candidate.name" class="w-full h-full object-contain">
                   } @else {
-                    <span class="text-2xl sm:text-3xl select-none">{{ candidate.symbol || candidate.symbolUrl || '🗳️' }}</span>
+                    <span class="text-2xl sm:text-3xl select-none">{{ getSymbolUrl(candidate) }}</span>
                   }
                 </div>
                 <span class="text-[9px] font-semibold text-slate-500 text-center line-clamp-1 mt-0.5">
-                  {{ candidate.symbolName || candidate.partyCode || 'Symbol' }}
+                  {{ candidate.symbolName || candidate.partyCode || 'चिन्ह' }}
                 </span>
               </div>
 
-              <!-- 4. Candidate Red LED Lamp -->
+              <!-- 5. Candidate Red LED Lamp -->
               <div class="col-span-1 flex items-center justify-center">
                 <div
                   class="candidate-led-lamp"
@@ -303,7 +303,7 @@
                 </div>
               </div>
 
-              <!-- 5. Iconic Tactile Blue Push Button -->
+              <!-- 6. Iconic Tactile Blue Push Button -->
               <div class="col-span-2 flex items-center justify-end pr-1 sm:pr-2">
                 <button
                   type="button"
@@ -406,24 +406,34 @@
                 </div>
 
                 <!-- Candidate Info On Paper Slip -->
-                <div class="flex items-center justify-between gap-2 py-1 border-b border-slate-800">
-                  <div class="text-left">
+                <div class="flex items-center justify-between gap-1.5 py-1 border-b border-slate-800">
+                  <div class="text-left shrink-0">
                     <span class="text-[8px] font-bold text-slate-500 block">SL NO:</span>
-                    <span class="text-base font-black font-mono text-slate-900">
+                    <span class="text-sm font-black font-mono text-slate-900">
                       {{ activeCandidate.candidateNumber || activeCandidate.ballotPosition || '01' }}
                     </span>
                   </div>
-                  <div class="text-center flex-1">
-                    <span class="text-[10px] font-black text-slate-900 block uppercase leading-tight">
+                  <!-- Candidate Photo on VVPAT -->
+                  @if (getCandidatePhoto(activeCandidate)) {
+                    <div class="w-7 h-9 border border-slate-900 bg-white flex items-center justify-center overflow-hidden shrink-0">
+                      <img [src]="getCandidatePhoto(activeCandidate)" [alt]="activeCandidate.name" class="w-full h-full object-cover">
+                    </div>
+                  }
+                  <div class="text-center flex-1 px-1">
+                    <span class="text-[9px] font-black text-slate-900 block uppercase leading-tight">
                       {{ activeCandidate.name || activeCandidate.fullName }}
                     </span>
                     <span class="text-[8px] font-bold text-slate-700 font-devanagari">
                       {{ getHindiName(activeCandidate) }}
                     </span>
                   </div>
-                  <div class="text-center">
-                    <div class="w-9 h-9 border border-slate-900 bg-white flex items-center justify-center text-xl font-bold">
-                      {{ activeCandidate.symbol || activeCandidate.symbolUrl || '🌸' }}
+                  <div class="text-center shrink-0">
+                    <div class="w-9 h-9 border border-slate-900 bg-white flex items-center justify-center p-0.5 overflow-hidden">
+                      @if (isImageUrl(getSymbolUrl(activeCandidate))) {
+                        <img [src]="getSymbolUrl(activeCandidate)" [alt]="activeCandidate.name" class="w-full h-full object-contain">
+                      } @else {
+                        <span class="text-xl font-bold">{{ getSymbolUrl(activeCandidate) }}</span>
+                      }
                     </div>
                   </div>
                 </div>

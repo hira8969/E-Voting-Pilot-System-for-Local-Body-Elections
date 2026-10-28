@@ -10,85 +10,85 @@ import { Election, ElectionDto, ElectionStatus } from '../models/election.model'
 })
 export class ElectionService {
   private apiUrl = `${environment.apiUrl}/elections`;
-  private storageKey = 'evoting_elections';
+  private storageKey = 'evoting_elections_v2';
 
-  // Seed elections strictly configured for the 4 Designated Municipal Wards
+  // Real Lok Sabha (MP) and Vidhan Sabha (MLA) elections
   private defaultElections: Election[] = [
     {
       id: 1,
-      title: 'Municipal Council Election - Ward 01',
-      description: 'Official Local Body Election for Ward 01 Council and Civic Representatives.',
+      title: 'Lok Sabha General Election 2026 (MP)',
+      description: 'Parliamentary General Election to elect Member of Parliament (Lok Sabha).',
       startDate: '2026-08-01',
       endDate: '2026-08-05',
       startTime: '07:00 AM',
       endTime: '06:00 PM',
       status: 'ACTIVE',
-      electionType: 'Municipal Ward',
-      type: 'MUNICIPAL',
-      constituency: 'Ward 01 - Indiranagar',
-      ward: 'Ward 01',
-      totalVoters: 12450,
-      totalCandidates: 4,
-      totalVotesCast: 8740,
-      turnoutPercentage: 70.2,
-      totalBooths: 42
+      electionType: 'MP',
+      type: 'GENERAL',
+      constituency: '05 - Sitamarhi Parliamentary Constituency (MP)',
+      ward: 'Sitamarhi Lok Sabha',
+      totalVoters: 1845000,
+      totalCandidates: 6,
+      totalVotesCast: 124500,
+      turnoutPercentage: 68.4,
+      totalBooths: 1850
     },
     {
       id: 2,
-      title: 'Municipal Council Election - Ward 02',
-      description: 'Official Local Body Election for Ward 02 Council and Civic Representatives.',
+      title: 'Bihar Vidhan Sabha Election 2026 (MLA)',
+      description: 'State Legislative Assembly Election to elect Member of Legislative Assembly (Bihar MLA).',
       startDate: '2026-10-10',
       endDate: '2026-10-12',
       startTime: '07:00 AM',
       endTime: '05:00 PM',
       status: 'UPCOMING',
-      electionType: 'Municipal Ward',
-      type: 'MUNICIPAL',
-      constituency: 'Ward 02 - Gandhi Nagar',
-      ward: 'Ward 02',
-      totalVoters: 11800,
-      totalCandidates: 4,
+      electionType: 'MLA',
+      type: 'ASSEMBLY',
+      constituency: '28 - Sitamarhi Assembly Constituency (MLA)',
+      ward: 'Sitamarhi Vidhan Sabha',
+      totalVoters: 312000,
+      totalCandidates: 5,
       totalVotesCast: 0,
       turnoutPercentage: 0,
-      totalBooths: 38
+      totalBooths: 340
     },
     {
       id: 3,
-      title: 'Municipal Council Election - Ward 03',
-      description: 'Official Local Body Election for Ward 03 Council and Civic Representatives.',
+      title: 'Uttar Pradesh Vidhan Sabha Election 2026 (MLA)',
+      description: 'State Legislative Assembly Election to elect Member of Legislative Assembly (UP MLA).',
       startDate: '2026-11-01',
       endDate: '2026-11-05',
       startTime: '07:00 AM',
       endTime: '06:00 PM',
       status: 'UPCOMING',
-      electionType: 'Municipal Ward',
-      type: 'MUNICIPAL',
-      constituency: 'Ward 03 - West Rajendra Nagar',
-      ward: 'Ward 03',
-      totalVoters: 13200,
+      electionType: 'MLA',
+      type: 'ASSEMBLY',
+      constituency: '172 - Lucknow Central Assembly Constituency (MLA)',
+      ward: 'Lucknow Central Vidhan Sabha',
+      totalVoters: 385000,
       totalCandidates: 4,
       totalVotesCast: 0,
       turnoutPercentage: 0,
-      totalBooths: 40
+      totalBooths: 410
     },
     {
       id: 4,
-      title: 'Municipal Council Election - Ward 04',
-      description: 'Official Local Body Election for Ward 04 Council and Civic Representatives.',
+      title: 'Odisha Vidhan Sabha Election 2026 (MLA)',
+      description: 'State Legislative Assembly Election to elect Member of Legislative Assembly (Odisha MLA).',
       startDate: '2026-07-01',
       endDate: '2026-07-05',
       startTime: '08:00 AM',
       endTime: '05:00 PM',
       status: 'COMPLETED',
-      electionType: 'Municipal Ward',
-      type: 'MUNICIPAL',
-      constituency: 'Ward 04 - South Sitamarhi Central',
-      ward: 'Ward 04',
-      totalVoters: 14500,
+      electionType: 'MLA',
+      type: 'ASSEMBLY',
+      constituency: '112 - Bhubaneswar Central Assembly Constituency (MLA)',
+      ward: 'Bhubaneswar Central Vidhan Sabha',
+      totalVoters: 295000,
       totalCandidates: 4,
-      totalVotesCast: 10250,
-      turnoutPercentage: 70.7,
-      totalBooths: 45
+      totalVotesCast: 205000,
+      turnoutPercentage: 69.5,
+      totalBooths: 320
     }
   ];
 

@@ -24,6 +24,17 @@ const angularApp = new AngularNodeAppEngine();
  * ```
  */
 
+import { resolve } from 'node:path';
+
+const publicFolder = resolve(process.cwd(), 'public');
+const assetsFolder = resolve(process.cwd(), 'src/assets');
+
+// Directly serve all public and assets files (symbols, logos, etc.)
+app.use(express.static(publicFolder));
+app.use(express.static(assetsFolder));
+app.use('/assets', express.static(assetsFolder));
+app.use('/assets', express.static(publicFolder));
+
 /**
  * Serve static files from /browser
  */

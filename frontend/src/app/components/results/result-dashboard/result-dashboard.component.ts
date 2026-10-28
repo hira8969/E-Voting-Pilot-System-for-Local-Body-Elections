@@ -180,41 +180,45 @@ export class ResultDashboardComponent implements OnInit {
   }
 
   setDefaultDemoResults(): void {
-    this.totalVotes = 100;
-    this.candidateResults = [
-      {
-        candidateId: '1',
-        candidateName: 'Ananya Deshmukh',
-        partyName: 'Progressive Civic Alliance',
-        votes: 42,
-        percentage: 42,
-        color: '#183153'
-      },
-      {
-        candidateId: '2',
-        candidateName: 'Rajeshwar Sharma',
-        partyName: 'Urban Development Front',
-        votes: 28,
-        percentage: 28,
-        color: '#237C78'
-      },
-      {
-        candidateId: '3',
-        candidateName: 'Meenakshi Sundaram',
-        partyName: 'Citizens Welfare Coalition',
-        votes: 20,
-        percentage: 20,
-        color: '#4A6572'
-      },
-      {
-        candidateId: '4',
-        candidateName: 'Tariq Anwar',
-        partyName: 'Independent Candidate',
-        votes: 10,
-        percentage: 10,
-        color: '#B45309'
-      }
-    ];
+    const elId = String(this.selectedElectionId);
+
+    if (elId === '1') {
+      this.totalVotes = 160100;
+      this.candidateResults = [
+        { candidateId: 1, candidateName: 'Arjun Sharma', partyName: 'Bharatiya Janata Party (BJP)', votes: 62400, percentage: 39.0, color: '#183153' },
+        { candidateId: 2, candidateName: 'Vikram Das', partyName: 'Indian National Congress (INC)', votes: 48200, percentage: 30.1, color: '#237C78' },
+        { candidateId: 3, candidateName: 'Devendra Prasad Yadav', partyName: 'Janata Dal United (JDU)', votes: 24500, percentage: 15.3, color: '#4A6572' },
+        { candidateId: 4, candidateName: 'Sunil Kumar Kushwaha', partyName: 'Rashtriya Janata Dal (RJD)', votes: 16800, percentage: 10.5, color: '#B45309' },
+        { candidateId: 5, candidateName: 'Sanjay Kumar Singh', partyName: 'Aam Aadmi Party (AAP)', votes: 6100, percentage: 3.8, color: '#64748B' },
+        { candidateId: 6, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2100, percentage: 1.3, color: '#94A3B8' }
+      ];
+    } else if (elId === '2') {
+      this.totalVotes = 125000;
+      this.candidateResults = [
+        { candidateId: 7, candidateName: 'Mithilesh Kumar', partyName: 'Bharatiya Janata Party (BJP)', votes: 46200, percentage: 37.0, color: '#183153' },
+        { candidateId: 8, candidateName: 'Dr. Varun Kumar', partyName: 'Janata Dal United (JDU)', votes: 39500, percentage: 31.6, color: '#237C78' },
+        { candidateId: 9, candidateName: 'Sunil Kumar', partyName: 'Rashtriya Janata Dal (RJD)', votes: 25400, percentage: 20.3, color: '#4A6572' },
+        { candidateId: 10, candidateName: 'Amit Kumar Tunna', partyName: 'Indian National Congress (INC)', votes: 11800, percentage: 9.4, color: '#B45309' },
+        { candidateId: 11, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2100, percentage: 1.7, color: '#94A3B8' }
+      ];
+    } else if (elId === '3') {
+      this.totalVotes = 142000;
+      this.candidateResults = [
+        { candidateId: 12, candidateName: 'Brajesh Pathak', partyName: 'Bharatiya Janata Party (BJP)', votes: 65200, percentage: 45.9, color: '#183153' },
+        { candidateId: 13, candidateName: 'Ravidas Mehrotra', partyName: 'Samajwadi Party (SP)', votes: 54100, percentage: 38.1, color: '#237C78' },
+        { candidateId: 14, candidateName: 'Sadaf Jafar', partyName: 'Indian National Congress (INC)', votes: 19800, percentage: 13.9, color: '#4A6572' },
+        { candidateId: 15, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2900, percentage: 2.1, color: '#94A3B8' }
+      ];
+    } else {
+      // Election 4: Odisha Vidhan Sabha Election (Completed)
+      this.totalVotes = 183000;
+      this.candidateResults = [
+        { candidateId: 16, candidateName: 'Ananta Narayan Jena', partyName: 'Biju Janata Dal (BJD)', votes: 88400, percentage: 48.3, color: '#183153' },
+        { candidateId: 17, candidateName: 'Jagannath Pradhan', partyName: 'Bharatiya Janata Party (BJP)', votes: 62300, percentage: 34.0, color: '#237C78' },
+        { candidateId: 18, candidateName: 'Satya Prakash Nayak', partyName: 'Indian National Congress (INC)', votes: 28100, percentage: 15.4, color: '#4A6572' },
+        { candidateId: 19, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 4200, percentage: 2.3, color: '#94A3B8' }
+      ];
+    }
   }
 
   onElectionChange(newId: string): void {

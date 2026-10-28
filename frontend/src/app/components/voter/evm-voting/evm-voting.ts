@@ -55,8 +55,43 @@ export class EvmVotingComponent implements OnInit, OnDestroy {
     'Rajeshwar Sharma': 'राजेश्वर शर्मा',
     'Meenakshi Sundaram': 'मीनाक्षी सुंदरम',
     'Tariq Anwar': 'तारिक अनवर',
+    'Narendra Modi': 'नरेंद्र मोदी',
+    'Rahul Gandhi': 'राहुल गांधी',
+    'Arvind Kejriwal': 'अरविंद केजरीवाल',
+    'Nitish Kumar': 'नीतीश कुमार',
+    'Tejashwi Yadav': 'तेजस्वी यादव',
+    'Akhilesh Yadav': 'अखिलेश यादव',
+    'Naveen Patnaik': 'नवीन पटनायक',
+    'Devendra Fadnavis': 'देवेंद्र फडणवीस',
+    'Sanjay Singh': 'संजय सिंह',
+    'Manoj Tiwari': 'मनोज तिवारी',
+    'Kanhaiya Kumar': 'कन्हैया कुमार',
+    'Alok Kumar Suman': 'आलोक कुमार सुमन',
+    'Sunil Kumar Pintu': 'सुनील कुमार पिंटू',
+    'Arjun Rai': 'अर्जुन राय',
+    'Mithilesh Kumar': 'मिथिलेश कुमार',
+    'Arjun Sharma': 'अर्जुन शर्मा',
+    'Vikram Das': 'विक्रम दास',
+    'Devendra Prasad Yadav': 'देवेंद्र प्रसाद यादव',
+    'Sunil Kumar Kushwaha': 'सुनील कुमार कुशवाहा',
+    'Sanjay Kumar Singh': 'संजय कुमार सिंह',
+    'Dr. Varun Kumar': 'डॉ. वरुण कुमार',
+    'Sunil Kumar': 'सुनील कुमार',
+    'Amit Kumar Tunna': 'अमित कुमार टुन्ना',
+    'Brajesh Pathak': 'ब्रजेश पाठक',
+    'Ravidas Mehrotra': 'रविदास मेहरोत्रा',
+    'Sadaf Jafar': 'सदफ जाफर',
+    'Ananta Narayan Jena': 'अनंत नारायण जेना',
+    'Jagannath Pradhan': 'जगन्नाथ प्रधान',
+    'Satya Prakash Nayak': 'सत्य प्रकाश नायक',
     'None of the Above (NOTA)': 'उपरोक्त में से कोई नहीं (नोटा)'
   };
+
+  isImageUrl(url?: string | null): boolean {
+    if (!url) return false;
+    const str = String(url).trim().toLowerCase();
+    return str.startsWith('http') || str.startsWith('/') || str.endsWith('.png') || str.endsWith('.jpg') || str.endsWith('.jpeg') || str.endsWith('.svg') || str.endsWith('.webp');
+  }
 
   constructor(
     private candidateService: CandidateService,
@@ -183,6 +218,50 @@ export class EvmVotingComponent implements OnInit, OnDestroy {
   getHindiName(candidate: Candidate): string {
     const key = candidate.fullName || candidate.name || '';
     return this.hindiNameMap[key] || this.hindiNameMap[candidate.name || ''] || candidate.name || candidate.fullName || '';
+  }
+
+  getCandidatePhoto(candidate: Candidate): string {
+    if (candidate.photoUrl && this.isImageUrl(candidate.photoUrl)) {
+      return candidate.photoUrl;
+    }
+    const name = String(candidate.fullName || candidate.name || '').toLowerCase();
+    if (name.includes('arjun') && !name.includes('rai')) return '/candidates/arjun.svg';
+    if (name.includes('vikram')) return '/candidates/vikram.svg';
+    if (name.includes('devendra')) return '/candidates/devendra.svg';
+    if (name.includes('kushwaha')) return '/candidates/sunil.svg';
+    if (name.includes('sanjay')) return '/candidates/sanjay.svg';
+    if (name.includes('mithilesh')) return '/candidates/mithilesh.svg';
+    if (name.includes('varun')) return '/candidates/varun.svg';
+    if (name.includes('sunil')) return '/candidates/sunil_k.svg';
+    if (name.includes('amit') || name.includes('tunna')) return '/candidates/amit.svg';
+    if (name.includes('brajesh') || name.includes('pathak')) return '/candidates/brajesh.svg';
+    if (name.includes('ravidas') || name.includes('mehrotra')) return '/candidates/ravidas.svg';
+    if (name.includes('sadaf') || name.includes('jafar')) return '/candidates/sadaf.svg';
+    if (name.includes('ananta') || name.includes('jena')) return '/candidates/ananta.svg';
+    if (name.includes('jagannath') || name.includes('pradhan')) return '/candidates/jagannath.svg';
+    if (name.includes('satya') || name.includes('nayak')) return '/candidates/satya.svg';
+    if (name.includes('nota') || name.includes('none of the above')) return '';
+    return '/candidates/default.svg';
+  }
+
+  getSymbolUrl(candidate: Candidate): string {
+    const raw = String(candidate.symbolUrl || candidate.symbol || '').trim();
+    if (this.isImageUrl(raw)) return raw;
+
+    const pCode = String(candidate.partyCode || '').toLowerCase();
+    const pName = String(candidate.partyName || '').toLowerCase();
+
+    if (pCode === 'bjp' || pName.includes('bjp') || pName.includes('bharatiya')) return '/bjp.jpg';
+    if (pCode === 'inc' || pName.includes('congress')) return '/congress.png';
+    if (pCode === 'aap' || pName.includes('aam aadmi')) return '/AAP.png';
+    if (pCode === 'jdu' || pName.includes('janata dal united')) return '/JDU.jpg';
+    if (pCode === 'rjd' || pName.includes('rashtriya janata')) return '/RJD.jpg';
+    if (pCode === 'sp' || pName.includes('samajwadi')) return '/samajwadi.png';
+    if (pCode === 'bjd' || pName.includes('biju')) return '/Bjd.png';
+    if (pCode === 'cjp' || pName.includes('citizen justice')) return '/cjp.jpg';
+    if (pCode === 'other' || pCode === 'ind' || pName.includes('independent') || pName.includes('other')) return '/other.svg';
+
+    return raw || '🗳️';
   }
 
   toggleCandidateDetails(id: number | string, event: Event): void {

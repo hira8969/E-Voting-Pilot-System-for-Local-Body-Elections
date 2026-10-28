@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100" height="120">
+  <!-- Studio Passport Background -->
+  <rect width="100" height="120" fill="#FFEDD5" rx="4"/>
+  <rect x="0.5" y="0.5" width="99" height="119" fill="none" stroke="#94A3B8" stroke-width="1" rx="4"/>
+  
+  <!-- Passport Vignette / Studio Lighting -->
+  <radialGradient id="grad_JP" cx="50%" cy="40%" r="50%">
+    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#FFEDD5" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="100" height="120" fill="url(#grad_JP)"/>
+
+  <!-- Head / Face Silhouette -->
+  <ellipse cx="50" cy="46" rx="20" ry="24" fill="#F8D7BE"/>
+  
+  <!-- Hair Silhouette -->
+  <path d="M 28 42 C 28 22, 72 22, 72 42 C 68 30, 58 26, 50 26 C 42 26, 32 30, 28 42 Z" fill="#1E293B"/>
+
+  <!-- Ears -->
+  <ellipse cx="29" cy="47" rx="3.5" ry="6" fill="#F1BC9B"/>
+  <ellipse cx="71" cy="47" rx="3.5" ry="6" fill="#F1BC9B"/>
+
+  <!-- Eyes & Eyebrows -->
+  <ellipse cx="42" cy="44" rx="2" ry="1.5" fill="#1E293B"/>
+  <ellipse cx="58" cy="44" rx="2" ry="1.5" fill="#1E293B"/>
+  <path d="M 38 40 Q 42 38 46 40" stroke="#1E293B" stroke-width="1.2" fill="none"/>
+  <path d="M 54 40 Q 58 38 62 40" stroke="#1E293B" stroke-width="1.2" fill="none"/>
+  
+  <!-- Nose & Smile -->
+  <path d="M 50 44 L 49 50 L 52 50" stroke="#D97706" stroke-width="1" fill="none"/>
+  <path d="M 45 55 Q 50 58 55 55" stroke="#9A3412" stroke-width="1.2" fill="none"/>
+
+  <!-- Neck -->
+  <rect x="43" y="66" width="14" height="12" fill="#E8B08F"/>
+
+  <!-- Formal Shoulders & Attire (Nehru Jacket / Formal Coat) -->
+  <path d="M 12 120 L 18 84 Q 50 78 82 84 L 88 120 Z" fill="#7C2D12"/>
+  
+  <!-- Inner White Collar / Shirt -->
+  <polygon points="44,76 50,96 56,76 50,78" fill="#FFF7ED"/>
+  
+  <!-- Tie or Jacket Trim -->
+  <polygon points="48,80 52,80 53,108 50,114 47,108" fill="#C2410C"/>
+
+  <!-- Official Passport Label Badge -->
+  <rect x="15" y="104" width="70" height="13" rx="2" fill="#0F172A" fill-opacity="0.85"/>
+  <text x="50" y="113" font-family="Arial, sans-serif" font-size="7" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">JP</text>
+</svg>
