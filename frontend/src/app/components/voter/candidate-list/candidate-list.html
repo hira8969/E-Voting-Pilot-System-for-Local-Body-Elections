@@ -31,10 +31,16 @@
       <div class="space-y-4">
         <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
           <div class="relative">
-            <img [src]="selectedCandidateForModal.photoUrl" [alt]="selectedCandidateForModal.name" class="w-20 h-20 rounded-full object-cover border-2 border-slate-100">
-            <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-base">
-              {{ selectedCandidateForModal.symbol }}
-            </div>
+            <img [src]="getCandidatePhoto(selectedCandidateForModal)" [alt]="selectedCandidateForModal.name" class="w-20 h-20 rounded-full object-cover border-2 border-slate-100">
+            @if (getSymbolUrl(selectedCandidateForModal)) {
+              <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center p-1 overflow-hidden">
+                <img [src]="getSymbolUrl(selectedCandidateForModal)" [alt]="selectedCandidateForModal.partyName" class="w-full h-full object-contain">
+              </div>
+            } @else {
+              <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-base">
+                {{ selectedCandidateForModal.symbol }}
+              </div>
+            }
           </div>
           <div>
             <h3 class="text-lg font-bold text-slate-900">{{ selectedCandidateForModal.name }}</h3>

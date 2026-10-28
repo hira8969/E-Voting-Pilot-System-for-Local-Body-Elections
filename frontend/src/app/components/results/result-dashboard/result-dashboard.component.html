@@ -278,8 +278,13 @@
                 [style.background-color]="cand.color">
               </div>
 
-              <!-- Candidate Name below bar -->
-              <span class="text-xs font-bold text-[#183153] truncate max-w-full text-center mt-3">
+              <!-- Candidate Name and Symbol below bar -->
+              @if (getSymbolUrl(cand)) {
+                <div class="w-6 h-6 rounded border border-slate-200 bg-white p-0.5 mt-2 flex items-center justify-center shrink-0 shadow-2xs">
+                  <img [src]="getSymbolUrl(cand)" [alt]="cand.partyName" class="w-full h-full object-contain">
+                </div>
+              }
+              <span class="text-xs font-bold text-[#183153] truncate max-w-full text-center mt-1">
                 {{ cand.candidateName }}
               </span>
               <span class="text-[10px] text-[#64748B] truncate max-w-full text-center">
@@ -313,14 +318,26 @@
                   <td class="p-3">
                     <div class="flex items-center gap-3">
                       <span class="w-3 h-3 rounded-sm shrink-0" [style.background-color]="cand.color"></span>
-                      <div>
-                        <span class="block font-bold text-[#183153] text-sm">{{ cand.candidateName }}</span>
+                      @if (getCandidatePhoto(cand)) {
+                        <div class="w-9 h-11 rounded border border-slate-300 bg-white p-0.5 overflow-hidden shrink-0 flex items-center justify-center shadow-2xs">
+                          <img [src]="getCandidatePhoto(cand)" [alt]="cand.candidateName" class="w-full h-full object-cover">
+                        </div>
+                      }
+                      <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                          <span class="block font-bold text-[#183153] text-sm">{{ cand.candidateName }}</span>
+                          @if (getSymbolUrl(cand)) {
+                            <div class="w-5 h-5 rounded border border-slate-200 bg-white p-0.5 flex items-center justify-center shrink-0">
+                              <img [src]="getSymbolUrl(cand)" [alt]="cand.partyName" class="w-full h-full object-contain">
+                            </div>
+                          }
+                        </div>
                         <span class="block text-[11px] text-[#64748B]">{{ cand.partyName }}</span>
                       </div>
                     </div>
                   </td>
                   <td class="p-3 font-mono font-bold text-[#183153] text-sm">
-                    {{ cand.votes }}
+                    {{ cand.votes.toLocaleString() }}
                   </td>
                   <td class="p-3 pr-4 text-right font-mono font-bold text-[#183153] text-sm">
                     {{ cand.percentage }}%

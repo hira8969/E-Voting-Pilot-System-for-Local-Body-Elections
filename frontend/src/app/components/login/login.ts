@@ -79,24 +79,34 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  quickFill(role: 'CANDIDATE' | 'PARTY' | 'ADMIN' | 'SUPER_ADMIN' | 'VOTER'): void {
+  directLogin(role: 'VOTER' | 'CANDIDATE' | 'PARTY' | 'ADMIN' | 'SUPER_ADMIN' | 'AUDITOR'): void {
+    this.authService.loginAsRole(role);
+    const redirectUrl = this.authService.getRoleRedirectUrl(role);
+    this.toastService.success('Demonstration Access Granted', `Signed in as ${role.replace('_', ' ')}`);
+    this.router.navigateByUrl(redirectUrl);
+  }
+
+  quickFill(role: 'CANDIDATE' | 'PARTY' | 'ADMIN' | 'SUPER_ADMIN' | 'VOTER' | 'AUDITOR'): void {
     this.loginMode = 'PASSWORD';
     this.errorMessage = '';
     if (role === 'CANDIDATE') {
       this.identifier = 'candidate';
-      this.password = 'Candidate@123';
+      this.password = 'Candidate@12345';
     } else if (role === 'PARTY') {
       this.identifier = 'party';
-      this.password = 'Party@123';
+      this.password = 'Party@12345';
     } else if (role === 'ADMIN') {
       this.identifier = 'admin';
-      this.password = 'Admin@123';
+      this.password = 'Admin@12345';
     } else if (role === 'SUPER_ADMIN') {
       this.identifier = 'superadmin';
-      this.password = 'SuperAdmin@123';
+      this.password = 'SuperAdmin@12345';
     } else if (role === 'VOTER') {
       this.identifier = 'voter';
-      this.password = 'Voter@123';
+      this.password = 'Voter@12345';
+    } else if (role === 'AUDITOR') {
+      this.identifier = 'auditor';
+      this.password = 'Auditor@12345';
     }
   }
 

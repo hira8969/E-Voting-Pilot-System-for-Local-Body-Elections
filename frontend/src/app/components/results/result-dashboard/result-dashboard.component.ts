@@ -15,6 +15,8 @@ export interface DisplayCandidateResult {
   votes: number;
   percentage: number;
   color: string;
+  photoUrl?: string;
+  symbolUrl?: string;
 }
 
 @Component({
@@ -246,5 +248,51 @@ export class ResultDashboardComponent implements OnInit {
     if (typeof window !== 'undefined') {
       window.print();
     }
+  }
+
+  getCandidatePhoto(cand: DisplayCandidateResult): string {
+    if (cand.photoUrl && (cand.photoUrl.startsWith('/') || cand.photoUrl.startsWith('http'))) {
+      return cand.photoUrl;
+    }
+    const name = String(cand.candidateName || '').toLowerCase();
+    if (name.includes('arjun')) return '/candidates/arjun.svg';
+    if (name.includes('vikram')) return '/candidates/vikram.svg';
+    if (name.includes('devendra')) return '/candidates/devendra.svg';
+    if (name.includes('sunil k') || name.includes('kushwaha')) return '/candidates/sunil.svg';
+    if (name.includes('sanjay')) return '/candidates/sanjay.svg';
+    if (name.includes('mithilesh')) return '/candidates/mithilesh.svg';
+    if (name.includes('varun')) return '/candidates/varun.svg';
+    if (name.includes('amit')) return '/candidates/amit.svg';
+    if (name.includes('brajesh')) return '/candidates/brajesh.svg';
+    if (name.includes('ravidas') || name.includes('ravi')) return '/candidates/ravidas.svg';
+    if (name.includes('sadaf')) return '/candidates/sadaf.svg';
+    if (name.includes('ananta')) return '/candidates/ananta.svg';
+    if (name.includes('jagannath')) return '/candidates/jagannath.svg';
+    if (name.includes('satya')) return '/candidates/satya.svg';
+    if (name.includes('nota') || name.includes('none of')) return '';
+    return '/candidates/default.svg';
+  }
+
+  getSymbolUrl(cand: DisplayCandidateResult): string {
+    const name = String(cand.candidateName || '').toLowerCase();
+    if (name.includes('nota') || name.includes('none of')) return '';
+
+    const party = String(cand.partyName || '').toLowerCase();
+    const symbolStr = String(cand.symbolUrl || '').toLowerCase();
+
+    if (party.includes('bjp') || party.includes('bharatiya') || symbolStr.includes('bjp')) return '/bjp.jpg';
+    if (party.includes('inc') || party.includes('congress') || symbolStr.includes('congress')) return '/congress.png';
+    if (party.includes('aap') || party.includes('aam') || symbolStr.includes('aap')) return '/AAP.png';
+    if (party.includes('jdu') || party.includes('janata dal (united)') || symbolStr.includes('jdu')) return '/JDU.jpg';
+    if (party.includes('rjd') || party.includes('rashtriya') || symbolStr.includes('rjd')) return '/RJD.jpg';
+    if (party.includes('sp') || party.includes('samajwadi') || symbolStr.includes('samajwadi')) return '/samajwadi.png';
+    if (party.includes('bjd') || party.includes('biju') || symbolStr.includes('bjd')) return '/Bjd.png';
+    if (party.includes('cjp') || party.includes('citizen') || symbolStr.includes('cjp')) return '/cjp.jpg';
+    if (party.includes('other') || party.includes('ind') || symbolStr.includes('other')) return '/other.svg';
+
+    if (cand.symbolUrl && (cand.symbolUrl.startsWith('/') || cand.symbolUrl.startsWith('http'))) {
+      return cand.symbolUrl;
+    }
+    return '';
   }
 }

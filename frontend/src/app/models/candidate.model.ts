@@ -16,6 +16,7 @@ export interface Candidate {
   partyCode?: string;
   symbolName?: string;
   photoUrl?: string;
+  avatarUrl?: string;
   wardNumber?: string;
   age?: number;
   education?: string;
