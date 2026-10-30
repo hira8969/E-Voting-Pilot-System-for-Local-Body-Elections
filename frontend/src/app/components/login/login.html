@@ -30,92 +30,6 @@
         <p class="text-xs text-[#64748B] mt-1">Authenticate using your credentials or instant Voter ID OTP</p>
       </div>
 
-      <!-- ACADEMIC DEMONSTRATION DIRECT LOGINS -->
-      <div class="mb-6 p-4 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1] shadow-2xs">
-        <span class="block text-[11px] font-extrabold text-[#183153] text-center uppercase tracking-wider mb-3">
-          Academic Demonstration Direct Logins:
-        </span>
-        <div class="grid grid-cols-3 gap-2">
-          <button
-            type="button"
-            (click)="directLogin('VOTER')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="user" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Voter</span>
-          </button>
-          <button
-            type="button"
-            (click)="directLogin('CANDIDATE')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="candidate" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Candidate</span>
-          </button>
-          <button
-            type="button"
-            (click)="directLogin('PARTY')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="party" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Party</span>
-          </button>
-          <button
-            type="button"
-            (click)="directLogin('ADMIN')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="scale" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Admin</span>
-          </button>
-          <button
-            type="button"
-            (click)="directLogin('SUPER_ADMIN')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="shield-check" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Super Admin</span>
-          </button>
-          <button
-            type="button"
-            (click)="directLogin('AUDITOR')"
-            class="py-2.5 px-2 bg-white hover:bg-emerald-50 text-[#183153] hover:text-emerald-800 font-bold rounded-lg border border-[#CBD5E1] hover:border-emerald-400 shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
-            <app-icon name="file-text" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span class="text-xs">Auditor</span>
-          </button>
-        </div>
-
-        <!-- Seeded Demo Credentials Card -->
-        <div class="mt-4 p-3 bg-white rounded-lg border border-[#DCE2E8]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-[#183153]">Seeded Demo Credentials:</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Active
-            </span>
-          </div>
-          <div class="space-y-1.5 text-xs">
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('VOTER')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Voter:</span>
-              <span class="font-mono text-[#183153] font-semibold">voter / Voter&#64;12345</span>
-            </div>
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('CANDIDATE')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Candidate:</span>
-              <span class="font-mono text-[#183153] font-semibold">candidate / Candidate&#64;12345</span>
-            </div>
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('PARTY')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Party Representative:</span>
-              <span class="font-mono text-[#183153] font-semibold">party / Party&#64;12345</span>
-            </div>
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('ADMIN')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Admin:</span>
-              <span class="font-mono text-[#183153] font-semibold">admin / Admin&#64;12345</span>
-            </div>
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('SUPER_ADMIN')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Super Admin:</span>
-              <span class="font-mono text-[#183153] font-semibold">superadmin / SuperAdmin&#64;12345</span>
-            </div>
-            <div class="flex items-center justify-between hover:bg-slate-50 p-1 rounded transition-colors cursor-pointer" (click)="quickFill('AUDITOR')" title="Click to fill form">
-              <span class="text-[#64748B] font-semibold">Auditor:</span>
-              <span class="font-mono text-[#183153] font-semibold">auditor / Auditor&#64;12345</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Mode Switcher Tabs -->
       <div class="flex rounded-md bg-[#F3F5F7] p-1 border border-[#DCE2E8] mb-6">
@@ -234,40 +148,6 @@
             </button>
           </div>
 
-          <!-- Quick Auto-Fill Demonstration Buttons -->
-          <div class="pt-1">
-            <span class="block text-[11px] font-semibold text-[#64748B] mb-1.5">Quick Auto-Fill Demo Credentials:</span>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11px]">
-              <button
-                type="button"
-                (click)="quickFill('CANDIDATE')"
-                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
-                <app-icon name="candidate" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
-                <span>Candidate</span>
-              </button>
-              <button
-                type="button"
-                (click)="quickFill('PARTY')"
-                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
-                <app-icon name="party" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
-                <span>Party Rep</span>
-              </button>
-              <button
-                type="button"
-                (click)="quickFill('ADMIN')"
-                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
-                <app-icon name="scale" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
-                <span>Admin</span>
-              </button>
-              <button
-                type="button"
-                (click)="quickFill('SUPER_ADMIN')"
-                class="px-2 py-1.5 bg-[#EEF3F8] hover:bg-[#d3dfea] text-[#183153] font-bold rounded border border-[#D3DFEA] flex items-center justify-center gap-1 cursor-pointer transition-colors">
-                <app-icon name="shield-check" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
-                <span>Super Admin</span>
-              </button>
-            </div>
-          </div>
 
           <!-- Submit Button -->
           <button
@@ -409,36 +289,6 @@
         </div>
       }
 
-      <!-- Security Verification & Role Reference Notice -->
-      <div class="mt-6 pt-5 border-t border-[#DCE2E8]">
-        <div class="p-3 bg-[#F3F5F7] rounded-md border border-[#DCE2E8] text-[11px] text-[#64748B]">
-          <div class="flex items-center gap-2 text-[#183153] font-bold mb-1.5">
-            <app-icon name="shield-check" className="w-4 h-4 text-[#237C78] shrink-0"></app-icon>
-            <span>Authorized Electoral Role Credentials</span>
-          </div>
-          <div class="grid grid-cols-2 gap-2 text-[11px] text-[#253247] pt-1">
-            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
-              <span class="block font-bold text-[#183153]">Candidate Portal:</span>
-              <span class="font-mono text-[#64748B]">candidate</span> / <span class="font-mono text-[#64748B]">Candidate&#64;123</span>
-            </div>
-            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
-              <span class="block font-bold text-[#183153]">Party Portal:</span>
-              <span class="font-mono text-[#64748B]">party</span> / <span class="font-mono text-[#64748B]">Party&#64;123</span>
-            </div>
-            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
-              <span class="block font-bold text-[#183153]">Election Admin:</span>
-              <span class="font-mono text-[#64748B]">admin</span> / <span class="font-mono text-[#64748B]">Admin&#64;123</span>
-            </div>
-            <div class="p-1.5 rounded bg-white border border-[#DCE2E8]">
-              <span class="block font-bold text-[#183153]">Super Admin:</span>
-              <span class="font-mono text-[#64748B]">superadmin</span> / <span class="font-mono text-[#64748B]">SuperAdmin&#64;123</span>
-            </div>
-          </div>
-          <p class="leading-relaxed mt-2 text-[#64748B]">
-            Electors can login using registered password or OTP using their Voter ID (EPIC). All logins issue signed Spring Security JWT tokens.
-          </p>
-        </div>
-      </div>
 
       <!-- Register Link -->
       <div class="mt-6 text-center text-xs text-[#64748B]">

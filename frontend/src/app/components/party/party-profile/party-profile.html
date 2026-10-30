@@ -1,0 +1,134 @@
+<div class="max-w-5xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-2xl border-2 border-slate-300 bg-white p-2 shadow-xs flex items-center justify-center shrink-0">
+        <img [src]="currentParty?.symbolUrl" [alt]="currentParty?.name" class="w-full h-full object-contain">
+      </div>
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight">{{ currentParty?.name }}</h1>
+          <span
+            class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border shadow-2xs"
+            [ngClass]="[currentParty?.badgeBg || 'bg-slate-100', currentParty?.badgeText || 'text-slate-800', currentParty?.badgeBorder || 'border-slate-300']">
+            {{ currentParty?.partyType === 'NATIONAL' ? '🏛️ ECI National Party' : (currentParty?.partyType === 'INDEPENDENT' ? '⚖️ Independent Group' : ('🚩 ' + currentParty?.homeState + ' State Party')) }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5 font-medium">
+          Official Registration Code: <strong class="text-slate-800 font-mono">{{ currentParty?.code }}</strong> &bull; Registration No: <strong class="text-slate-800 font-mono">{{ currentParty?.registrationNumber }}</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Switcher & Actions -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs">
+        <span class="text-[10px] font-bold text-slate-400 uppercase">Party:</span>
+        <select
+          [value]="currentParty?.key"
+          (change)="onPartySwitch($event)"
+          class="bg-transparent font-bold text-slate-800 text-xs focus:outline-none cursor-pointer">
+          @for (p of allParties; track p.key) {
+            <option [value]="p.key">{{ p.code }} — {{ p.name }}</option>
+          }
+        </select>
+      </div>
+
+      <a routerLink="/party/candidates/register" class="inline-flex items-center gap-1 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg shadow-xs transition-colors shrink-0">
+        + Nominate Candidate
+      </a>
+    </div>
+  </div>
+
+  <!-- Profile Details Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Card 1: Official Reserved Symbol -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+      <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+        <app-icon name="shield-check" [size]="18" class="text-blue-900" />
+        <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider">ECI Reserved Symbol</h2>
+      </div>
+
+      <div class="text-center py-4 space-y-3 bg-slate-50 rounded-xl border border-slate-200/80">
+        <div class="w-24 h-24 rounded-2xl bg-white border-2 border-slate-300 p-2 shadow-sm mx-auto flex items-center justify-center">
+          <img [src]="currentParty?.symbolUrl" [alt]="currentParty?.name" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <span class="text-base font-black text-slate-900 block">{{ currentParty?.symbolName }}</span>
+          <span class="text-[11px] text-slate-500 font-medium">Official EVM / VVPAT Ballot Emblem</span>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-600 space-y-2 pt-1">
+        <div class="flex justify-between py-1 border-b border-slate-100">
+          <span class="text-slate-500">Allocation Order</span>
+          <span class="font-bold text-slate-800">Symbols Order, 1968</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-100">
+          <span class="text-slate-500">Recognition Class</span>
+          <span class="font-bold text-slate-800">{{ currentParty?.partyType }}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-slate-500">Home Jurisdiction</span>
+          <span class="font-bold text-slate-800">{{ currentParty?.homeState }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Party Governance & Leadership -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4 md:col-span-2">
+      <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+        <app-icon name="users" [size]="18" class="text-blue-900" />
+        <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider">Party Secretariat & Official Credentials</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Party Founder / National President</span>
+          <span class="text-sm font-bold text-slate-900 mt-1 block">{{ currentParty?.president }}</span>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Authorized Portal Representative</span>
+          <span class="text-sm font-bold text-slate-900 mt-1 block">{{ currentUser?.fullName || currentUser?.name || 'Party Representative' }}</span>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 sm:col-span-2">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Registered Party Headquarters</span>
+          <span class="text-xs font-bold text-slate-800 mt-1 block">{{ currentParty?.headquarters }}</span>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Secretariat Email</span>
+          <span class="text-xs font-mono font-bold text-slate-800 mt-1 block">{{ currentParty?.contactEmail }}</span>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Secretariat Telephone</span>
+          <span class="text-xs font-mono font-bold text-slate-800 mt-1 block">{{ currentParty?.contactPhone }}</span>
+        </div>
+      </div>
+
+      <!-- Ideological Tagline -->
+      <div class="p-4 rounded-xl border border-slate-200" [ngClass]="currentParty?.bgGradient || 'bg-slate-50'">
+        <span class="text-[10px] font-bold text-slate-500 uppercase block">Core Ideological Commitment:</span>
+        <p class="text-xs font-bold text-slate-800 mt-1 italic">
+          "{{ currentParty?.tagline }}"
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <a routerLink="/party/dashboard" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition-colors">
+          View Nominated Candidates
+        </a>
+        <a routerLink="/party/manifesto" class="px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg transition-colors">
+          Upload Party Manifesto
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>

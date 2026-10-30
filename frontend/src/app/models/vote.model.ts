@@ -5,6 +5,14 @@ export interface CastVoteDto {
   constituency?: string;
   boothId?: string;
   evmSerial?: string;
+  candidateName?: string;
+  candidateHindiName?: string;
+  partyName?: string;
+  partyCode?: string;
+  symbolUrl?: string;
+  symbolName?: string;
+  candidatePhoto?: string;
+  candidateNumber?: number | string;
 }
 
 export interface VoteReceiptDto {
@@ -12,6 +20,14 @@ export interface VoteReceiptDto {
   electionId: number | string;
   voterId: number | string;
   candidateId: number | string;
+  candidateName?: string;
+  candidateHindiName?: string;
+  partyName?: string;
+  partyCode?: string;
+  symbolUrl?: string;
+  symbolName?: string;
+  candidatePhoto?: string;
+  candidateNumber?: number | string;
   constituency: string;
   timestamp: string;
   voteHash: string;

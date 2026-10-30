@@ -255,61 +255,6 @@
     </div>
   </section>
 
-  <!-- VIVA EVALUATION & DEMONSTRATION ROLE NAVIGATOR -->
-  <section class="bg-[#183153] text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-[#12243e]">
-    <div class="max-w-5xl mx-auto text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#237C78]/30 text-teal-200 text-xs font-bold uppercase tracking-wider border border-[#237C78]/50">
-        <app-icon name="shield-check" className="w-3.5 h-3.5 text-teal-300"></app-icon>
-        <span>Evaluation & Viva Role Direct Navigators</span>
-      </div>
-      <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Inspect Any Role in One Click</h2>
-      <p class="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed">
-        Switch directly to authenticated role dashboards to examine their respective interfaces, permissions, and administrative capabilities without re-entering credentials.
-      </p>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4 text-xs font-semibold">
-        <button
-          type="button"
-          (click)="openRole('VOTER')"
-          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
-          <app-icon name="user" className="w-5 h-5 text-teal-300"></app-icon>
-          <span>Voter Portal</span>
-        </button>
-
-        <button
-          type="button"
-          (click)="openRole('CANDIDATE')"
-          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
-          <app-icon name="candidate" className="w-5 h-5 text-teal-300"></app-icon>
-          <span>Candidate Portal</span>
-        </button>
-
-        <button
-          type="button"
-          (click)="openRole('PARTY')"
-          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
-          <app-icon name="party" className="w-5 h-5 text-teal-300"></app-icon>
-          <span>Party Representative</span>
-        </button>
-
-        <button
-          type="button"
-          (click)="openRole('ADMIN')"
-          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
-          <app-icon name="scale" className="w-5 h-5 text-teal-300"></app-icon>
-          <span>Election Admin</span>
-        </button>
-
-        <button
-          type="button"
-          (click)="openRole('AUDITOR')"
-          class="p-3.5 rounded-lg bg-[#12243e] hover:bg-[#237C78] border border-slate-700 hover:border-teal-400 text-white transition-all cursor-pointer flex flex-col items-center gap-2">
-          <app-icon name="receipt" className="w-5 h-5 text-teal-300"></app-icon>
-          <span>Auditor Portal</span>
-        </button>
-      </div>
-    </div>
-  </section>
 
   <!-- OFFICIAL FOOTER WITH STATUTORY LINKS -->
   <footer class="bg-[#12243e] text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800">

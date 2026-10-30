@@ -18,11 +18,15 @@ export interface User {
   wardNumber?: string;
   pollingBoothId?: string;
   avatarUrl?: string;
+  partyCode?: string;
+  partyName?: string;
+  partySymbolUrl?: string;
   [key: string]: unknown;
 }
 
 export interface AuthResponse {
   token: string;
+  refreshToken?: string;
   user: User;
   message?: string;
 }

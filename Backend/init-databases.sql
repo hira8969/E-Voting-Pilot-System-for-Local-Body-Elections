@@ -339,15 +339,41 @@ INSERT IGNORE INTO roles (id, name) VALUES
 (5, 'ROLE_VOTER'),
 (6, 'ROLE_AUDITOR');
 
--- Seed Admin and Super Admin with BCrypt hashed passwords:
--- Admin: Admin@12345 ($2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi)
--- SuperAdmin: SuperAdmin@12345 ($2a$10$Y1rX4O9LhS7T7q.Yp10E5eD7cQp3KqYV8lWz0kQkG7B4Gq9h2aYcy)
+-- Seed Default Users with BCrypt hashed passwords
 INSERT IGNORE INTO users (id, username, email, password_hash, enabled) VALUES
 (1, 'admin', 'admin@evoting.local', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', TRUE),
-(2, 'superadmin', 'superadmin@evoting.local', '$2a$10$Y1rX4O9LhS7T7q.Yp10E5eD7cQp3KqYV8lWz0kQkG7B4Gq9h2aYcy', TRUE);
+(2, 'superadmin', 'superadmin@evoting.local', '$2a$10$Y1rX4O9LhS7T7q.Yp10E5eD7cQp3KqYV8lWz0kQkG7B4Gq9h2aYcy', TRUE),
+(3, 'voter', 'voter@evoting.local', '$2a$10$3Of5NH8AUkwcm53R9F.nuORt2SDD0iPdrBHjNjDcJDSbonxjPcmiu', TRUE),
+(4, 'candidate', 'candidate@evoting.local', '$2a$10$/Lkjun6pzdLFGE10XStip..P9XGD85PfBi86HLl0Br.1Q.VmRSuTS', TRUE),
+(5, 'party', 'party@evoting.local', '$2a$10$ZPWgsa1Jtm5ff.FJsM/uze0dJ0c9HXnpMmeKBB3Qnk5pyrOxfODTe', TRUE),
+(6, 'auditor', 'auditor@evoting.local', '$2a$10$fVED3anbjCb3RMcTM7SYt.iJRGeijlnGdJSucTcYgAr/gWjO7TBhq', TRUE),
+-- Political Party Representatives:
+(501, 'bjp', 'bjp@evoting.local', '$2a$10$OOILP72Ie8MLlxC2LX//oeTK1/3Bj80CqdC6CrfAArMH57bElTZ1e', TRUE),
+(502, 'bjd', 'bjd@evoting.local', '$2a$10$1odxx/o5tSJt58YPlUMOUuJRQFEGlEbPi9sCbOvv6cpFyyhuYtCr.', TRUE),
+(503, 'rjd', 'rjd@evoting.local', '$2a$10$xfb75jZBFYA.lByvG6nMBubpIto3cWt5iBt9o33Dox2xWgx8RByWK', TRUE),
+(504, 'jdu', 'jdu@evoting.local', '$2a$10$92cRcaOVpTUpuZzMoS2bhunlYBh1FpUlnkMnUfiVOW0t0/zH2Ndn6', TRUE),
+(505, 'sp', 'sp@evoting.local', '$2a$10$CHd58u3BWDYNAC5Pr0c7k.IMindkri7Z2y7mf/oKMlpc5gkjJl5/W', TRUE),
+(506, 'aap', 'aap@evoting.local', '$2a$10$pNvbK4Iqk6wgoqZ9pxYdLu9MYBL/cWGFrvIakIRvnOuau8uxVNA9O', TRUE),
+(507, 'congress', 'congress@evoting.local', '$2a$10$zsCJWiEowluHsH7fai880.MGu4A1k4MahYNXzDaWRWi.NkXbu7eV2', TRUE),
+(508, 'cjp', 'cjp@evoting.local', '$2a$10$VP969C/2FwwlSDmvkcOKl.0LnYkxa0ko8EwK5soGR0jf2RHTd7nAu', TRUE),
+(509, 'other', 'other@evoting.local', '$2a$10$wfwlrggJXYG.EIi2yfxWF.HqrbUFDIT9GY8/iZittgNxofz8VpTC6', TRUE);
 
 INSERT IGNORE INTO user_roles (user_id, role_id) VALUES
 (1, 1),
 (2, 1),
-(2, 2);
+(2, 2),
+(3, 5),
+(4, 3),
+(5, 4),
+(6, 6),
+(501, 4),
+(502, 4),
+(503, 4),
+(504, 4),
+(505, 4),
+(506, 4),
+(507, 4),
+(508, 4),
+(509, 4);
+
 

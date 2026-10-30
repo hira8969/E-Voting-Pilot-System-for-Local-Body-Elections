@@ -28,15 +28,50 @@ export class SidebarComponent implements OnInit {
   @Input() role?: string;
 
   currentRole: string = 'VOTER';
+  currentUser: any = null;
 
   constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    const user = this.authService.currentUser() || this.authService.getStoredUser();
-    this.currentRole = this.role || user?.role || 'VOTER';
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user || this.authService.getStoredUser();
+      this.currentRole = this.role || this.currentUser?.role || 'VOTER';
+      if (!this.menuItems || this.menuItems.length === 0) {
+        this.menuItems = this.getMenuItemsForRole(this.currentRole);
+      }
+    });
+  }
 
-    if (!this.menuItems || this.menuItems.length === 0) {
-      this.menuItems = this.getMenuItemsForRole(this.currentRole);
+  getInitials(): string {
+    const name = this.currentUser?.fullName || this.currentUser?.name || this.currentUser?.email || 'User';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  getUserDisplayName(): string {
+    return this.currentUser?.fullName || this.currentUser?.name || 'Verified Elector';
+  }
+
+  getUserSubtext(): string {
+    return this.currentUser?.epicNumber || this.currentUser?.email || 'EPIC Verified';
+  }
+
+  getDisplayRole(): string {
+    const raw = String(this.currentRole || '').replace(/^ROLE_/, '').toUpperCase();
+    switch (raw) {
+      case 'VOTER': return 'Voter';
+      case 'CANDIDATE': return 'Candidate';
+      case 'PARTY':
+      case 'PARTY_REP': return 'Party Rep';
+      case 'ADMIN': return 'Admin';
+      case 'SUPER_ADMIN': return 'Super Admin';
+      case 'AUDITOR': return 'Auditor';
+      case 'OBSERVER': return 'Observer';
+      case 'SYSTEM_ADMIN': return 'System Admin';
+      default: return raw ? raw.charAt(0) + raw.slice(1).toLowerCase() : 'Voter';
     }
   }
 

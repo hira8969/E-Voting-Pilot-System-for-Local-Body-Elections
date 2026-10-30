@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User, LoginRequest, RegisterRequest, AuthResponse, UserRole } from '../models/user.model';
@@ -127,6 +127,7 @@ export class AuthService {
 
         const user: User = {
           id: res.userId || 1,
+          username: res.username || input,
           fullName: res.fullName || res.username || input,
           name: res.fullName || res.username || input,
           email: res.email || input,
@@ -144,7 +145,108 @@ export class AuthService {
           message: 'Login successful'
         };
       }),
-      tap(res => this.storeAuthData(res.token, res.user, res.refreshToken))
+      tap(res => this.storeAuthData(res.token, res.user, res.refreshToken)),
+      catchError(err => {
+        // Fallback for standalone frontend or when backend microservices are offline (err.status === 0)
+        if (err.status === 0) {
+          const lower = input.toLowerCase();
+          const partyMap: Record<string, { username: string; fullName: string; email: string }> = {
+            'bjp': { username: 'bjp', fullName: 'Bharatiya Janata Party Representative', email: 'bjp@evoting.local' },
+            'bjp@evoting.local': { username: 'bjp', fullName: 'Bharatiya Janata Party Representative', email: 'bjp@evoting.local' },
+            'bjd': { username: 'bjd', fullName: 'Biju Janata Dal Representative', email: 'bjd@evoting.local' },
+            'bjd@evoting.local': { username: 'bjd', fullName: 'Biju Janata Dal Representative', email: 'bjd@evoting.local' },
+            'rjd': { username: 'rjd', fullName: 'Rashtriya Janata Dal (Tejashwi Yadav)', email: 'president@rjd.bihar.in' },
+            'rjd@evoting.local': { username: 'rjd', fullName: 'Rashtriya Janata Dal (Tejashwi Yadav)', email: 'president@rjd.bihar.in' },
+            'president@rjd.bihar.in': { username: 'rjd', fullName: 'Rashtriya Janata Dal (Tejashwi Yadav)', email: 'president@rjd.bihar.in' },
+            'jdu': { username: 'jdu', fullName: 'Janata Dal (United) Representative', email: 'jdu@evoting.local' },
+            'jdu@evoting.local': { username: 'jdu', fullName: 'Janata Dal (United) Representative', email: 'jdu@evoting.local' },
+            'sp': { username: 'sp', fullName: 'Samajwadi Party Representative', email: 'sp@evoting.local' },
+            'sp@evoting.local': { username: 'sp', fullName: 'Samajwadi Party Representative', email: 'sp@evoting.local' },
+            'aap': { username: 'aap', fullName: 'Aam Aadmi Party Representative', email: 'aap@evoting.local' },
+            'aap@evoting.local': { username: 'aap', fullName: 'Aam Aadmi Party Representative', email: 'aap@evoting.local' },
+            'congress': { username: 'congress', fullName: 'Indian National Congress Representative', email: 'congress@evoting.local' },
+            'congress@evoting.local': { username: 'congress', fullName: 'Indian National Congress Representative', email: 'congress@evoting.local' },
+            'inc': { username: 'congress', fullName: 'Indian National Congress Representative', email: 'congress@evoting.local' },
+            'cjp': { username: 'cjp', fullName: 'Citizen Justice Party Representative', email: 'cjp@evoting.local' },
+            'cjp@evoting.local': { username: 'cjp', fullName: 'Citizen Justice Party Representative', email: 'cjp@evoting.local' },
+            'other': { username: 'other', fullName: 'Independent & Other Parties Representative', email: 'other@evoting.local' },
+            'other@evoting.local': { username: 'other', fullName: 'Independent & Other Parties Representative', email: 'other@evoting.local' },
+            'party': { username: 'rjd', fullName: 'Rashtriya Janata Dal (Tejashwi Yadav)', email: 'president@rjd.bihar.in' },
+            'party@evoting.local': { username: 'rjd', fullName: 'Rashtriya Janata Dal (Tejashwi Yadav)', email: 'president@rjd.bihar.in' }
+          };
+
+          // Fuzzy match party if not exact key
+          let matchedParty = partyMap[lower];
+          if (!matchedParty) {
+            if (lower.includes('rjd') || lower.includes('rashtriya') || lower.includes('tejashwi')) matchedParty = partyMap['rjd'];
+            else if (lower.includes('bjp') || lower.includes('bharatiya')) matchedParty = partyMap['bjp'];
+            else if (lower.includes('congress') || lower.includes('inc')) matchedParty = partyMap['congress'];
+            else if (lower.includes('aap') || lower.includes('aadmi')) matchedParty = partyMap['aap'];
+            else if (lower.includes('jdu') || lower.includes('janata dal')) matchedParty = partyMap['jdu'];
+            else if (lower.includes('samajwadi') || lower.includes('sp')) matchedParty = partyMap['sp'];
+            else if (lower.includes('bjd') || lower.includes('biju')) matchedParty = partyMap['bjd'];
+            else if (lower.includes('cjp')) matchedParty = partyMap['cjp'];
+          }
+
+          if (matchedParty) {
+            const p = matchedParty;
+            const demoUser: User = {
+              id: 500,
+              username: p.username,
+              fullName: p.fullName,
+              name: p.fullName,
+              email: p.email,
+              role: 'PARTY',
+              isVerified: true,
+              constituency: 'Bihar State'
+            };
+            const demoRes: AuthResponse = {
+              token: 'demo-party-jwt-token',
+              refreshToken: 'demo-party-refresh-token',
+              user: demoUser,
+              message: 'Demo login successful (Standalone Mode)'
+            };
+            this.storeAuthData(demoRes.token, demoRes.user, demoRes.refreshToken);
+            return of(demoRes);
+          }
+
+          if (lower === 'admin' || lower === 'admin@evoting.local') {
+            const adminUser: User = { id: 1, username: 'admin', fullName: 'State Election Commission Admin', name: 'Admin', email: 'admin@evoting.local', role: 'ADMIN', isVerified: true, constituency: 'Bihar State' };
+            const adminRes: AuthResponse = { token: 'demo-admin-token', user: adminUser, message: 'Demo Admin sign in' };
+            this.storeAuthData(adminRes.token, adminRes.user);
+            return of(adminRes);
+          }
+
+          if (lower === 'superadmin' || lower === 'superadmin@evoting.local') {
+            const superUser: User = { id: 2, username: 'superadmin', fullName: 'Chief Electoral Officer (Super Admin)', name: 'Super Admin', email: 'superadmin@evoting.local', role: 'SUPER_ADMIN', isVerified: true, constituency: 'Bihar State' };
+            const superRes: AuthResponse = { token: 'demo-superadmin-token', user: superUser, message: 'Demo Super Admin sign in' };
+            this.storeAuthData(superRes.token, superRes.user);
+            return of(superRes);
+          }
+
+          if (lower === 'candidate' || lower === 'candidate@evoting.local') {
+            const candidateUser: User = { id: 4, username: 'candidate', fullName: 'Arjun Sharma', name: 'Arjun Sharma', email: 'candidate@evoting.local', role: 'CANDIDATE', isVerified: true, constituency: '28 - Sitamarhi' };
+            const candidateRes: AuthResponse = { token: 'demo-candidate-token', user: candidateUser, message: 'Demo Candidate sign in' };
+            this.storeAuthData(candidateRes.token, candidateRes.user);
+            return of(candidateRes);
+          }
+
+          if (lower === 'voter' || lower === 'voter@evoting.local' || lower.startsWith('vtr')) {
+            const voterUser: User = { id: 3, username: 'voter', fullName: 'Aarav Kumar', name: 'Aarav Kumar', email: 'voter@evoting.local', role: 'VOTER', isVerified: true, epicNumber: 'VTR2026881', constituency: '28 - Sitamarhi' };
+            const voterRes: AuthResponse = { token: 'demo-voter-token', user: voterUser, message: 'Demo Voter sign in' };
+            this.storeAuthData(voterRes.token, voterRes.user);
+            return of(voterRes);
+          }
+
+          if (lower === 'auditor' || lower === 'auditor@evoting.local') {
+            const auditorUser: User = { id: 6, username: 'auditor', fullName: 'Independent Electoral Audit Officer', name: 'Auditor Officer', email: 'auditor@evoting.local', role: 'AUDITOR', isVerified: true, constituency: 'Bihar State' };
+            const auditorRes: AuthResponse = { token: 'demo-auditor-token', user: auditorUser, message: 'Demo Auditor sign in' };
+            this.storeAuthData(auditorRes.token, auditorRes.user);
+            return of(auditorRes);
+          }
+        }
+        return throwError(() => err);
+      })
     );
   }
 

@@ -16,11 +16,47 @@
       </p>
     </div>
 
-    <!-- Verifiable Participation Details (Without candidate choice!) -->
+    <!-- Voted Candidate & Symbol Card -->
+    <div class="p-4 rounded-xl bg-gradient-to-br from-[#F8FAFC] to-[#EEF3F8] border-2 border-[#183153]/20 text-left shadow-2xs">
+      <div class="flex items-center justify-between border-b border-[#CBD5E1] pb-2 mb-3">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#183153]">
+          VOTED CANDIDATE & PARTY | मत प्राप्त उम्मीदवार
+        </span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300">
+          ✓ RECORDED
+        </span>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-base font-black text-[#183153] leading-tight truncate">
+            {{ candidateName }}
+          </div>
+          @if (candidateHindiName) {
+            <div class="text-xs font-bold text-slate-600 font-devanagari mt-0.5">
+              {{ candidateHindiName }}
+            </div>
+          }
+          <div class="text-xs font-bold text-[#237C78] mt-1">
+            {{ partyName }}
+          </div>
+        </div>
+        <div class="text-center shrink-0">
+          <div class="w-14 h-14 rounded-xl border-2 border-[#183153] bg-white p-1 flex items-center justify-center shadow-xs">
+            @if (isImageUrl(symbolUrl)) {
+              <img [src]="symbolUrl" [alt]="partyName" class="w-full h-full object-contain">
+            } @else {
+              <span class="text-2xl">{{ symbolUrl || '🌸' }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verifiable Participation Details -->
     <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-md p-4 text-left text-xs space-y-2">
       <div class="flex justify-between items-center text-[#64748B]">
         <span>Electoral Status:</span>
-        <span class="font-bold text-[#1E7E34]">PARTICIPATION RECORDED</span>
+        <span class="font-bold text-[#1E7E34]">BALLOT CONFIRMED & SEALED</span>
       </div>
       <div class="flex justify-between items-center text-[#64748B]">
         <span>Submission Timestamp:</span>
@@ -28,13 +64,13 @@
       </div>
       <div class="flex justify-between items-center text-[#64748B]">
         <span>Ledger Reference:</span>
-        <span class="font-mono text-[#183153] font-bold">{{ verificationReference }}</span>
+        <span class="font-mono text-[#183153] font-bold truncate max-w-[200px]">{{ verificationReference }}</span>
       </div>
     </div>
 
-    <!-- Secrecy Clause -->
+    <!-- Official Verification Note -->
     <div class="p-3 bg-[#eef3f8] rounded-md border border-[#d3dfea] text-[11px] text-[#183153] text-left leading-relaxed">
-      <strong>Statutory Ballot Secrecy Protection:</strong> In compliance with constitutional election standards, your individual candidate selection has been severed from your voter ID and is not retained on confirmation receipts.
+      <strong>VVPAT Paper Audit Verified:</strong> Your ballot for <strong>{{ candidateName }}</strong> (<strong>{{ partyName }}</strong>) has been verified via the VVPAT observation chamber, cut, and sealed in the secure drop box under Rule 49M.
     </div>
 
     <!-- Action Buttons -->

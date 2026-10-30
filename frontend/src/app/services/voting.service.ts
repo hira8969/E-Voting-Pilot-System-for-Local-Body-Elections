@@ -23,9 +23,20 @@ export class VotingService {
   castVote(dto: CastVoteDto): Observable<VoteReceiptDto> {
     return this.http.post<VoteReceiptDto>(`${this.apiUrl}/cast`, dto).pipe(
       map(receipt => {
-        this.saveReceipt(receipt);
+        const enriched: VoteReceiptDto = {
+          ...receipt,
+          candidateName: receipt.candidateName || dto.candidateName,
+          candidateHindiName: receipt.candidateHindiName || dto.candidateHindiName,
+          partyName: receipt.partyName || dto.partyName,
+          partyCode: receipt.partyCode || dto.partyCode,
+          symbolUrl: receipt.symbolUrl || dto.symbolUrl,
+          symbolName: receipt.symbolName || dto.symbolName,
+          candidatePhoto: receipt.candidatePhoto || dto.candidatePhoto,
+          candidateNumber: receipt.candidateNumber || dto.candidateNumber
+        };
+        this.saveReceipt(enriched);
         this.recordLocalVoteTally(String(dto.electionId), String(dto.candidateId));
-        return receipt;
+        return enriched;
       }),
       catchError(() => {
         const voteId = Date.now();
@@ -39,6 +50,14 @@ export class VotingService {
           voterId: dto.voterId || 101,
           electionId: dto.electionId || 1,
           candidateId: dto.candidateId || 1,
+          candidateName: dto.candidateName || 'Arjun Sharma',
+          candidateHindiName: dto.candidateHindiName || 'अर्जुन शर्मा',
+          partyName: dto.partyName || 'Bharatiya Janata Party (BJP)',
+          partyCode: dto.partyCode || 'BJP',
+          symbolUrl: dto.symbolUrl || '/bjp.jpg',
+          symbolName: dto.symbolName || '',
+          candidatePhoto: dto.candidatePhoto || '/candidates/arjun.svg',
+          candidateNumber: dto.candidateNumber || 1,
           constituency: dto.constituency || 'Ward 12 - Indiranagar',
           timestamp: new Date().toLocaleString(),
           voteHash: voteHash,

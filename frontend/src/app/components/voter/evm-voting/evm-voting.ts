@@ -211,6 +211,7 @@ export class EvmVotingComponent implements OnInit, OnDestroy {
       }
 
       this.candidates = rawList;
+      this.checkVoteStatus();
       this.cdr.detectChanges();
     });
   }
@@ -462,7 +463,15 @@ export class EvmVotingComponent implements OnInit, OnDestroy {
             electionId: this.electionId,
             candidateId: this.activeCandidate?.id || 1,
             voterId: user?.id || 101,
-            constituency: this.election?.constituency || 'Ward 12 - Indiranagar'
+            constituency: this.election?.constituency || 'Ward 12 - Indiranagar',
+            candidateName: this.activeCandidate?.fullName || this.activeCandidate?.name,
+            candidateHindiName: this.activeCandidate ? this.getHindiName(this.activeCandidate) : undefined,
+            partyName: this.activeCandidate?.partyName,
+            partyCode: this.activeCandidate?.partyCode,
+            symbolUrl: this.activeCandidate ? this.getSymbolUrl(this.activeCandidate) : undefined,
+            symbolName: this.activeCandidate?.symbolName,
+            candidatePhoto: this.activeCandidate ? this.getCandidatePhoto(this.activeCandidate) : undefined,
+            candidateNumber: this.activeCandidate?.candidateNumber || this.activeCandidate?.ballotPosition
           }).subscribe({
             next: (receipt) => {
               this.existingReceipt = receipt;

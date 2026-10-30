@@ -20,8 +20,8 @@ public enum ElectionStatus {
             case SCHEDULED -> Set.of(ACTIVE, CANCELLED).contains(next);
             case ACTIVE -> Set.of(PAUSED, COMPLETED, CANCELLED).contains(next);
             case PAUSED -> Set.of(ACTIVE, CANCELLED).contains(next);
-            case COMPLETED -> Set.of(PUBLISHED, ACTIVE).contains(next);
-            case PUBLISHED -> Set.of(COMPLETED).contains(next);
+            case COMPLETED -> Set.of(PUBLISHED).contains(next);
+            case PUBLISHED -> false;
             case CANCELLED -> false; // Terminal states
         };
     }

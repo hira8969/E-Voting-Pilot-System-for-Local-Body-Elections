@@ -22,6 +22,6 @@ describe('RegisterComponent', () => {
 
   it('should have initial empty fields', () => {
     expect(component.fullName).toBe('');
-    expect(component.constituency).toBe('28 - Sitamarhi');
+    expect(component.constituency).toBe('Ward 01 - Indiranagar');
   });
 });

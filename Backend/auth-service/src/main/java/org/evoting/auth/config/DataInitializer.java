@@ -74,13 +74,24 @@ public class DataInitializer {
                         .username("party")
                         .email("party@evoting.local")
                         .password(passwordEncoder.encode("Party@12345"))
-                        .fullName("Bharatiya Janata Party Representative")
+                        .fullName("Janata Vikas Party Representative")
                         .constituency("Bihar State")
                         .enabled(true)
                         .roles(Set.of(roleParty))
                         .build();
                 userRepository.save(party);
             }
+
+            // Seed Recognized Political Parties Representatives
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "bjp", "bjp@evoting.local", "Bjp@12345", "Bharatiya Janata Party Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "bjd", "bjd@evoting.local", "Bjd@12345", "Biju Janata Dal Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "rjd", "rjd@evoting.local", "Rjd@12345", "Rashtriya Janata Dal Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "jdu", "jdu@evoting.local", "Jdu@12345", "Janata Dal (United) Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "sp", "sp@evoting.local", "Sp@12345", "Samajwadi Party Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "aap", "aap@evoting.local", "Aap@12345", "Aam Aadmi Party Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "congress", "congress@evoting.local", "Congress@12345", "Indian National Congress Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "cjp", "cjp@evoting.local", "Cjp@12345", "Citizen Justice Party Representative");
+            seedPartyUser(userRepository, passwordEncoder, roleParty, "other", "other@evoting.local", "Other@12345", "Independent & Other Parties Representative");
 
             // Seed default System Admin
             if (!userRepository.existsByUsername("admin")) {
@@ -121,5 +132,26 @@ public class DataInitializer {
                 userRepository.save(auditor);
             }
         };
+    }
+
+    private void seedPartyUser(UserRepository userRepository,
+                               PasswordEncoder passwordEncoder,
+                               Role roleParty,
+                               String username,
+                               String email,
+                               String rawPassword,
+                               String fullName) {
+        if (!userRepository.existsByUsername(username)) {
+            User partyUser = User.builder()
+                    .username(username)
+                    .email(email)
+                    .password(passwordEncoder.encode(rawPassword))
+                    .fullName(fullName)
+                    .constituency("Bihar State")
+                    .enabled(true)
+                    .roles(Set.of(roleParty))
+                    .build();
+            userRepository.save(partyUser);
+        }
     }
 }

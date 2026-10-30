@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, timeout } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Candidate, CandidateDto } from '../models/candidate.model';
 
@@ -563,16 +563,26 @@ export class CandidateService {
     return slate;
   }
 
+  // Synchronous immediate return of local candidate data for 0ms UI render
+  getLocalCandidates(): Candidate[] {
+    return this.mockCandidates.map(c => this.normalize(c));
+  }
+
   // Get all candidates
   getAllCandidates(): Observable<Candidate[]> {
+    const local = this.getLocalCandidates();
     return this.http.get<Candidate[]>(this.apiUrl).pipe(
+      timeout(1000),
       map(list => {
         if (Array.isArray(list) && list.length > 0) {
-          return list.map(c => this.normalize(c));
+          const normalized = list.map(c => this.normalize(c));
+          this.mockCandidates = normalized;
+          this.saveToStorage(normalized);
+          return normalized;
         }
-        return this.mockCandidates.map(c => this.normalize(c));
+        return local;
       }),
-      catchError(() => of(this.mockCandidates.map(c => this.normalize(c))))
+      catchError(() => of(local))
     );
   }
 
@@ -580,29 +590,28 @@ export class CandidateService {
   getCandidatesByElection(electionId: number | string): Observable<Candidate[]> {
     const idStr = String(electionId).toLowerCase();
 
+    // Fast local filter
+    let filtered = this.mockCandidates.filter(c => {
+      const cId = String(c.electionId).toLowerCase();
+      return cId === idStr || 
+        (idStr === '1' && (cId === '1' || cId.includes('01') || cId.includes('sitamarhi'))) ||
+        (idStr.includes('sitamarhi') && (cId === '1' || cId.includes('01') || cId.includes('sitamarhi')));
+    });
+
+    if (filtered.length === 0) {
+      filtered = this.generateDefaultSlate(electionId);
+    }
+    const localNormalized = filtered.map(c => this.normalize(c));
+
     return this.http.get<Candidate[]>(`${this.apiUrl}/election/${electionId}`).pipe(
+      timeout(1000),
       map(list => {
         if (Array.isArray(list) && list.length > 0) {
           return list.map(c => this.normalize(c));
         }
-        throw new Error('Fallback to local');
+        return localNormalized;
       }),
-      catchError(() => {
-        // Filter by electionId
-        let filtered = this.mockCandidates.filter(c => {
-          const cId = String(c.electionId).toLowerCase();
-          return cId === idStr || 
-            (idStr === '1' && (cId === '1' || cId.includes('01') || cId.includes('sitamarhi'))) ||
-            (idStr.includes('sitamarhi') && (cId === '1' || cId.includes('01') || cId.includes('sitamarhi')));
-        });
-
-        // If no candidates found for this election, auto-seed candidates slate
-        if (filtered.length === 0) {
-          filtered = this.generateDefaultSlate(electionId);
-        }
-
-        return of(filtered.map(c => this.normalize(c)));
-      })
+      catchError(() => of(localNormalized))
     );
   }
 
@@ -613,12 +622,13 @@ export class CandidateService {
   // Get candidate by ID
   getCandidateById(id: number | string): Observable<Candidate | undefined> {
     const idStr = String(id);
+    const localFound = this.mockCandidates.find(c => String(c.id) === idStr);
+    const local = localFound ? this.normalize(localFound) : undefined;
+
     return this.http.get<Candidate>(`${this.apiUrl}/${id}`).pipe(
+      timeout(1000),
       map(c => this.normalize(c)),
-      catchError(() => {
-        const found = this.mockCandidates.find(c => String(c.id) === idStr);
-        return of(found ? this.normalize(found) : undefined);
-      })
+      catchError(() => of(local))
     );
   }
 

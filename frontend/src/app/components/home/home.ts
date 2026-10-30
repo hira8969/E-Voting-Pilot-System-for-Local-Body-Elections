@@ -4,7 +4,6 @@ import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
 import { AppIconComponent } from '../icon/icon.component';
 import { ElectionService } from '../../services/election.service';
-import { AuthService } from '../../services/auth.service';
 import { Election } from '../../models/election.model';
 
 @Component({
@@ -47,8 +46,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private electionService: ElectionService,
-    private router: Router,
-    private authService: AuthService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -64,10 +62,5 @@ export class HomeComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  openRole(role: string): void {
-    const target = this.authService.getRoleRedirectUrl(role);
-    this.router.navigateByUrl(target);
   }
 }

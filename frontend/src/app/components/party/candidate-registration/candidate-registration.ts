@@ -6,6 +6,7 @@ import { CandidateService } from '../../../services/candidate.service';
 import { ElectionService } from '../../../services/election.service';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { PartyService, PartyMeta } from '../../../services/party.service';
 import { Candidate } from '../../../models/candidate.model';
 
 export interface ElectionOption {
@@ -16,16 +17,6 @@ export interface ElectionOption {
   constituency: string;
   ward: string;
   description: string;
-}
-
-export interface PartyMeta {
-  code: string;
-  name: string;
-  symbolUrl: string;
-  symbolName: string;
-  partyType: 'NATIONAL' | 'STATE';
-  homeState?: string;
-  allowedElectionIds: number[];
 }
 
 @Component({
@@ -76,88 +67,6 @@ export class CandidateRegistrationComponent implements OnInit {
     }
   ];
 
-  // Official political parties matching public/ folder symbols
-  partyDirectory: Record<string, PartyMeta> = {
-    bjp: {
-      code: 'BJP',
-      name: 'Bharatiya Janata Party',
-      symbolUrl: '/bjp.jpg',
-      symbolName: 'Lotus (कमल)',
-      partyType: 'NATIONAL',
-      allowedElectionIds: [1, 2, 3, 4]
-    },
-    congress: {
-      code: 'INC',
-      name: 'Indian National Congress',
-      symbolUrl: '/congress.png',
-      symbolName: 'Hand (हाथ)',
-      partyType: 'NATIONAL',
-      allowedElectionIds: [1, 2, 3, 4]
-    },
-    aap: {
-      code: 'AAP',
-      name: 'Aam Aadmi Party',
-      symbolUrl: '/AAP.png',
-      symbolName: 'Broom (झाड़ू)',
-      partyType: 'NATIONAL',
-      allowedElectionIds: [1, 2, 3, 4]
-    },
-    jdu: {
-      code: 'JDU',
-      name: 'Janata Dal (United)',
-      symbolUrl: '/JDU.jpg',
-      symbolName: 'Arrow (तीर)',
-      partyType: 'STATE',
-      homeState: 'Bihar',
-      allowedElectionIds: [1, 2] // Sitamarhi Lok Sabha MP & Bihar Vidhan Sabha MLA
-    },
-    rjd: {
-      code: 'RJD',
-      name: 'Rashtriya Janata Dal',
-      symbolUrl: '/RJD.jpg',
-      symbolName: 'Hurricane Lamp (लालटेन)',
-      partyType: 'STATE',
-      homeState: 'Bihar',
-      allowedElectionIds: [1, 2]
-    },
-    sp: {
-      code: 'SP',
-      name: 'Samajwadi Party',
-      symbolUrl: '/samajwadi.png',
-      symbolName: 'Bicycle (साइकिल)',
-      partyType: 'STATE',
-      homeState: 'Uttar Pradesh',
-      allowedElectionIds: [1, 3] // Sitamarhi MP & UP Vidhan Sabha MLA
-    },
-    bjd: {
-      code: 'BJD',
-      name: 'Biju Janata Dal',
-      symbolUrl: '/Bjd.png',
-      symbolName: 'Conch (शंख)',
-      partyType: 'STATE',
-      homeState: 'Odisha',
-      allowedElectionIds: [1, 4] // Sitamarhi MP & Odisha Vidhan Sabha MLA
-    },
-    cjp: {
-      code: 'CJP',
-      name: 'Citizen Justice Party',
-      symbolUrl: '/cjp.jpg',
-      symbolName: 'Scales (तराजू)',
-      partyType: 'STATE',
-      homeState: 'Bihar',
-      allowedElectionIds: [1, 2]
-    },
-    other: {
-      code: 'OTHER',
-      name: 'Independent & Other Registered Group',
-      symbolUrl: '/other.svg',
-      symbolName: 'Kite (पतंग)',
-      partyType: 'STATE',
-      homeState: 'All Constituencies (Independent)',
-      allowedElectionIds: [1, 2, 3, 4]
-    }
-  };
-
   candidateAvatars = [
     { label: 'Portrait 1 (Classic)', url: '/candidates/arjun.svg' },
     { label: 'Portrait 2 (Professional)', url: '/candidates/vikram.svg' },
@@ -171,14 +80,8 @@ export class CandidateRegistrationComponent implements OnInit {
     { label: 'Official Passport Avatar', url: '/candidates/default.svg' }
   ];
 
-  currentParty: PartyMeta = {
-    code: 'BJP',
-    name: 'Bharatiya Janata Party',
-    symbolUrl: '/bjp.jpg',
-    symbolName: 'Lotus (कमल)',
-    partyType: 'NATIONAL',
-    allowedElectionIds: [1, 2, 3, 4]
-  };
+  allParties: PartyMeta[] = [];
+  currentParty!: PartyMeta;
 
   availableElections: ElectionOption[] = [];
   selectedElectionId: number = 1;
@@ -194,11 +97,11 @@ export class CandidateRegistrationComponent implements OnInit {
   formData: Partial<Candidate> = {
     name: '',
     fullName: '',
-    partyName: 'Bharatiya Janata Party',
-    partyCode: 'BJP',
-    symbol: '🌸',
-    symbolUrl: '/bjp.jpg',
-    symbolName: 'Lotus (कमल)',
+    partyName: '',
+    partyCode: '',
+    symbol: '',
+    symbolUrl: '',
+    symbolName: '',
     photoUrl: '/candidates/default.svg',
     constituency: '05 - Sitamarhi Parliamentary Constituency (MP)',
     wardNumber: 'Sitamarhi Lok Sabha',
@@ -217,48 +120,60 @@ export class CandidateRegistrationComponent implements OnInit {
   constructor(
     private candidateService: CandidateService,
     private electionService: ElectionService,
-    private authService: AuthService,
+    public authService: AuthService,
+    public partyService: PartyService,
     private toastService: ToastService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.currentUser() || this.authService.getStoredUser();
-    const username = String(user?.username || 'bjp').toLowerCase().trim();
+    this.allParties = this.partyService.getAllParties();
 
-    if (this.partyDirectory[username]) {
-      this.currentParty = this.partyDirectory[username];
-    } else {
-      // Try to find matching party from user full name
-      const matchedKey = Object.keys(this.partyDirectory).find(k =>
-        String(user?.fullName || '').toLowerCase().includes(k) ||
-        String(user?.username || '').toLowerCase().includes(k)
-      );
-      if (matchedKey) {
-        this.currentParty = this.partyDirectory[matchedKey];
-      }
-    }
+    this.authService.currentUser$.subscribe(user => {
+      const activeUser = user || this.authService.getStoredUser();
+      const resolved = this.partyService.resolveParty(activeUser);
+      this.applyParty(resolved);
+    });
+  }
+
+  applyParty(party: PartyMeta): void {
+    this.currentParty = party;
 
     // Set party details in form
     this.formData.partyName = this.currentParty.name;
     this.formData.partyCode = this.currentParty.code;
     this.formData.symbolUrl = this.currentParty.symbolUrl;
     this.formData.symbolName = this.currentParty.symbolName;
+    this.formData.symbol = this.currentParty.symbolEmoji;
 
     // Filter available elections based on Party state registration rules
     this.availableElections = this.allElections.filter(e =>
       this.currentParty.allowedElectionIds.includes(e.id)
     );
 
-    if (this.availableElections.length > 0) {
+    // If current selected election is not allowed for this party, switch to first allowed
+    const isAllowed = this.availableElections.some(e => e.id === this.selectedElectionId);
+    if (!isAllowed && this.availableElections.length > 0) {
       this.onElectionSelect(this.availableElections[0].id);
+    } else if (this.availableElections.length > 0) {
+      this.onElectionSelect(this.selectedElectionId);
     }
 
-    // Generate suggested candidate credentials
+    // Generate suggested candidate credentials matching party
     this.suggestCredentials();
   }
 
+  onPartySwitch(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    if (select && select.value) {
+      const switched = this.partyService.switchPartyByKey(select.value);
+      this.applyParty(switched);
+      this.toastService.info('Party Switched', `Active party is now ${switched.name} (${switched.code})`);
+    }
+  }
+
   suggestCredentials(): void {
+    if (!this.currentParty) return;
     const prefix = this.currentParty.code.toLowerCase();
     const rand = Math.floor(100 + Math.random() * 900);
     this.candidateCredentials.username = `cand_${prefix}_${rand}`;
@@ -307,6 +222,7 @@ export class CandidateRegistrationComponent implements OnInit {
     this.formData.partyCode = this.currentParty.code;
     this.formData.symbolUrl = this.currentParty.symbolUrl;
     this.formData.symbolName = this.currentParty.symbolName;
+    this.formData.symbol = this.currentParty.symbolEmoji;
     this.formData.nominationStatus = 'PENDING';
 
     // 1. Issue candidate login account in auth-service

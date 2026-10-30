@@ -156,6 +156,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/party/party-dashboard/party-dashboard').then(m => m.PartyDashboardComponent)
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./components/party/party-profile/party-profile').then(m => m.PartyProfileComponent)
+      },
+      {
         path: 'candidates',
         loadComponent: () => import('./components/party/party-dashboard/party-dashboard').then(m => m.PartyDashboardComponent)
       },
