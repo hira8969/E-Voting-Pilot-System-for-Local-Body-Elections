@@ -13,10 +13,10 @@ import { SidebarComponent, MenuItem } from '../../sidebar/sidebar';
 })
 export class OfficerLayoutComponent {
   menuItems: MenuItem[] = [
-    { label: 'Control Overview', route: '/officer/dashboard', icon: '📊', exact: true },
-    { label: 'Verify Voters', route: '/officer/voters', icon: '🧑', badge: '1 Pending', badgeColor: 'bg-amber-100 text-amber-800' },
-    { label: 'Verify Candidates', route: '/officer/candidates', icon: '👥' },
-    { label: 'Manage Booths', route: '/officer/booths', icon: '📍', badge: '4 Active', badgeColor: 'bg-green-100 text-green-800' },
-    { label: 'Live Monitoring', route: '/officer/monitoring', icon: '📡' }
+    { label: 'Control Overview', route: '/officer/dashboard', icon: 'dashboard', exact: true },
+    { label: 'Verify Voters', route: '/officer/voters', icon: 'user-check', badge: '1 Pending', badgeColor: 'bg-amber-100 text-amber-800' },
+    { label: 'Verify Candidates', route: '/officer/candidates', icon: 'candidate' },
+    { label: 'Manage Booths', route: '/officer/booths', icon: 'map-pin', badge: '4 Active', badgeColor: 'bg-green-100 text-green-800' },
+    { label: 'Live Monitoring', route: '/officer/monitoring', icon: 'activity' }
   ];
 }

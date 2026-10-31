@@ -32,7 +32,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 1,
       ballotPosition: 1,
-      votesReceived: 10420
+      votesReceived: 0
     },
     {
       id: 2,
@@ -53,7 +53,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 2,
       ballotPosition: 2,
-      votesReceived: 9850
+      votesReceived: 0
     },
     {
       id: 3,
@@ -74,7 +74,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 3,
       ballotPosition: 3,
-      votesReceived: 8900
+      votesReceived: 0
     },
     {
       id: 4,
@@ -95,7 +95,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 4,
       ballotPosition: 4,
-      votesReceived: 8200
+      votesReceived: 0
     },
     {
       id: 5,
@@ -116,7 +116,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 5,
       ballotPosition: 5,
-      votesReceived: 4100
+      votesReceived: 0
     },
     {
       id: 6,
@@ -137,7 +137,7 @@ export class CandidateService {
       verificationStatus: 'VERIFIED',
       candidateNumber: 6,
       ballotPosition: 6,
-      votesReceived: 450
+      votesReceived: 0
     },
 
     // Election 2: Bihar Vidhan Sabha Election 2026 (MLA) - Sitamarhi
@@ -420,10 +420,22 @@ export class CandidateService {
     }
   ];
 
-  private storageKey = 'evoting_candidates_v3';
+  private storageKey = 'evoting_candidates_v4';
 
   constructor(private http: HttpClient) {
     this.mockCandidates = this.loadFromStorage();
+  }
+
+  private getLiveVotesForCandidate(electionId: number | string, candidateId: number | string): number {
+    if (typeof localStorage === 'undefined') return 0;
+    try {
+      const raw = localStorage.getItem(`evoting_tally_${electionId}`);
+      if (raw) {
+        const tallies = JSON.parse(raw);
+        return Number(tallies[String(candidateId)]) || 0;
+      }
+    } catch {}
+    return 0;
   }
 
   private loadFromStorage(): Candidate[] {
@@ -435,7 +447,10 @@ export class CandidateService {
       try {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map(c => ({
+            ...c,
+            votesReceived: this.getLiveVotesForCandidate(c.electionId, c.id)
+          }));
         }
       } catch (err) {
         console.error('Failed to parse cached candidates:', err);
@@ -452,6 +467,7 @@ export class CandidateService {
   }
 
   private normalize(c: Candidate): Candidate {
+    const liveVotes = this.getLiveVotesForCandidate(c.electionId, c.id);
     return {
       ...c,
       fullName: c.fullName || c.name || '',
@@ -464,7 +480,8 @@ export class CandidateService {
       manifestoSummary: c.manifestoSummary || c.manifesto || '',
       bio: c.bio || c.manifestoSummary || '',
       nominationStatus: c.nominationStatus || c.verificationStatus || 'APPROVED',
-      verificationStatus: c.verificationStatus || c.nominationStatus || 'VERIFIED'
+      verificationStatus: c.verificationStatus || c.nominationStatus || 'VERIFIED',
+      votesReceived: liveVotes
     };
   }
 
@@ -491,7 +508,7 @@ export class CandidateService {
         verificationStatus: 'VERIFIED',
         candidateNumber: 1,
         ballotPosition: 1,
-        votesReceived: 42
+        votesReceived: 0
       },
       {
         id: `${idPrefix}-2`,
@@ -512,7 +529,7 @@ export class CandidateService {
         verificationStatus: 'VERIFIED',
         candidateNumber: 2,
         ballotPosition: 2,
-        votesReceived: 35
+        votesReceived: 0
       },
       {
         id: `${idPrefix}-3`,
@@ -533,7 +550,7 @@ export class CandidateService {
         verificationStatus: 'VERIFIED',
         candidateNumber: 3,
         ballotPosition: 3,
-        votesReceived: 28
+        votesReceived: 0
       },
       {
         id: `${idPrefix}-4`,
@@ -554,7 +571,7 @@ export class CandidateService {
         verificationStatus: 'VERIFIED',
         candidateNumber: 4,
         ballotPosition: 4,
-        votesReceived: 18
+        votesReceived: 0
       }
     ];
 

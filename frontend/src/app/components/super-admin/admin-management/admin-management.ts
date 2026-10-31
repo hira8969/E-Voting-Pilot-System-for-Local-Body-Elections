@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
+import { AppIconComponent } from '../../icon/icon.component';
 
 export interface AdminAccount {
   id: string;
@@ -16,7 +17,7 @@ export interface AdminAccount {
 @Component({
   selector: 'app-admin-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AppIconComponent],
   templateUrl: './admin-management.html'
 })
 export class AdminManagementComponent implements OnInit {

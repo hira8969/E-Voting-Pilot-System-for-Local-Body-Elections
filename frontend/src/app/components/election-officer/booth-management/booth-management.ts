@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { DataTableComponent, TableColumn } from '../../data-table/data-table';
 import { ModalComponent } from '../../modal/modal';
 import { OfficerService } from '../../../services/officer.service';
@@ -11,7 +12,7 @@ import { AppIconComponent } from '../../icon/icon.component';
 @Component({
   selector: 'app-booth-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTableComponent, ModalComponent, AppIconComponent],
+  imports: [CommonModule, FormsModule, RouterModule, DataTableComponent, ModalComponent, AppIconComponent],
   templateUrl: './booth-management.html',
   styleUrl: './booth-management.css'
 })

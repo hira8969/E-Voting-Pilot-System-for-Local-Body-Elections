@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AppIconComponent } from '../../icon/icon.component';
 
 export interface AuditRecord {
   id: string;
@@ -17,7 +18,7 @@ export interface AuditRecord {
 @Component({
   selector: 'app-auditor-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AppIconComponent],
   templateUrl: './auditor-dashboard.html'
 })
 export class AuditorDashboardComponent implements OnInit {

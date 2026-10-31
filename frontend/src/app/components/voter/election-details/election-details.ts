@@ -7,11 +7,12 @@ import { CandidateService } from '../../../services/candidate.service';
 import { VotingService } from '../../../services/voting.service';
 import { Election } from '../../../models/election.model';
 import { Candidate } from '../../../models/candidate.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-election-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, CandidateCardComponent],
+  imports: [CommonModule, RouterModule, CandidateCardComponent, AppIconComponent],
   templateUrl: './election-details.html',
   styleUrl: './election-details.css'
 })

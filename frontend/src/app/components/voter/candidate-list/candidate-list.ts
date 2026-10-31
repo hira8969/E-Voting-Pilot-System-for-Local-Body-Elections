@@ -7,11 +7,12 @@ import { ModalComponent } from '../../modal/modal';
 import { CandidateService } from '../../../services/candidate.service';
 import { VotingService } from '../../../services/voting.service';
 import { Candidate } from '../../../models/candidate.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-candidate-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, CandidateCardComponent, SearchBoxComponent, ModalComponent],
+  imports: [CommonModule, RouterModule, CandidateCardComponent, SearchBoxComponent, ModalComponent, AppIconComponent],
   templateUrl: './candidate-list.html',
   styleUrl: './candidate-list.css'
 })

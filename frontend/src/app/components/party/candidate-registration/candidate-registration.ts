@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { PartyService, PartyMeta } from '../../../services/party.service';
 import { Candidate } from '../../../models/candidate.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 export interface ElectionOption {
   id: number;
@@ -22,7 +23,7 @@ export interface ElectionOption {
 @Component({
   selector: 'app-candidate-registration',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AppIconComponent],
   templateUrl: './candidate-registration.html',
   styleUrl: './candidate-registration.css'
 })
@@ -116,6 +117,20 @@ export class CandidateRegistrationComponent implements OnInit {
   loading: boolean = false;
   createdSuccess: boolean = false;
   issuedCandidateSummary: any = null;
+  nameError: boolean = false;
+
+  // Suggested authentic candidate names per political party
+  partyCandidateNames: Record<string, string> = {
+    bjd: 'Prakash Kumar Mohanty',
+    bjp: 'Anand Kumar Verma',
+    rjd: 'Sunil Kumar Kushwaha',
+    inc: 'Rajesh Ranjan (Pappu Yadav)',
+    aap: 'Sanjay Kumar Singh',
+    sp: 'Ravidas Mehrotra',
+    jdu: 'Devesh Chandra Thakur',
+    cjp: 'Advocate Manoj Sinha',
+    other: 'Dr. Sunita Devi (Independent)'
+  };
 
   constructor(
     private candidateService: CandidateService,
@@ -146,6 +161,13 @@ export class CandidateRegistrationComponent implements OnInit {
     this.formData.symbolName = this.currentParty.symbolName;
     this.formData.symbol = this.currentParty.symbolEmoji;
 
+    // Auto-populate default candidate name if currently empty
+    const pKey = (this.currentParty.code || '').toLowerCase();
+    if (!this.formData.name || !this.formData.name.trim()) {
+      this.formData.name = this.partyCandidateNames[pKey] || 'Anand Kumar Verma';
+      this.formData.fullName = this.formData.name;
+    }
+
     // Filter available elections based on Party state registration rules
     this.availableElections = this.allElections.filter(e =>
       this.currentParty.allowedElectionIds.includes(e.id)
@@ -163,10 +185,24 @@ export class CandidateRegistrationComponent implements OnInit {
     this.suggestCredentials();
   }
 
+  fillSampleCandidate(): void {
+    const pKey = (this.currentParty?.code || '').toLowerCase();
+    this.formData.name = this.partyCandidateNames[pKey] || 'Prakash Kumar Mohanty';
+    this.formData.fullName = this.formData.name;
+    this.nameError = false;
+    this.suggestCredentials();
+    this.toastService.info('Sample Data Filled', `Loaded sample candidate: ${this.formData.name}`);
+  }
+
   onPartySwitch(event: Event): void {
     const select = event.target as HTMLSelectElement;
     if (select && select.value) {
       const switched = this.partyService.switchPartyByKey(select.value);
+      // Update name to match newly selected party
+      const pKey = (switched.code || '').toLowerCase();
+      this.formData.name = this.partyCandidateNames[pKey] || 'Anand Kumar Verma';
+      this.formData.fullName = this.formData.name;
+      this.nameError = false;
       this.applyParty(switched);
       this.toastService.info('Party Switched', `Active party is now ${switched.name} (${switched.code})`);
     }
@@ -206,10 +242,21 @@ export class CandidateRegistrationComponent implements OnInit {
 
   onSubmit(event: Event): void {
     event.preventDefault();
-    if (!this.formData.name || !this.formData.name.trim()) {
-      this.toastService.error('Required Field', 'Please enter candidate legal name.');
+
+    const candidateName = (this.formData.name || this.formData.fullName || '').trim();
+    if (!candidateName) {
+      this.nameError = true;
+      this.toastService.error('Required Field', 'Please enter Candidate Legal Name in Section 2.');
+      setTimeout(() => {
+        const el = document.getElementById('candidateLegalName');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.focus();
+        }
+      }, 50);
       return;
     }
+    this.nameError = false;
 
     if (!this.candidateCredentials.username || !this.candidateCredentials.password) {
       this.toastService.error('Credentials Missing', 'Please enter Candidate Username and Password to issue credentials.');
@@ -217,7 +264,8 @@ export class CandidateRegistrationComponent implements OnInit {
     }
 
     this.loading = true;
-    this.formData.fullName = this.formData.name.trim();
+    this.formData.name = candidateName;
+    this.formData.fullName = candidateName;
     this.formData.partyName = this.currentParty.name;
     this.formData.partyCode = this.currentParty.code;
     this.formData.symbolUrl = this.currentParty.symbolUrl;

@@ -207,7 +207,7 @@ export const MOCK_CANDIDATES: Candidate[] = [
     profession: 'Social Worker & Educator',
     verificationStatus: 'VERIFIED',
     ballotPosition: 1,
-    votesReceived: 10420,
+    votesReceived: 0,
     manifestoSummary: '24x7 Clean Drinking Water, Solar Street Lights, Upgraded Ward Dispensary, and Women Self Help Group grants.',
     affidavitUrl: '/assets/docs/affidavit_cand_001.pdf'
   },
@@ -227,7 +227,7 @@ export const MOCK_CANDIDATES: Candidate[] = [
     profession: 'Urban Infrastructure Planner',
     verificationStatus: 'VERIFIED',
     ballotPosition: 2,
-    votesReceived: 12150,
+    votesReceived: 0,
     manifestoSummary: 'Modern underground drainage, Zero waterlogging guarantee, smart digital ward office, and open green parks.',
     affidavitUrl: '/assets/docs/affidavit_cand_002.pdf'
   },
@@ -247,7 +247,7 @@ export const MOCK_CANDIDATES: Candidate[] = [
     profession: 'Advocate & Municipal Legal Advisor',
     verificationStatus: 'VERIFIED',
     ballotPosition: 3,
-    votesReceived: 7890,
+    votesReceived: 0,
     manifestoSummary: 'Youth employment skill center, transparency in tender allocation, free legal aid clinic for residents.',
     affidavitUrl: '/assets/docs/affidavit_cand_003.pdf'
   },
@@ -267,7 +267,7 @@ export const MOCK_CANDIDATES: Candidate[] = [
     profession: 'Farmer Cooperative Leader',
     verificationStatus: 'VERIFIED',
     ballotPosition: 4,
-    votesReceived: 1420,
+    votesReceived: 0,
     manifestoSummary: 'Direct market linkages for local produce, dairy refrigeration hubs, and organic waste management.',
     affidavitUrl: '/assets/docs/affidavit_cand_004.pdf'
   },
@@ -287,7 +287,7 @@ export const MOCK_CANDIDATES: Candidate[] = [
     profession: 'Senior Physician',
     verificationStatus: 'VERIFIED',
     ballotPosition: 5,
-    votesReceived: 541,
+    votesReceived: 0,
     manifestoSummary: 'Mobile medical dispensaries, elder care support cells, and health cards for all residents.',
     affidavitUrl: '/assets/docs/affidavit_cand_005.pdf'
   },

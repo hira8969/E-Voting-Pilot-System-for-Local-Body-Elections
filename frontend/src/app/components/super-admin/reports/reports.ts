@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
 import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, AppIconComponent],
+  imports: [CommonModule, RouterModule, AppIconComponent],
   templateUrl: './reports.html',
   styleUrl: './reports.css'
 })

@@ -46,6 +46,13 @@ export class VoterDashboardComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Instant 0ms load of local elections
+    const initial = this.electionService.getLocalElections();
+    if (initial && initial.length > 0) {
+      this.processElections(initial);
+      this.isLoading = false;
+    }
+
     this.loadElections();
   }
 

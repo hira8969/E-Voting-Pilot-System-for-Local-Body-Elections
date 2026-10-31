@@ -1,5 +1,42 @@
 <div class="space-y-6 max-w-6xl mx-auto" id="printable-receipt">
 
+  <!-- TOP BREADCRUMB & BACK TO HOME NAVIGATION BAR -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-2xs no-print">
+    <nav aria-label="Breadcrumb" class="text-xs text-slate-500">
+      <ol class="flex items-center gap-2 flex-wrap">
+        <li>
+          <a routerLink="/" class="hover:text-blue-900 font-semibold transition-colors flex items-center gap-1.5">
+            <app-icon name="vote" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="text-slate-300">/</li>
+        <li class="text-slate-700 font-medium">Public Results</li>
+        <li class="text-slate-300">/</li>
+        <li class="font-bold text-blue-950">Official Tally & Verification</li>
+      </ol>
+    </nav>
+
+    <!-- Navigation Action Buttons -->
+    <div class="flex items-center gap-2">
+      @if (currentUser) {
+        <a
+          [routerLink]="authService.getRoleRedirectUrl()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all group shrink-0 cursor-pointer">
+          <app-icon name="dashboard" className="w-3.5 h-3.5 text-[#183153]"></app-icon>
+          <span>My Portal</span>
+        </a>
+      }
+      <a
+        routerLink="/"
+        class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-blue-950 text-xs font-bold rounded-lg shadow-2xs transition-all group shrink-0 cursor-pointer"
+        title="Back to Public Homepage">
+        <app-icon name="arrow-right" className="w-3.5 h-3.5 rotate-180 text-[#237C78] group-hover:-translate-x-0.5 transition-transform"></app-icon>
+        <span>Back to Home</span>
+      </a>
+    </div>
+  </div>
+
   <!-- Header Bar -->
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCFA] p-6 rounded-lg border border-[#DCE2E8] shadow-xs">
     <div class="space-y-1">
@@ -114,8 +151,8 @@
     </div>
   }
 
-  <!-- NON-ADMIN VIEW WHEN UNPUBLISHED: Gated Informational Screen -->
-  @if (!isAdmin && !isPublished) {
+  <!-- GATED VIEW ONLY WHEN SCRUTINY MODE IS ACTIVE WITHOUT PUBLICATION OR VOTES -->
+  @if (!canViewResults) {
     <div class="bg-[#FCFCFA] rounded-xl border border-[#DCE2E8] p-8 sm:p-12 shadow-sm text-center space-y-6">
       <div class="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 mx-auto flex items-center justify-center text-amber-700 shadow-xs">
         <app-icon name="lock" className="w-8 h-8 text-amber-600"></app-icon>
@@ -169,8 +206,8 @@
     </div>
   }
 
-  <!-- RESULTS BODY (Visible to Admin in scrutiny mode, OR to everyone once Published) -->
-  @if (isAdmin || isPublished) {
+  <!-- RESULTS BODY (Visible to Admin, OR during Active Polling, OR once Published, OR when live votes exist) -->
+  @if (canViewResults) {
 
     <!-- Statutory Publication Metadata Strip -->
     <div class="bg-[#F3F5F7] border border-[#DCE2E8] rounded-lg p-4 text-xs text-[#64748B] flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -214,9 +251,9 @@
             <app-icon name="candidate" className="w-4 h-4 text-[#237C78]"></app-icon>
           </div>
         </div>
-        <p class="text-base font-extrabold text-[#183153] truncate">{{ winner?.candidateName || 'N/A' }}</p>
+        <p class="text-base font-extrabold text-[#183153] truncate">{{ winner ? winner.candidateName : 'No Votes Recorded Yet' }}</p>
         <div class="text-[11px] text-[#64748B]">
-          <span>{{ winner?.percentage || 0 }}% of valid votes polled</span>
+          <span>{{ winner ? (winner.percentage + '% of valid votes polled') : 'Awaiting voter participation' }}</span>
         </div>
       </div>
 
@@ -228,9 +265,9 @@
             <app-icon name="chart" className="w-4 h-4 text-[#183153]"></app-icon>
           </div>
         </div>
-        <p class="text-2xl font-extrabold text-[#183153] font-mono">+{{ margin }}</p>
+        <p class="text-2xl font-extrabold text-[#183153] font-mono">{{ winner ? '+' + margin : '0' }}</p>
         <div class="text-[11px] text-[#64748B] truncate">
-          <span>Ahead of {{ runnerUp?.candidateName || 'nearest contender' }}</span>
+          <span>{{ runnerUp && winner ? ('Ahead of ' + runnerUp.candidateName) : 'No lead established' }}</span>
         </div>
       </div>
 
@@ -343,14 +380,18 @@
                     {{ cand.percentage }}%
                   </td>
                   <td class="p-3 pr-4 text-right">
-                    @if (idx === 0) {
+                    @if (cand.votes > 0 && idx === 0) {
                       <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#e8f5e9] text-[#1E7E34] border border-[#c8e6c9]">
                         <app-icon name="check" className="w-3 h-3"></app-icon>
                         <span>{{ isPublished ? 'ELECTED' : 'LEADING' }}</span>
                       </span>
-                    } @else {
+                    } @else if (cand.votes > 0) {
                       <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#F3F5F7] text-[#64748B] border border-[#DCE2E8]">
                         CONTENDER
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                        0 VOTES
                       </span>
                     }
                   </td>

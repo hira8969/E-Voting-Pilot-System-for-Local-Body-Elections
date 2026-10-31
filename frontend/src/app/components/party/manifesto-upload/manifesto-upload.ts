@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
 import { PartyService, PartyMeta } from '../../../services/party.service';
 import { AuthService } from '../../../services/auth.service';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-manifesto-upload',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, AppIconComponent],
   templateUrl: './manifesto-upload.html',
   styleUrl: './manifesto-upload.css'
 })

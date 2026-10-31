@@ -5,11 +5,12 @@ import { Subscription } from 'rxjs';
 import { SearchBoxComponent } from '../../search-box/search-box';
 import { ElectionService } from '../../../services/election.service';
 import { Election } from '../../../models/election.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-election-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, SearchBoxComponent],
+  imports: [CommonModule, RouterModule, SearchBoxComponent, AppIconComponent],
   templateUrl: './election-list.html',
   styleUrl: './election-list.css'
 })

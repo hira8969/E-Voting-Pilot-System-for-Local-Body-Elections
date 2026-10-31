@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { StatusIndicatorComponent } from '../../status-indicator/status-indicator';
 import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-election-monitoring',
   standalone: true,
-  imports: [CommonModule, StatusIndicatorComponent, AppIconComponent],
+  imports: [CommonModule, RouterModule, StatusIndicatorComponent, AppIconComponent],
   templateUrl: './election-monitoring.html',
   styleUrl: './election-monitoring.css'
 })

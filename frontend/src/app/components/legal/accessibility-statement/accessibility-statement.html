@@ -2,13 +2,24 @@
   <app-navbar mode="public"></app-navbar>
 
   <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
-    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-[#64748B]">
-      <ol class="flex items-center gap-2">
-        <li><a routerLink="/" class="hover:text-[#183153] transition-colors">Home</a></li>
-        <li>/</li>
-        <li class="text-[#183153] font-semibold">Accessibility Statement</li>
-      </ol>
-    </nav>
+    <div class="flex items-center justify-between pb-2 mb-6 border-b border-[#DCE2E8]">
+      <nav aria-label="Breadcrumb" class="text-xs text-[#64748B]">
+        <ol class="flex items-center gap-1.5 font-medium">
+          <li>
+            <a routerLink="/" class="hover:text-[#183153] flex items-center gap-1 text-[#64748B] transition-colors">
+              <app-icon name="vote" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="text-[#94A3B8]">/</li>
+          <li class="text-[#183153] font-bold">Accessibility Statement</li>
+        </ol>
+      </nav>
+      <a routerLink="/" class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-[#DCE2E8] text-[#253247] hover:text-[#183153] text-xs font-bold rounded-lg shadow-2xs transition-all group shrink-0 cursor-pointer" title="Back to Public Homepage">
+        <app-icon name="arrow-right" className="w-3.5 h-3.5 rotate-180 text-[#237C78] group-hover:-translate-x-0.5 transition-transform"></app-icon>
+        <span>Back to Home</span>
+      </a>
+    </div>
 
     <!-- Draft Legal Notice -->
     <div class="p-4 mb-8 rounded-lg bg-[#fef3c7] border border-[#fde68a] text-xs text-[#92400e]">

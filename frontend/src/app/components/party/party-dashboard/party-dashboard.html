@@ -1,5 +1,31 @@
 <div class="space-y-6 max-w-6xl mx-auto">
   
+  <!-- TOP BREADCRUMB & BACK TO HOME NAVIGATION BAR -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-2xs">
+    <nav aria-label="Breadcrumb" class="text-xs text-slate-500">
+      <ol class="flex items-center gap-2 flex-wrap">
+        <li>
+          <a routerLink="/" class="hover:text-blue-900 font-semibold transition-colors flex items-center gap-1.5">
+            <app-icon name="vote" className="w-3.5 h-3.5 text-[#237C78]"></app-icon>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="text-slate-300">/</li>
+        <li class="text-slate-700 font-medium">Political Party Portal</li>
+        <li class="text-slate-300">/</li>
+        <li class="font-bold text-blue-950">{{ currentTheme?.name }} ({{ currentTheme?.code }})</li>
+      </ol>
+    </nav>
+
+    <!-- Prominent "Back to Home" Button -->
+    <a
+      routerLink="/"
+      class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-blue-950 text-xs font-bold rounded-lg shadow-2xs transition-all group shrink-0 cursor-pointer">
+      <app-icon name="arrow-right" className="w-3.5 h-3.5 rotate-180 text-[#237C78] group-hover:-translate-x-0.5 transition-transform"></app-icon>
+      <span>Back to Home</span>
+    </a>
+  </div>
+
   <!-- THEMED PARTY HERO BANNER (DYNAMIC ACCENTS & OFFICIAL RESERVED SYMBOL) -->
   <div
     class="relative overflow-hidden p-6 sm:p-8 rounded-2xl border-2 shadow-sm transition-all"
@@ -71,6 +97,13 @@
           class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer">
           <app-icon name="file-text" [size]="14" />
           <span>Manifesto</span>
+        </a>
+        <a
+          routerLink="/"
+          class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-blue-950 text-xs font-bold rounded-xl shadow-xs transition-colors group cursor-pointer"
+          title="Back to Public Homepage">
+          <app-icon name="arrow-right" className="w-3.5 h-3.5 rotate-180 text-[#237C78] group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Home</span>
         </a>
       </div>
 

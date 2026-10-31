@@ -4,6 +4,8 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ResultService } from '../../../services/result.service';
 import { ElectionService } from '../../../services/election.service';
+import { CandidateService } from '../../../services/candidate.service';
+import { VotingService } from '../../../services/voting.service';
 import { AuthService } from '../../../services/auth.service';
 import { Election } from '../../../models/election.model';
 import { AppIconComponent } from '../../icon/icon.component';
@@ -46,7 +48,7 @@ export class ResultDashboardComponent implements OnInit {
   publicationStatus: 'PROVISIONAL_TALLY' | 'CERTIFIED_FINAL' = 'CERTIFIED_FINAL';
   dataSource = 'State Election Commission Cryptographic Ledger';
   publicationTimestamp = new Date().toLocaleString();
-  turnoutPercentage = 74.8;
+  turnoutPercentage = 0;
 
   // Civic color palette matching requirements (Deep navy, muted teal, slate, amber, muted grey)
   palette = ['#183153', '#237C78', '#4A6572', '#B45309', '#64748B'];
@@ -54,12 +56,18 @@ export class ResultDashboardComponent implements OnInit {
   constructor(
     private resultService: ResultService,
     private electionService: ElectionService,
-    private authService: AuthService,
+    private candidateService: CandidateService,
+    private votingService: VotingService,
+    public authService: AuthService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.loadElections();
+  }
+
+  get currentUser() {
+    return this.authService.currentUser() || this.authService.getStoredUser();
   }
 
   get isAdmin(): boolean {
@@ -76,6 +84,10 @@ export class ResultDashboardComponent implements OnInit {
 
   get isPublished(): boolean {
     return this.currentStatus === 'PUBLISHED';
+  }
+
+  get canViewResults(): boolean {
+    return this.isAdmin || this.isPublished || this.currentStatus === 'ACTIVE' || this.totalVotes > 0;
   }
 
   get isCompletedOrPublished(): boolean {
@@ -107,6 +119,9 @@ export class ResultDashboardComponent implements OnInit {
           if (res.electionStatus) {
             this.currentResultStatus = res.electionStatus;
           }
+          if (typeof res.turnoutPercentage === 'number') {
+            this.turnoutPercentage = res.turnoutPercentage;
+          }
           const list = res.candidates || res.candidateResults || [];
           if (list.length > 0) {
             this.totalVotes = res.totalVotesCast ?? list.reduce((acc, c) => acc + (c.voteCount ?? c.votes ?? 0), 0);
@@ -116,18 +131,20 @@ export class ResultDashboardComponent implements OnInit {
               partyName: c.partyName || 'Independent',
               votes: c.voteCount ?? c.votes ?? 0,
               percentage: c.votePercentage ?? c.percentage ?? 0,
-              color: this.palette[i % this.palette.length]
+              color: this.palette[i % this.palette.length],
+              photoUrl: c.photoUrl,
+              symbolUrl: c.symbolUrl
             }));
           } else {
-            this.setDefaultDemoResults();
+            this.loadRealCandidateResults();
           }
         } else {
-          this.setDefaultDemoResults();
+          this.loadRealCandidateResults();
         }
         this.isLoading = false;
       },
       error: () => {
-        this.setDefaultDemoResults();
+        this.loadRealCandidateResults();
         this.isLoading = false;
       }
     });
@@ -181,46 +198,46 @@ export class ResultDashboardComponent implements OnInit {
     });
   }
 
-  setDefaultDemoResults(): void {
-    const elId = String(this.selectedElectionId);
+  loadRealCandidateResults(): void {
+    const elId = this.selectedElectionId;
+    const localTallies = this.votingService.getLocalVoteTally(elId);
+    const all = this.candidateService.getLocalCandidates();
+    const candidates = all.filter(c => {
+      const cId = String(c.electionId).toLowerCase();
+      const targetId = String(elId).toLowerCase();
+      return cId === targetId || 
+        (targetId === '1' && (cId === '1' || cId.includes('sitamarhi'))) ||
+        (targetId.includes('sitamarhi') && (cId === '1' || cId.includes('sitamarhi')));
+    });
 
-    if (elId === '1') {
-      this.totalVotes = 160100;
-      this.candidateResults = [
-        { candidateId: 1, candidateName: 'Arjun Sharma', partyName: 'Bharatiya Janata Party (BJP)', votes: 62400, percentage: 39.0, color: '#183153' },
-        { candidateId: 2, candidateName: 'Vikram Das', partyName: 'Indian National Congress (INC)', votes: 48200, percentage: 30.1, color: '#237C78' },
-        { candidateId: 3, candidateName: 'Devendra Prasad Yadav', partyName: 'Janata Dal United (JDU)', votes: 24500, percentage: 15.3, color: '#4A6572' },
-        { candidateId: 4, candidateName: 'Sunil Kumar Kushwaha', partyName: 'Rashtriya Janata Dal (RJD)', votes: 16800, percentage: 10.5, color: '#B45309' },
-        { candidateId: 5, candidateName: 'Sanjay Kumar Singh', partyName: 'Aam Aadmi Party (AAP)', votes: 6100, percentage: 3.8, color: '#64748B' },
-        { candidateId: 6, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2100, percentage: 1.3, color: '#94A3B8' }
-      ];
-    } else if (elId === '2') {
-      this.totalVotes = 125000;
-      this.candidateResults = [
-        { candidateId: 7, candidateName: 'Mithilesh Kumar', partyName: 'Bharatiya Janata Party (BJP)', votes: 46200, percentage: 37.0, color: '#183153' },
-        { candidateId: 8, candidateName: 'Dr. Varun Kumar', partyName: 'Janata Dal United (JDU)', votes: 39500, percentage: 31.6, color: '#237C78' },
-        { candidateId: 9, candidateName: 'Sunil Kumar', partyName: 'Rashtriya Janata Dal (RJD)', votes: 25400, percentage: 20.3, color: '#4A6572' },
-        { candidateId: 10, candidateName: 'Amit Kumar Tunna', partyName: 'Indian National Congress (INC)', votes: 11800, percentage: 9.4, color: '#B45309' },
-        { candidateId: 11, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2100, percentage: 1.7, color: '#94A3B8' }
-      ];
-    } else if (elId === '3') {
-      this.totalVotes = 142000;
-      this.candidateResults = [
-        { candidateId: 12, candidateName: 'Brajesh Pathak', partyName: 'Bharatiya Janata Party (BJP)', votes: 65200, percentage: 45.9, color: '#183153' },
-        { candidateId: 13, candidateName: 'Ravidas Mehrotra', partyName: 'Samajwadi Party (SP)', votes: 54100, percentage: 38.1, color: '#237C78' },
-        { candidateId: 14, candidateName: 'Sadaf Jafar', partyName: 'Indian National Congress (INC)', votes: 19800, percentage: 13.9, color: '#4A6572' },
-        { candidateId: 15, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 2900, percentage: 2.1, color: '#94A3B8' }
-      ];
-    } else {
-      // Election 4: Odisha Vidhan Sabha Election (Completed)
-      this.totalVotes = 183000;
-      this.candidateResults = [
-        { candidateId: 16, candidateName: 'Ananta Narayan Jena', partyName: 'Biju Janata Dal (BJD)', votes: 88400, percentage: 48.3, color: '#183153' },
-        { candidateId: 17, candidateName: 'Jagannath Pradhan', partyName: 'Bharatiya Janata Party (BJP)', votes: 62300, percentage: 34.0, color: '#237C78' },
-        { candidateId: 18, candidateName: 'Satya Prakash Nayak', partyName: 'Indian National Congress (INC)', votes: 28100, percentage: 15.4, color: '#4A6572' },
-        { candidateId: 19, candidateName: 'None of the Above (NOTA)', partyName: 'NOTA', votes: 4200, percentage: 2.3, color: '#94A3B8' }
-      ];
-    }
+    let total = 0;
+    this.candidateResults = (candidates.length > 0 ? candidates : all.slice(0, 5)).map((c, i) => {
+      const votes = localTallies[String(c.id)] || 0;
+      total += votes;
+      return {
+        candidateId: c.id,
+        candidateName: c.fullName || c.name || 'Candidate',
+        partyName: c.partyName || 'Independent',
+        votes: votes,
+        percentage: 0,
+        color: this.palette[i % this.palette.length],
+        photoUrl: c.photoUrl,
+        symbolUrl: c.symbolUrl
+      };
+    });
+
+    this.totalVotes = total;
+    this.candidateResults.forEach(c => {
+      c.percentage = total > 0 ? Number(((c.votes / total) * 100).toFixed(1)) : 0;
+    });
+
+    this.candidateResults.sort((a, b) => {
+      const diff = b.votes - a.votes;
+      if (diff !== 0) return diff;
+      return Number(a.candidateId) - Number(b.candidateId);
+    });
+
+    this.turnoutPercentage = total > 0 ? Number(((total / 10000) * 100).toFixed(2)) : 0;
   }
 
   onElectionChange(newId: string): void {
@@ -230,18 +247,21 @@ export class ResultDashboardComponent implements OnInit {
   }
 
   get winner(): DisplayCandidateResult | null {
-    if (!this.candidateResults || this.candidateResults.length === 0) return null;
-    return [...this.candidateResults].sort((a, b) => b.votes - a.votes)[0];
+    if (!this.candidateResults || this.candidateResults.length === 0 || this.totalVotes === 0) return null;
+    const sorted = [...this.candidateResults].sort((a, b) => b.votes - a.votes);
+    return sorted[0].votes > 0 ? sorted[0] : null;
   }
 
   get runnerUp(): DisplayCandidateResult | null {
-    if (!this.candidateResults || this.candidateResults.length < 2) return null;
-    return [...this.candidateResults].sort((a, b) => b.votes - a.votes)[1];
+    if (!this.candidateResults || this.candidateResults.length < 2 || this.totalVotes === 0) return null;
+    const sorted = [...this.candidateResults].sort((a, b) => b.votes - a.votes);
+    return sorted[1];
   }
 
   get margin(): number {
-    if (!this.winner || !this.runnerUp) return this.winner?.votes || 0;
-    return this.winner.votes - this.runnerUp.votes;
+    if (!this.winner) return 0;
+    if (!this.runnerUp) return this.winner.votes;
+    return Math.max(0, this.winner.votes - this.runnerUp.votes);
   }
 
   printTally(): void {

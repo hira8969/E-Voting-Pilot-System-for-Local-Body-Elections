@@ -4,6 +4,7 @@ export interface CandidateResultDto {
   fullName?: string;
   partyName: string;
   symbolUrl?: string;
+  photoUrl?: string;
   constituency?: string;
   votes?: number;
   voteCount?: number;

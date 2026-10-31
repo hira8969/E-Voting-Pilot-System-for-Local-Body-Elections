@@ -13,9 +13,9 @@ import { SidebarComponent, MenuItem } from '../../sidebar/sidebar';
 })
 export class ObserverLayoutComponent {
   menuItems: MenuItem[] = [
-    { label: 'Integrity Overview', route: '/observer/dashboard', icon: '👁️', exact: true },
-    { label: 'Turnout Analytics', route: '/observer/turnout', icon: '📈' },
-    { label: 'Counting & Results', route: '/observer/results', icon: '🏆' },
-    { label: 'Immutable Audit Trail', route: '/observer/audit', icon: '📜' }
+    { label: 'Integrity Overview', route: '/observer/dashboard', icon: 'dashboard', exact: true },
+    { label: 'Turnout Analytics', route: '/observer/turnout', icon: 'chart' },
+    { label: 'Counting & Results', route: '/observer/results', icon: 'vote' },
+    { label: 'Immutable Audit Trail', route: '/observer/audit', icon: 'receipt' }
   ];
 }

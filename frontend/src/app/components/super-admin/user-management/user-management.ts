@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { DataTableComponent, TableColumn } from '../../data-table/data-table';
 import { SearchBoxComponent } from '../../search-box/search-box';
+import { AppIconComponent } from '../../icon/icon.component';
 import { AdminService } from '../../../services/admin.service';
 import { ToastService } from '../../../services/toast.service';
 import { User, UserRole } from '../../../models/user.model';
@@ -9,7 +11,7 @@ import { User, UserRole } from '../../../models/user.model';
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, DataTableComponent, SearchBoxComponent],
+  imports: [CommonModule, RouterModule, DataTableComponent, SearchBoxComponent, AppIconComponent],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css'
 })

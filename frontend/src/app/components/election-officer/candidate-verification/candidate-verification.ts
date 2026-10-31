@@ -6,11 +6,12 @@ import { SearchBoxComponent } from '../../search-box/search-box';
 import { CandidateService } from '../../../services/candidate.service';
 import { ToastService } from '../../../services/toast.service';
 import { Candidate } from '../../../models/candidate.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-candidate-verification',
   standalone: true,
-  imports: [CommonModule, RouterModule, DataTableComponent, SearchBoxComponent],
+  imports: [CommonModule, RouterModule, DataTableComponent, SearchBoxComponent, AppIconComponent],
   templateUrl: './candidate-verification.html',
   styleUrl: './candidate-verification.css'
 })

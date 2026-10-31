@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { DataTableComponent, TableColumn } from '../../data-table/data-table';
+import { AppIconComponent } from '../../icon/icon.component';
 import { MonitoringService } from '../../../services/monitoring.service';
 import { ServiceHealth } from '../../../models/system.model';
 
 @Component({
   selector: 'app-service-monitoring',
   standalone: true,
-  imports: [CommonModule, DataTableComponent],
+  imports: [CommonModule, RouterModule, AppIconComponent, DataTableComponent],
   templateUrl: './service-monitoring.html',
   styleUrl: './service-monitoring.css'
 })

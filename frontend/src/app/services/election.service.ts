@@ -10,7 +10,7 @@ import { Election, ElectionDto, ElectionStatus } from '../models/election.model'
 })
 export class ElectionService {
   private apiUrl = `${environment.apiUrl}/elections`;
-  private storageKey = 'evoting_elections_v2';
+  private storageKey = 'evoting_elections_v3';
 
   // Real Lok Sabha (MP) and Vidhan Sabha (MLA) elections
   private defaultElections: Election[] = [
@@ -29,8 +29,8 @@ export class ElectionService {
       ward: 'Sitamarhi Lok Sabha',
       totalVoters: 1845000,
       totalCandidates: 6,
-      totalVotesCast: 124500,
-      turnoutPercentage: 68.4,
+      totalVotesCast: 0,
+      turnoutPercentage: 0,
       totalBooths: 1850
     },
     {
@@ -86,8 +86,8 @@ export class ElectionService {
       ward: 'Bhubaneswar Central Vidhan Sabha',
       totalVoters: 295000,
       totalCandidates: 4,
-      totalVotesCast: 205000,
-      turnoutPercentage: 69.5,
+      totalVotesCast: 0,
+      turnoutPercentage: 0,
       totalBooths: 320
     }
   ];
@@ -101,6 +101,18 @@ export class ElectionService {
     this.electionsSubject.next([...this.mockElections]);
   }
 
+  private getLiveVotesForElection(electionId: number | string): number {
+    if (typeof localStorage === 'undefined') return 0;
+    try {
+      const raw = localStorage.getItem(`evoting_tally_${electionId}`);
+      if (raw) {
+        const tallies = JSON.parse(raw);
+        return Object.values(tallies).reduce((acc: number, v: any) => acc + (Number(v) || 0), 0);
+      }
+    } catch {}
+    return 0;
+  }
+
   // Load elections from localStorage or fallback to defaults
   private loadFromStorage(): Election[] {
     if (typeof localStorage === 'undefined') {
@@ -111,7 +123,10 @@ export class ElectionService {
       try {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map(e => ({
+            ...e,
+            totalVotesCast: this.getLiveVotesForElection(e.id)
+          }));
         }
       } catch (err) {
         console.error('Failed to parse cached elections:', err);
@@ -135,9 +150,24 @@ export class ElectionService {
     this.electionsSubject.next([...this.mockElections]);
   }
 
+  // Synchronous immediate return of local elections data for 0ms UI render
+  getLocalElections(): Election[] {
+    return this.mockElections.map(e => {
+      const liveVotes = this.getLiveVotesForElection(e.id);
+      const totalVoters = e.totalVoters || 10000;
+      return {
+        ...e,
+        totalVotesCast: liveVotes,
+        turnoutPercentage: liveVotes > 0 ? Number(((liveVotes / totalVoters) * 100).toFixed(2)) : 0
+      };
+    });
+  }
+
   // Get all elections — attempts API, syncs with cache, falls back safely
   getElections(): Observable<Election[]> {
+    const local = this.getLocalElections();
     return this.http.get<Election[]>(this.apiUrl).pipe(
+      timeout(1000),
       tap((apiElections) => {
         if (Array.isArray(apiElections) && apiElections.length > 0) {
           // Merge API elections with local additions
@@ -147,31 +177,26 @@ export class ElectionService {
           this.notifyListeners();
         }
       }),
-      catchError(() => {
-        // Safe offline return from local storage
-        return of([...this.mockElections]);
-      })
+      catchError(() => of(local))
     );
   }
 
   // Get single election by ID
   getElectionById(id: number | string): Observable<Election | undefined> {
     const idStr = String(id);
+    const local = this.mockElections.find(e => String(e.id) === idStr);
     return this.http.get<Election>(`${this.apiUrl}/${id}`).pipe(
-      catchError(() => {
-        const found = this.mockElections.find(e => String(e.id) === idStr);
-        return of(found);
-      })
+      timeout(1000),
+      catchError(() => of(local))
     );
   }
 
   // Get elections filtered by status
   getElectionsByStatus(status: ElectionStatus): Observable<Election[]> {
+    const local = this.mockElections.filter(e => e.status === status);
     return this.http.get<Election[]>(`${this.apiUrl}/status/${status}`).pipe(
-      catchError(() => {
-        const filtered = this.mockElections.filter(e => e.status === status);
-        return of(filtered);
-      })
+      timeout(1000),
+      catchError(() => of(local))
     );
   }
 

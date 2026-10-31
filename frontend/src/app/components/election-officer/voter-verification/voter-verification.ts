@@ -6,11 +6,12 @@ import { SearchBoxComponent } from '../../search-box/search-box';
 import { OfficerService } from '../../../services/officer.service';
 import { ToastService } from '../../../services/toast.service';
 import { User } from '../../../models/user.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-voter-verification',
   standalone: true,
-  imports: [CommonModule, RouterModule, DataTableComponent, SearchBoxComponent],
+  imports: [CommonModule, RouterModule, DataTableComponent, SearchBoxComponent, AppIconComponent],
   templateUrl: './voter-verification.html',
   styleUrl: './voter-verification.css'
 })

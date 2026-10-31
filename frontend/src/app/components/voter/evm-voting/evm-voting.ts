@@ -9,13 +9,14 @@ import { Candidate } from '../../../models/candidate.model';
 import { ElectionService } from '../../../services/election.service';
 import { Election } from '../../../models/election.model';
 import { VoteReceiptDto } from '../../../models/vote.model';
+import { AppIconComponent } from '../../icon/icon.component';
 
 export type EvmState = 'IDLE' | 'PRESSED' | 'VVPAT_DISPLAY' | 'PAPER_CUT' | 'BEEPING' | 'RECORDED';
 
 @Component({
   selector: 'app-evm-voting',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, AppIconComponent],
   templateUrl: './evm-voting.html',
   styleUrl: './evm-voting.css'
 })

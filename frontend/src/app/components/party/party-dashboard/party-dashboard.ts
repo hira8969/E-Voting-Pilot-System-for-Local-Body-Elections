@@ -67,70 +67,80 @@ export class PartyDashboardComponent implements OnInit {
   loadData(): void {
     if (!this.currentTheme) return;
 
-    const code = this.currentTheme.code.toLowerCase();
-    const name = this.currentTheme.name.toLowerCase();
-
     // Active elections count based on party allowed constituencies
     this.activeElections = this.currentTheme.allowedElectionIds.length;
 
+    // 1. Instant 0ms render from cached/local candidate store
+    const immediate = this.candidateService.getLocalCandidates();
+    this.processCandidateList(immediate);
+
+    // 2. Background sync from server API (with 1s timeout safeguard)
     this.candidateService.getAllCandidates().subscribe(list => {
-      const all = list || [];
+      if (list && list.length > 0) {
+        this.processCandidateList(list);
+      }
+    });
+  }
 
-      // Filter candidates strictly for this specific logged-in party
-      const partyCandidates = all.filter(c => {
-        const pName = String(c.partyName || '').toLowerCase();
-        const pCode = String(c.partyCode || '').toLowerCase();
+  private processCandidateList(all: any[]): void {
+    if (!this.currentTheme) return;
+    const code = this.currentTheme.code.toLowerCase();
+    const name = this.currentTheme.name.toLowerCase();
 
-        if (code === 'other') {
-          return pCode === 'other' || pCode === 'ind' || pName.includes('independent') || pName.includes('other');
-        }
-        if (code === 'rjd') {
-          return pCode === 'rjd' || pName.includes('rjd') || pName.includes('rashtriya janata');
-        }
-        if (code === 'bjp') {
-          return pCode === 'bjp' || pName.includes('bjp') || pName.includes('bharatiya janata');
-        }
-        if (code === 'inc') {
-          return pCode === 'inc' || pName.includes('congress') || pName.includes('inc');
-        }
-        if (code === 'aap') {
-          return pCode === 'aap' || pName.includes('aap') || pName.includes('aam aadmi');
-        }
-        if (code === 'jdu') {
-          return pCode === 'jdu' || pName.includes('jdu') || pName.includes('janata dal');
-        }
-        if (code === 'sp') {
-          return pCode === 'sp' || pName.includes('sp') || pName.includes('samajwadi');
-        }
-        if (code === 'bjd') {
-          return pCode === 'bjd' || pName.includes('bjd') || pName.includes('biju');
-        }
-        if (code === 'cjp') {
-          return pCode === 'cjp' || pName.includes('cjp') || pName.includes('citizen justice');
-        }
-        return pName.includes(code) || pCode === code || pName.includes(name);
-      });
+    // Filter candidates strictly for this specific logged-in party
+    const partyCandidates = (all || []).filter(c => {
+      const pName = String(c.partyName || '').toLowerCase();
+      const pCode = String(c.partyCode || '').toLowerCase();
 
-      this.totalCandidates = partyCandidates.length;
-      this.approvedCandidates = partyCandidates.filter(c => c.verificationStatus === 'VERIFIED' || c.nominationStatus === 'APPROVED').length;
-      this.pendingCandidates = partyCandidates.filter(c => c.verificationStatus === 'PENDING' || c.nominationStatus === 'PENDING').length;
+      if (code === 'other') {
+        return pCode === 'other' || pCode === 'ind' || pName.includes('independent') || pName.includes('other');
+      }
+      if (code === 'rjd') {
+        return pCode === 'rjd' || pName.includes('rjd') || pName.includes('rashtriya janata');
+      }
+      if (code === 'bjp') {
+        return pCode === 'bjp' || pName.includes('bjp') || pName.includes('bharatiya janata');
+      }
+      if (code === 'inc') {
+        return pCode === 'inc' || pName.includes('congress') || pName.includes('inc');
+      }
+      if (code === 'aap') {
+        return pCode === 'aap' || pName.includes('aap') || pName.includes('aam aadmi');
+      }
+      if (code === 'jdu') {
+        return pCode === 'jdu' || pName.includes('jdu') || pName.includes('janata dal');
+      }
+      if (code === 'sp') {
+        return pCode === 'sp' || pName.includes('sp') || pName.includes('samajwadi');
+      }
+      if (code === 'bjd') {
+        return pCode === 'bjd' || pName.includes('bjd') || pName.includes('biju');
+      }
+      if (code === 'cjp') {
+        return pCode === 'cjp' || pName.includes('cjp') || pName.includes('citizen justice');
+      }
+      return pName.includes(code) || pCode === code || pName.includes(name);
+    });
 
-      this.candidates = partyCandidates.map(c => {
-        let electionTitle = `Election #${c.electionId}`;
-        if (c.electionId === 1 || String(c.electionId) === '1') electionTitle = 'Lok Sabha General (MP)';
-        else if (c.electionId === 2 || String(c.electionId) === '2') electionTitle = 'Bihar Vidhan Sabha (MLA)';
-        else if (c.electionId === 3 || String(c.electionId) === '3') electionTitle = 'UP Vidhan Sabha (MLA)';
-        else if (c.electionId === 4 || String(c.electionId) === '4') electionTitle = 'Odisha Vidhan Sabha (MLA)';
+    this.totalCandidates = partyCandidates.length;
+    this.approvedCandidates = partyCandidates.filter(c => c.verificationStatus === 'VERIFIED' || c.nominationStatus === 'APPROVED').length;
+    this.pendingCandidates = partyCandidates.filter(c => c.verificationStatus === 'PENDING' || c.nominationStatus === 'PENDING').length;
 
-        return {
-          id: c.id,
-          name: c.fullName || c.name || 'Nominee',
-          photoUrl: c.photoUrl,
-          constituency: c.constituency || 'Constituency Seat',
-          election: electionTitle,
-          status: (c.nominationStatus === 'APPROVED' || c.verificationStatus === 'VERIFIED') ? 'APPROVED' : 'PENDING'
-        };
-      });
+    this.candidates = partyCandidates.map(c => {
+      let electionTitle = `Election #${c.electionId}`;
+      if (c.electionId === 1 || String(c.electionId) === '1') electionTitle = 'Lok Sabha General (MP)';
+      else if (c.electionId === 2 || String(c.electionId) === '2') electionTitle = 'Bihar Vidhan Sabha (MLA)';
+      else if (c.electionId === 3 || String(c.electionId) === '3') electionTitle = 'UP Vidhan Sabha (MLA)';
+      else if (c.electionId === 4 || String(c.electionId) === '4') electionTitle = 'Odisha Vidhan Sabha (MLA)';
+
+      return {
+        id: c.id,
+        name: c.fullName || c.name || 'Nominee',
+        photoUrl: c.photoUrl,
+        constituency: c.constituency || 'Constituency Seat',
+        election: electionTitle,
+        status: (c.nominationStatus === 'APPROVED' || c.verificationStatus === 'VERIFIED') ? 'APPROVED' : 'PENDING'
+      };
     });
   }
 

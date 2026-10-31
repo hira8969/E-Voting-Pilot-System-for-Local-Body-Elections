@@ -5,14 +5,14 @@
 
 USE evoting_election_db;
 
--- 1. State Master
+-- 1. State 
 CREATE TABLE IF NOT EXISTS states (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     code VARCHAR(10) NOT NULL UNIQUE
 );
 
--- 2. District Master
+-- 2. District 
 CREATE TABLE IF NOT EXISTS districts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     state_id BIGINT NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS districts (
     FOREIGN KEY (state_id) REFERENCES states(id) ON DELETE CASCADE
 );
 
--- 3. Sub-Division (Anumandal) Master
+-- 3. Sub-Division (Anumandal) 
 CREATE TABLE IF NOT EXISTS sub_divisions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     district_id BIGINT NOT NULL,
